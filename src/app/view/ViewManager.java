@@ -105,7 +105,12 @@ public class ViewManager {
 			LogHelper.getLogger().info(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Updates the task list shown to the user.
+	 * 
+	 * @param tasks TaskList containing a list of tasks.
+	 */
 	public void updateTaskList(TaskList tasks) {
 		taskListViewManager.updateView(tasks);
 	}

@@ -21,6 +21,12 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	@FXML
 	private Label taskBottomDate;
 
+	/**
+	 * This method is implicitly called whenever a item (TaskListItemView) is
+	 * added to the ListView (TaskListView).
+	 * 
+	 * The components of the item is updated with the supplied Task parameter.
+	 */
 	@Override
 	public void updateItem(Task task, boolean empty) {
 		super.updateItem(task, empty);
@@ -33,6 +39,9 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		}
 	}
 
+	/**
+	 * Sets the item labels using the supplied Task.
+	 */
 	private void setLabels() {
 		// TODO: placeholder ID
 		taskId.setText("ID");

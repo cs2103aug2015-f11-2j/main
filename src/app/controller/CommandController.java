@@ -15,6 +15,12 @@ public class CommandController {
 		taskList = new TaskList();
 	}
 
+	/**
+	 * Entry method for executing a command string. The command string is parsed
+	 * and the relevant logic is executed.
+	 * 
+	 * @param commandString The full command string.
+	 */
 	public void executeCommand(String commandString) {
 		/*
 		 * TODO: parse command, build Task object, update taskList, update view

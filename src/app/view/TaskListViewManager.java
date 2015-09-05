@@ -21,8 +21,13 @@ public class TaskListViewManager {
 	@FXML
 	private ListView<Task> taskListViewLayout;
 
+	/**
+	 * This method is implicitly called when the TaskListView is loaded from the
+	 * FXMLLoader. The logic for setting our custom cell (TaskListItemView) is
+	 * defined by setting the cell factory of the TaskListView.
+	 */
 	@FXML
-	public void initialize() {		
+	public void initialize() {
 		taskListViewLayout.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> listView) {
@@ -39,11 +44,21 @@ public class TaskListViewManager {
 		});
 	}
 
+	/**
+	 * Updates the list of tasks shown to the user
+	 * 
+	 * @param tasks A TaskList object containing the list of tasks.
+	 */
 	public void updateView(TaskList tasks) {
 		taskList = FXCollections.observableArrayList(tasks.getTaskList());
 		taskListViewLayout.setItems(taskList);
 	}
 
+	/**
+	 * This sets a reference to the ViewManager that initialized this class.
+	 * 
+	 * @param viewManager The ViewManager that initialized this class.
+	 */
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
 	}
