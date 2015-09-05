@@ -7,10 +7,14 @@ import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -19,13 +23,16 @@ import javafx.stage.Stage;
  */
 public class ViewManager {
 
-	private AnchorPane rootLayout;
+	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
 	private ListView<Task> taskListViewLayout;
 
 	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
+
+	@FXML
+	private Label statusBar;
 
 	/**
 	 * This is the main initialization method for the ViewManager. This method
@@ -34,9 +41,11 @@ public class ViewManager {
 	 * 
 	 * @param primaryStage The main window.
 	 */
-	public void initialize(Stage primaryStage) {
+	public void initialize(Stage primaryStage, BorderPane rootLayout) {
+		this.rootLayout = rootLayout;
 		commandController = new CommandController(this);
-		initializeViews(primaryStage);
+		initializeViews();
+		showStage(primaryStage);
 	}
 
 	/**
@@ -46,31 +55,20 @@ public class ViewManager {
 	 * @param primaryStage The stage (window) for which the views will be
 	 *            attached to.
 	 */
-	public void initializeViews(Stage primaryStage) {
-		initializeRootView(primaryStage);
+	public void initializeViews() {
 		initializeTaskListView();
 		initializeInputView();
 	}
 
 	/**
-	 * Initializes the RootView.
+	 * Applies the root view to the stage (window) before displaying the stage.
 	 * 
-	 * @param primaryStage The main window to attach the view to.
+	 * @param primaryStage The stage (window) to display.
 	 */
-	private void initializeRootView(Stage primaryStage) {
-		LogHelper.getLogger().info("Initializing root view");
-		try {
-			FXMLLoader loader = buildFxmlLoader("view/fxml/RootView.fxml");
-			rootLayout = loader.load();
-			Scene scene = new Scene(rootLayout);
-			primaryStage.setMinWidth(600);
-			primaryStage.setMinHeight(300);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			LogHelper.getLogger().severe(e.getMessage());
-		}
-
+	public void showStage(Stage primaryStage) {
+		Scene scene = new Scene(rootLayout);
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class ViewManager {
 			taskListViewLayout = loader.load();
 			taskListViewManager = loader.getController();
 			taskListViewManager.setViewManager(this);
-			rootLayout.getChildren().add(taskListViewLayout);
+			rootLayout.setCenter(taskListViewLayout);
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
@@ -100,7 +98,8 @@ public class ViewManager {
 			inputViewLayout = loader.load();
 			inputViewManager = loader.getController();
 			inputViewManager.setViewManager(this);
-			rootLayout.getChildren().add(inputViewLayout);
+			VBox vbox = (VBox) rootLayout.getBottom();
+			vbox.getChildren().add(inputViewLayout);
 		} catch (IOException e) {
 			LogHelper.getLogger().info(e.getMessage());
 		}
@@ -113,6 +112,15 @@ public class ViewManager {
 	 */
 	public void updateTaskList(TaskList tasks) {
 		taskListViewManager.updateView(tasks);
+	}
+
+	/**
+	 * Sets the status bar text.
+	 * 
+	 * @param text The status bar text to set.
+	 */
+	public void setStatus(String text) {
+		statusBar.setText(text);
 	}
 
 	/**

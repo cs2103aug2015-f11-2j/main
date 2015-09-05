@@ -23,12 +23,14 @@
 					</font>
 				</Label>
 				<Label fx:id="taskName" maxWidth="1.7976931348623157E308"
-					prefHeight="46.0" prefWidth="386.0"
-					text="Task Name Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore "
-					wrapText="true" HBox.hgrow="ALWAYS">
+					prefHeight="46.0" prefWidth="386.0" text="Task Name" wrapText="true"
+					HBox.hgrow="ALWAYS">
 					<font>
 						<Font size="14.0" />
 					</font>
+					<tooltip>
+						<Tooltip maxWidth="500.0" wrapText="true" />
+					</tooltip>
 				</Label>
 				<Separator orientation="VERTICAL" prefHeight="46.0"
 					prefWidth="6.0">

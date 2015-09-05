@@ -32,5 +32,6 @@ public class CommandController {
 
 		taskList.addTask(new Task(cmd));
 		viewManager.updateTaskList(taskList);
+		viewManager.setStatus("Added task: " + cmd.getTaskName());
 	}
 }

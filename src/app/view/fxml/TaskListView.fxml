@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.*?>
 
 <ListView fx:id="taskListViewLayout" focusTraversable="false"
+	maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
 	prefHeight="242.0" prefWidth="386.0" AnchorPane.bottomAnchor="38.0"
 	AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 	AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="app.view.TaskListViewManager">
 	<placeholder>
 		<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-			minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-			prefWidth="600.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8"
+			prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
 			xmlns:fx="http://javafx.com/fxml/1">
 			<columnConstraints>
 				<ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308"
