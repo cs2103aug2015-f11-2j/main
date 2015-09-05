@@ -5,24 +5,10 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
 
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
 	prefWidth="600.0" fx:controller="app.view.ViewManager" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<TextField fx:id="commandInput" layoutY="374.0" onAction="#onKeypressEnter"
-			prefHeight="35.0" prefWidth="600.0" promptText="Command"
-			AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0"
-			AnchorPane.rightAnchor="1.0">
-			<font>
-				<Font size="16.0" />
-			</font>
-			<padding>
-				<Insets bottom="1.0" left="8.0" right="8.0" top="1.0" />
-			</padding>
-		</TextField>
-	</children>
 </AnchorPane>
