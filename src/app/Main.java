@@ -6,14 +6,21 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	
+	private Stage primaryStage;
+	
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage stage) {
+		initializeStage(stage);
 		ViewManager viewManager = new ViewManager();
-		viewManager.setMainApp(this);
-		viewManager.initializeViews(primaryStage);
+		viewManager.initialize(primaryStage);
 	}
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	private void initializeStage(Stage stage) {
+		primaryStage = stage;
+		primaryStage.setTitle("Next :: your next-gen todo list");
 	}
 }

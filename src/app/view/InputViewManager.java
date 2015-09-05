@@ -22,9 +22,9 @@ public class InputViewManager {
 	 */
 	public void onKeypressEnter() {
 		String commandString = commandInput.getText();
-		LogHelper.info("User pressed enter key with input: " + commandString);
+		LogHelper.getLogger().info("User pressed enter key with input: " + commandString);
 		// TODO: this is just test code
-		viewManager.updateTaskList(commandString);
+		viewManager.getCommandController().executeCommand(commandString);
 		commandInput.clear();
 	}
 
