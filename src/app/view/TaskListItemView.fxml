@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<AnchorPane maxHeight="46.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="46.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <CheckBox layoutX="576.0" layoutY="12.0" mnemonicParsing="false" AnchorPane.rightAnchor="3.0" />
+      <Label layoutX="7.0" layoutY="3.0" prefHeight="40.0" text="ID" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="51.0" layoutY="1.0" prefHeight="40.0" prefWidth="389.0" text="Task Name Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore " wrapText="true" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER_RIGHT" layoutX="452.0" layoutY="6.0" text="Due 10/11/2015 3:15pm" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="6.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER_RIGHT" layoutX="452.0" layoutY="24.0" text="Due 10/11/2015 3:15pm" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="24.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

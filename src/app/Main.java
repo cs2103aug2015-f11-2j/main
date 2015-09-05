@@ -10,7 +10,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		ViewManager viewManager = new ViewManager();
 		viewManager.setMainApp(this);
-		viewManager.initializeRootView(primaryStage);
+		viewManager.initializeViews(primaryStage);
 	}
 
 	public static void main(String[] args) {
