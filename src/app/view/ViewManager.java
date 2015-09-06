@@ -15,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -35,6 +36,10 @@ public class ViewManager {
 
 	@FXML
 	private Label statusBar;
+
+	public enum StatusType {
+		SUCCESS, ERROR, INFO;
+	}
 
 	/**
 	 * This is the main initialization method for the ViewManager. This method
@@ -57,7 +62,7 @@ public class ViewManager {
 	 * @param primaryStage The stage (window) for which the views will be
 	 *            attached to.
 	 */
-	public void initializeViews() {
+	private void initializeViews() {
 		initializeTaskListView();
 		initializeInputView();
 		initializeTextView();
@@ -129,7 +134,7 @@ public class ViewManager {
 		taskListViewManager.updateView(tasks);
 		rootLayout.setCenter(taskListViewLayout);
 	}
-	
+
 	/**
 	 * Updates the shows the text view to the user.
 	 * 
@@ -141,12 +146,43 @@ public class ViewManager {
 	}
 
 	/**
-	 * Sets the status bar text.
+	 * Sets the status bar text with StatusType.INFO (Black).
 	 * 
 	 * @param text The status bar text to set.
 	 */
 	public void setStatus(String text) {
+		setStatus(text, StatusType.INFO);
+	}
+
+	/**
+	 * Sets the status bar text with specified StatusType and corresponding
+	 * color.
+	 * 
+	 * @param text The status bar text to set.
+	 * @param type The StatusType of the text.
+	 */
+	public void setStatus(String text, StatusType type) {
 		statusBar.setText(text);
+		statusBar.setTextFill(determineStatusColor(type));
+	}
+
+	/**
+	 * Returns the corresponding Color object of the StatusType.
+	 * 
+	 * @param type The StatusType object.
+	 * @return The corresponding Color object.
+	 */
+	private Color determineStatusColor(StatusType type) {
+		switch (type) {
+		case INFO:
+			return Color.BLACK;
+		case SUCCESS:
+			return Color.GREEN;
+		case ERROR:
+			return Color.RED;
+		default:
+			return Color.BLACK;
+		}
 	}
 
 	/**
@@ -162,6 +198,9 @@ public class ViewManager {
 		return loader;
 	}
 
+	/**
+	 * @return The reference to the CommandController.
+	 */
 	public CommandController getCommandController() {
 		return commandController;
 	}

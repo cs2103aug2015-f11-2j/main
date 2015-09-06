@@ -4,6 +4,7 @@ import app.model.Command;
 import app.model.Task;
 import app.model.TaskList;
 import app.view.ViewManager;
+import app.view.ViewManager.StatusType;
 
 public class CommandController {
 
@@ -37,7 +38,7 @@ public class CommandController {
 
 		taskList.addTask(new Task(cmd));
 		viewManager.updateTaskList(taskList);
-		viewManager.setStatus("Added task: " + cmd.getTaskName());
+		viewManager.setStatus("Added task: " + cmd.getTaskName(), StatusType.SUCCESS);
 	}
 	
 	private void showHelp() {
