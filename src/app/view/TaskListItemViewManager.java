@@ -2,8 +2,10 @@ package app.view;
 
 import app.model.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 
 public class TaskListItemViewManager extends ListCell<Task> {
@@ -20,6 +22,10 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	private Label taskTopDate;
 	@FXML
 	private Label taskBottomDate;
+	@FXML
+	private CheckBox taskCheckbox;
+	@FXML
+	private Tooltip taskNameTooltip;
 
 	/**
 	 * This method is implicitly called whenever a item (TaskListItemView) is
@@ -46,9 +52,11 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		// TODO: placeholder ID
 		taskId.setText("ID");
 		taskName.setText(task.getName());
-		// TODO: placeholder dates.
+		taskNameTooltip.setText(task.getName());
+		// TODO: placeholder data.
 		taskTopDate.setText("From 10/11/2015");
 		taskBottomDate.setText("To 15/11/2015 11:59pm");
+		taskCheckbox.setSelected(false);
 	}
 
 }

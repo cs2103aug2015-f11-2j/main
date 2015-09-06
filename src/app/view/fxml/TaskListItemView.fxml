@@ -29,7 +29,8 @@
 						<Font size="14.0" />
 					</font>
 					<tooltip>
-						<Tooltip maxWidth="500.0" wrapText="true" />
+						<Tooltip fx:id="taskNameTooltip" maxWidth="500.0"
+							wrapText="true" />
 					</tooltip>
 				</Label>
 				<Separator orientation="VERTICAL" prefHeight="46.0"
