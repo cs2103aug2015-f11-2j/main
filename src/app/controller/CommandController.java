@@ -27,11 +27,21 @@ public class CommandController {
 		 * this is placeholder code until parsing is done. now we're just
 		 * setting the task name to the user input
 		 */
+		// placeholder example of showing the help.
+		if (commandString.equalsIgnoreCase("help")) {
+			showHelp();
+			return;
+		}
 		Command cmd = new Command(commandString);
 		cmd.setTaskName(commandString);
 
 		taskList.addTask(new Task(cmd));
 		viewManager.updateTaskList(taskList);
 		viewManager.setStatus("Added task: " + cmd.getTaskName());
+	}
+	
+	private void showHelp() {
+		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
+		viewManager.setStatus("Showing list of commands");
 	}
 }

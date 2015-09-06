@@ -25,11 +25,13 @@ public class ViewManager {
 
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
+	private AnchorPane textViewLayout;
 	private ListView<Task> taskListViewLayout;
 
 	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
+	private TextViewManager textViewManager;
 
 	@FXML
 	private Label statusBar;
@@ -58,6 +60,7 @@ public class ViewManager {
 	public void initializeViews() {
 		initializeTaskListView();
 		initializeInputView();
+		initializeTextView();
 	}
 
 	/**
@@ -105,13 +108,36 @@ public class ViewManager {
 		}
 	}
 
+	private void initializeTextView() {
+		LogHelper.getLogger().info("Initializing text view");
+		try {
+			FXMLLoader loader = buildFxmlLoader("view/fxml/TextView.fxml");
+			textViewLayout = loader.load();
+			textViewManager = loader.getController();
+			textViewManager.setViewManager(this);
+		} catch (IOException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+		}
+	}
+
 	/**
-	 * Updates the task list shown to the user.
+	 * Updates and shows the task list to the user.
 	 * 
 	 * @param tasks TaskList containing a list of tasks.
 	 */
 	public void updateTaskList(TaskList tasks) {
 		taskListViewManager.updateView(tasks);
+		rootLayout.setCenter(taskListViewLayout);
+	}
+	
+	/**
+	 * Updates the shows the text view to the user.
+	 * 
+	 * @param text The text to populate the text view with.
+	 */
+	public void updateTextView(String text) {
+		textViewManager.setText(text);
+		rootLayout.setCenter(textViewLayout);
 	}
 
 	/**
