@@ -50,7 +50,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 */
 	private void setLabels() {
 		// TODO: placeholder ID
-		taskId.setText("ID");
+		taskId.setText("#10");
 		taskName.setText(task.getName());
 		taskNameTooltip.setText(task.getName());
 		// TODO: placeholder data.
