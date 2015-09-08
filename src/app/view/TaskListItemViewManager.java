@@ -40,6 +40,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	public void updateItem(Task task, boolean empty) {
 		super.updateItem(task, empty);
 		this.task = task;
+		// Always clear the content due to a JavaFX quirk with updating cells.
 		clearContent();
 		if (!empty && task != null) {
 			setGraphic(taskListItemViewLayout);
@@ -48,6 +49,9 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		}
 	}
 
+	/**
+	 * Resets all cell content.
+	 */
 	private void clearContent() {
 		setGraphic(null);
 		taskListItemViewLayout.getStyleClass().removeAll("priorityHigh", "priorityMedium", "priorityLow");
@@ -68,6 +72,9 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		taskCheckbox.setSelected(false);
 	}
 
+	/**
+	 * Sets the item to display the appropriate priority level, if applicable.
+	 */
 	private void setPriority() {
 		if (task.getPriority() != null) {
 			switch (task.getPriority()) {
@@ -86,6 +93,12 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		}
 	}
 
+	/**
+	 * Displays the priority image by setting the style class and making the
+	 * image visible.
+	 * 
+	 * @param styleClass A style class of the form: .priority[High | Medium | Low]
+	 */
 	private void setPriorityImage(String styleClass) {
 		taskListItemViewLayout.getStyleClass().add(styleClass);
 		priorityImage.setVisible(true);

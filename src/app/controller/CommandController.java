@@ -37,6 +37,8 @@ public class CommandController {
 		}
 		Command cmd = new Command(commandString);
 		cmd.setTaskName(commandString);
+		
+		// placeholder logic for priority levels
 		if (commandString.contains("priority high")) {
 			cmd.setPriority(Priority.HIGH);
 		} else if (commandString.contains("priority medium")) {
