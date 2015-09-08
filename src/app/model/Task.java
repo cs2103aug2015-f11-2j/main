@@ -7,12 +7,19 @@ public class Task {
 	private String name;
 	private Date startDate;
 	private Date endDate;
+	private Priority priority;
+
 	private boolean isCompleted;
+	
+	public enum Priority {
+		HIGH, MEDIUM, LOW;
+	}
 	
 	public Task(Command cmd) {
 		name = cmd.getTaskName();
 		startDate = cmd.getStartDate();
 		endDate = cmd.getEndDate();
+		priority = cmd.getPriority();
 		isCompleted = false;
 	}
 
@@ -46,6 +53,14 @@ public class Task {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+	
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
 	}
 
 	public boolean isCompleted() {

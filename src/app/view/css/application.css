@@ -1,3 +1,4 @@
+
 /* Default background color for items */
 .list-cell {
 	-fx-background-color: #FCFCFC;
@@ -21,7 +22,7 @@
 	-fx-background-color: #FCFCFC;
 }
 
-/* Even taks items */
+/* Even task items */
 .list-cell:even .taskItem {
 	-fx-background-color: #F5F5F5;
 }
@@ -31,15 +32,27 @@
 	-fx-stroke: #CCCCCC;	
 }
 
-.taskItemLines.priorityHigh .taskItemLine1, .taskItemLines.priorityHigh .taskItemLine2 {
-	-fx-stroke: #DF3451;
+.taskItem.priorityHigh .taskItemLine1, .taskItem.priorityHigh .taskItemLine2 {
+	-fx-stroke: #F44336;
 }
 
-.taskItemLines.priorityMedium .taskItemLine1, .taskItemLines.priorityMedium .taskItemLine2 {
-	-fx-stroke: #F37042;
+.taskItem.priorityMedium .taskItemLine1, .taskItem.priorityMedium .taskItemLine2 {
+	-fx-stroke: #FFC107;
 }
 
-.taskItemLines.priorityLow .taskItemLine1, .taskItemLines.priorityLow .taskItemLine2 {
-	-fx-stroke: #089EDC;
+.taskItem.priorityLow .taskItemLine1, .taskItem.priorityLow .taskItemLine2 {
+	-fx-stroke: #4CAF50;
+}
+
+.taskItem.priorityHigh .priorityImage {
+	-fx-image: url("../images/priority_high_icon.png");
+}
+
+.taskItem.priorityMedium .priorityImage {
+	-fx-image: url("../images/priority_medium_icon.png");
+}
+
+.taskItem.priorityLow .priorityImage {
+	-fx-image: url("../images/priority_low_icon.png");
 }
 /* End priority indicators */

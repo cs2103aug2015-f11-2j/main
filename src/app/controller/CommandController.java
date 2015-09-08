@@ -3,6 +3,7 @@ package app.controller;
 import app.model.Command;
 import app.model.Task;
 import app.model.TaskList;
+import app.model.Task.Priority;
 import app.view.ViewManager;
 import app.view.ViewManager.StatusType;
 
@@ -25,8 +26,9 @@ public class CommandController {
 	public void executeCommand(String commandString) {
 		/*
 		 * TODO: parse command, build Task object, update taskList, update view
-		 * this is placeholder code until parsing is done. now we're just
-		 * setting the task name to the user input
+		 * THIS IS ALL PLACEHOLDER CODE! This whole chuck should be removed once
+		 * parsing is done. now we're just setting the task name to the user
+		 * input
 		 */
 		// placeholder example of showing the help.
 		if (commandString.equalsIgnoreCase("help")) {
@@ -35,12 +37,19 @@ public class CommandController {
 		}
 		Command cmd = new Command(commandString);
 		cmd.setTaskName(commandString);
+		if (commandString.contains("priority high")) {
+			cmd.setPriority(Priority.HIGH);
+		} else if (commandString.contains("priority medium")) {
+			cmd.setPriority(Priority.MEDIUM);
+		} else if (commandString.contains("priority low")) {
+			cmd.setPriority(Priority.LOW);
+		}
 
 		taskList.addTask(new Task(cmd));
 		viewManager.updateTaskList(taskList);
 		viewManager.setStatus("Added task: " + cmd.getTaskName(), StatusType.SUCCESS);
 	}
-	
+
 	private void showHelp() {
 		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
 		viewManager.setStatus("Showing list of commands");

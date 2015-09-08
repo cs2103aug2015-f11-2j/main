@@ -2,6 +2,8 @@ package app.model;
 
 import java.util.Date;
 
+import app.model.Task.Priority;
+
 public class Command {
 
 	private String commandString;
@@ -9,6 +11,7 @@ public class Command {
 	private String taskName;
 	private Date startDate;
 	private Date endDate;
+	private Priority priority;
 	private String feedback;
 
 	public Command(String commandString) {
@@ -53,6 +56,14 @@ public class Command {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
 	}
 
 	public String getFeedback() {
