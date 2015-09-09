@@ -1,6 +1,9 @@
 package app.model;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import app.model.Task.Priority;
 
@@ -13,6 +16,18 @@ public class Command {
 	private Date endDate;
 	private Priority priority;
 	private String feedback;
+	
+	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a");
+	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
+	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
+	
+	public enum CommandType {
+		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP;
+	}
+	
+	private static List<String> getUnmodifiableList(String... args) {
+		return Collections.unmodifiableList(Arrays.asList(args));
+	}
 
 	public Command(String commandString) {
 		this.commandString = commandString;
