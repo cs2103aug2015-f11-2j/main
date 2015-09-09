@@ -1,12 +1,10 @@
 .list-view {
 	-fx-background-color: #323A43;
 	-fx-border-color: transparent transparent #101010 transparent;
-	-fx-border-width: 0.0 0 1px 0;
 }
 
 .list-cell {
 	-fx-background-color: #323A43;
-	-fx-padding: 0.0px;
 }
 
 .list-cell .label {
@@ -25,7 +23,6 @@
 
 .taskItem {
 	-fx-border-color: transparent transparent #151515 transparent;
-	-fx-border-width: 0.0 0 1px 0;
 }
 
 .list-view .listViewTitle, .list-view .listViewNoTasks, .list-view .listViewInfo1, .list-view .listViewInfo2 {
@@ -39,46 +36,17 @@
 .commandInput {
 	-fx-background-color: #1C1F26;
 	-fx-text-fill: #FDFDFD;
-	-fx-background-radius: 0;
 }
 
 .textViewTextArea {
 	-fx-background-color: #323A43;
 	-fx-text-fill: #FDFDFD;
-	-fx-background-radius: 0;
 }
 
 .textViewTextArea .content {
 	-fx-background-color: #323A43;
-	-fx-background-radius: 0;
 }
 
-/* Begin priority indicators */
 .taskItemLines .taskItemLine1, .taskItemLines .taskItemLine2 {
 	-fx-stroke: #151515;	
 }
-
-.taskItem.priorityHigh .taskItemLine1, .taskItem.priorityHigh .taskItemLine2 {
-	-fx-stroke: #F44336;
-}
-
-.taskItem.priorityMedium .taskItemLine1, .taskItem.priorityMedium .taskItemLine2 {
-	-fx-stroke: #FFC107;
-}
-
-.taskItem.priorityLow .taskItemLine1, .taskItem.priorityLow .taskItemLine2 {
-	-fx-stroke: #4CAF50;
-}
-
-.taskItem.priorityHigh .priorityImage {
-	-fx-image: url("../images/priority_high_icon.png");
-}
-
-.taskItem.priorityMedium .priorityImage {
-	-fx-image: url("../images/priority_medium_icon.png");
-}
-
-.taskItem.priorityLow .priorityImage {
-	-fx-image: url("../images/priority_low_icon.png");
-}
-/* End priority indicators */
