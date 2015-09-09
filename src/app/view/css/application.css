@@ -56,3 +56,7 @@
 	-fx-image: url("../images/priority_low_icon.png");
 }
 /* End priority indicators */
+
+.commandInput {
+	-fx-background-radius: 0;
+}

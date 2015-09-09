@@ -15,7 +15,7 @@
 	<children>
 		<TextField fx:id="commandInput" maxHeight="1.7976931348623157E308"
 			maxWidth="1.7976931348623157E308" onAction="#onKeypressEnter"
-			prefHeight="35.0" prefWidth="600.0" promptText="Command"
+			prefHeight="35.0" prefWidth="600.0" promptText="Command" styleClass="commandInput"
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0">
 			<font>
