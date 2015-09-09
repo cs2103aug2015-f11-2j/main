@@ -53,7 +53,8 @@ public class ViewManager {
 	 */
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
 		this.rootLayout = rootLayout;
-		commandController = new CommandController(this);
+		commandController = CommandController.getInstance();
+		commandController.setViewManager(this);
 		initializeViews();
 		showStage(primaryStage);
 	}
@@ -170,6 +171,13 @@ public class ViewManager {
 		statusBar.getStyleClass().add(determineStatusStyleClass(type));
 	}
 
+	/**
+	 * Determines the style class for the specified StatusType. This style class
+	 * will be used by the theme CSS files to properly color the text.
+	 * 
+	 * @param type The StatusType of the text.
+	 * @return The style class for the specified StatusType, as a string.
+	 */
 	private String determineStatusStyleClass(StatusType type) {
 		switch (type) {
 		case SUCCESS:
@@ -194,12 +202,4 @@ public class ViewManager {
 		loader.setLocation(Main.class.getResource(fxml));
 		return loader;
 	}
-
-	/**
-	 * @return The reference to the CommandController.
-	 */
-	public CommandController getCommandController() {
-		return commandController;
-	}
-
 }

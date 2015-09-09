@@ -1,5 +1,6 @@
 package app.view;
 
+import app.controller.CommandController;
 import app.helper.LogHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -24,7 +25,7 @@ public class InputViewManager {
 		String commandString = commandInput.getText();
 		LogHelper.getLogger().info("User pressed enter key with input: " + commandString);
 		// TODO: this is just test code
-		viewManager.getCommandController().executeCommand(commandString);
+		CommandController.getInstance().executeCommand(commandString);
 		commandInput.clear();
 	}
 

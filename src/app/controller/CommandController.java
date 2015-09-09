@@ -8,13 +8,21 @@ import app.view.ViewManager;
 import app.view.ViewManager.StatusType;
 
 public class CommandController {
+	
+	private static CommandController commandController;
 
 	private ViewManager viewManager;
 	private TaskList taskList;
 
-	public CommandController(ViewManager viewManager) {
-		this.viewManager = viewManager;
+	private CommandController() {
 		taskList = new TaskList();
+	}
+	
+	public static CommandController getInstance() {
+		if (commandController == null) {
+			commandController = new CommandController();
+		}
+		return commandController;
 	}
 
 	/**
@@ -55,5 +63,9 @@ public class CommandController {
 	private void showHelp() {
 		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
 		viewManager.setStatus("Showing list of commands");
+	}
+
+	public void setViewManager(ViewManager viewManager) {
+		this.viewManager = viewManager;
 	}
 }
