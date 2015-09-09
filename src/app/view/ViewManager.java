@@ -15,7 +15,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -23,6 +22,10 @@ import javafx.stage.Stage;
  * sub-views and provides a references to each of them.
  */
 public class ViewManager {
+
+	private static String STATUS_STYLE_SUCCESS = "success";
+	private static String STATUS_STYLE_ERROR = "error";
+	private static String STATUS_STYLE_INFO = "info";
 
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
@@ -163,25 +166,19 @@ public class ViewManager {
 	 */
 	public void setStatus(String text, StatusType type) {
 		statusBar.setText(text);
-		statusBar.setTextFill(determineStatusColor(type));
+		statusBar.getStyleClass().removeAll(STATUS_STYLE_SUCCESS, STATUS_STYLE_ERROR, STATUS_STYLE_INFO);
+		statusBar.getStyleClass().add(determineStatusStyleClass(type));
 	}
 
-	/**
-	 * Returns the corresponding Color object of the StatusType.
-	 * 
-	 * @param type The StatusType object.
-	 * @return The corresponding Color object.
-	 */
-	private Color determineStatusColor(StatusType type) {
+	private String determineStatusStyleClass(StatusType type) {
 		switch (type) {
-		case INFO:
-			return Color.BLACK;
 		case SUCCESS:
-			return Color.GREEN;
+			return STATUS_STYLE_SUCCESS;
 		case ERROR:
-			return Color.RED;
+			return STATUS_STYLE_ERROR;
+		case INFO:
 		default:
-			return Color.BLACK;
+			return STATUS_STYLE_INFO;
 		}
 	}
 

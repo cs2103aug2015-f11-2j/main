@@ -50,3 +50,17 @@
 .taskItemLines .taskItemLine1, .taskItemLines .taskItemLine2 {
 	-fx-stroke: #151515;	
 }
+
+/* Status bar */
+.statusBar.success {
+	-fx-text-fill: green;
+}
+
+.statusBar.error {
+	-fx-text-fill: red;
+}
+
+.statusBar.info {
+	-fx-text-fill: black;
+}
+/* End status bar */

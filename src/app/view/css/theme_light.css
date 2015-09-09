@@ -27,3 +27,17 @@
 .taskItemLines .taskItemLine1, .taskItemLines .taskItemLine2 {
 	-fx-stroke: #CCCCCC;	
 }
+
+/* Status bar */
+.statusBar.success {
+	-fx-text-fill: green;
+}
+
+.statusBar.error {
+	-fx-text-fill: red;
+}
+
+.statusBar.info {
+	-fx-text-fill: black;
+}
+/* End status bar */
