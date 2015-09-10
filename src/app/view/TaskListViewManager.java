@@ -6,8 +6,6 @@ import app.Main;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskList;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
@@ -16,7 +14,6 @@ import javafx.util.Callback;
 
 public class TaskListViewManager {
 	private ViewManager viewManager;
-	private ObservableList<Task> taskList = FXCollections.observableArrayList();
 
 	@FXML
 	private ListView<Task> taskListViewLayout;
@@ -50,8 +47,7 @@ public class TaskListViewManager {
 	 * @param tasks A TaskList object containing the list of tasks.
 	 */
 	public void updateView(TaskList tasks) {
-		taskList = FXCollections.observableArrayList(tasks.getTaskList());
-		taskListViewLayout.setItems(taskList);
+		taskListViewLayout.setItems(tasks.getTaskList());
 	}
 
 	/**

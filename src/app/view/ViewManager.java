@@ -20,8 +20,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * View Manager for the root of the program. This manager instantiates all
- * sub-views and provides a references to each of them.
+ * View Manager for the root of the program. This class instantiates all
+ * sub-views and provides a references to each of them. This manager this is the
+ * only one to interact with its child views.
  */
 public class ViewManager {
 
@@ -87,7 +88,7 @@ public class ViewManager {
 			taskListViewLayout = loader.load();
 			taskListViewManager = loader.getController();
 			taskListViewManager.setViewManager(this);
-			rootLayout.setCenter(taskListViewLayout);
+			showTaskList();
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
@@ -130,6 +131,9 @@ public class ViewManager {
 	 */
 	public void updateTaskList(TaskList tasks) {
 		taskListViewManager.updateView(tasks);
+	}
+
+	public void showTaskList() {
 		rootLayout.setCenter(taskListViewLayout);
 	}
 
@@ -140,6 +144,9 @@ public class ViewManager {
 	 */
 	public void updateTextView(String text) {
 		textViewManager.setText(text);
+	}
+
+	public void showTextView() {
 		rootLayout.setCenter(textViewLayout);
 	}
 

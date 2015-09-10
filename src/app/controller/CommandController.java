@@ -1,9 +1,12 @@
 package app.controller;
 
 import app.helper.CommandParser;
+import app.helper.LogHelper;
+import app.model.Task;
 import app.model.TaskList;
 import app.model.command.Command;
 import app.view.ViewManager;
+import javafx.collections.ListChangeListener;
 
 /**
  * This class provides the layer of logic between the ViewManager and the rest
@@ -19,8 +22,15 @@ public class CommandController {
 	private CommandParser parser;
 
 	private CommandController() {
-		taskList = new TaskList();
 		parser = new CommandParser();
+		taskList = new TaskList();
+		
+		// Updates the view whenever taskList is changed.
+		taskList.getTaskList().addListener(new ListChangeListener<Task>() {
+			public void onChanged(ListChangeListener.Change<? extends Task> c) {
+				viewManager.updateTaskList(taskList);
+			}
+		});
 	}
 
 	/**
@@ -55,7 +65,7 @@ public class CommandController {
 
 		Command cmd = parser.parseCommand(commandString);
 		cmd.execute();
-		viewManager.updateTaskList(taskList);
+		viewManager.showTaskList();
 
 		// Set new status bar message if feedback exists.
 		if (!cmd.getFeedback().isEmpty()) {

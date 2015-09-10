@@ -1,15 +1,17 @@
 package app.model;
 
-import java.util.ArrayList;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class TaskList {
-	ArrayList<Task> taskList;
+	ObservableList<Task> taskList;
 	
 	public TaskList() {
-		taskList = new ArrayList<Task>();
+		taskList = FXCollections.observableArrayList();
 	}
 
-	public ArrayList<Task> getTaskList() {
+	public ObservableList<Task> getTaskList() {
 		return taskList;
 	}
 	
