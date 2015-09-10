@@ -1,9 +1,10 @@
 package app.model.command;
 
+import app.constants.CommandConstants.CommandType;
+import app.constants.ViewConstants.StatusType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
-import app.view.ViewManager.StatusType;
 
 public class CommandAdd extends Command {
 	

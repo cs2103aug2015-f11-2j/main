@@ -1,12 +1,11 @@
 package app.model.command;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
-import app.model.Task.Priority;
-import app.view.ViewManager.StatusType;
+import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants.Priority;
+import app.constants.ViewConstants.StatusType;
+
 
 public abstract class Command {
 
@@ -18,14 +17,6 @@ public abstract class Command {
 	private Priority priority;
 	private String feedback;
 	private StatusType statusType;
-	
-	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a");
-	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
-	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
-	
-	public enum CommandType {
-		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, INVALID;
-	}
 
 	public Command() {
 		commandString = "";
@@ -103,10 +94,6 @@ public abstract class Command {
 
 	public void setStatusType(StatusType statusType) {
 		this.statusType = statusType;
-	}
-
-	private static List<String> getUnmodifiableList(String... args) {
-		return Collections.unmodifiableList(Arrays.asList(args));
 	}
 
 }

@@ -1,10 +1,11 @@
 package app.helper;
 
-import app.model.Task.Priority;
+import app.constants.CommandConstants;
+import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
 import app.model.command.CommandInvalid;
-import app.model.command.Command.CommandType;
 
 public class CommandParser {
 
@@ -39,11 +40,11 @@ public class CommandParser {
 
 	private CommandType determineCommandType(String commandString) {
 		String word = getFirstWord(commandString).toLowerCase();
-		if (Command.ALIASES_ADD.contains(word)) {
+		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
-		} else if (Command.ALIASES_REMOVE.contains(word)) {
+		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
 			return CommandType.REMOVE;
-		} else if (Command.ALIASES_HELP.contains(word)) {
+		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
 			return CommandType.HELP;
 		}
 		return CommandType.INVALID;

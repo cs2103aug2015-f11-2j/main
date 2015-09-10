@@ -1,7 +1,8 @@
 package app.model.command;
 
+import app.constants.CommandConstants.CommandType;
+import app.constants.ViewConstants.StatusType;
 import app.helper.CommandParser;
-import app.view.ViewManager.StatusType;
 
 public class CommandInvalid extends Command {
 

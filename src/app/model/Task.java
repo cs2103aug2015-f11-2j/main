@@ -2,6 +2,7 @@ package app.model;
 
 import java.util.Date;
 
+import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 
 public class Task {
@@ -12,10 +13,6 @@ public class Task {
 	private Priority priority;
 
 	private boolean isCompleted;
-	
-	public enum Priority {
-		HIGH, MEDIUM, LOW, NONE;
-	}
 	
 	public Task(Command cmd) {
 		name = cmd.getTaskName();
