@@ -68,6 +68,11 @@ public class CommandController {
 		viewManager.setStatus("Showing list of commands");
 	}
 
+	/**
+	 * Updates the view with the specified theme.
+	 * 
+	 * @param themeCss The new theme to set.
+	 */
 	public void setTheme(String themeCss) {
 		viewManager.setTheme(themeCss);
 	}
