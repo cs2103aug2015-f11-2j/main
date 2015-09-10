@@ -3,6 +3,8 @@ package app.view;
 import java.io.IOException;
 
 import app.Main;
+import app.constants.ViewConstants;
+import app.constants.ViewConstants.StatusType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
@@ -23,10 +25,6 @@ import javafx.stage.Stage;
  */
 public class ViewManager {
 
-	private static String STATUS_STYLE_SUCCESS = "success";
-	private static String STATUS_STYLE_ERROR = "error";
-	private static String STATUS_STYLE_INFO = "info";
-
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
 	private AnchorPane textViewLayout;
@@ -39,10 +37,6 @@ public class ViewManager {
 
 	@FXML
 	private Label statusBar;
-
-	public enum StatusType {
-		SUCCESS, ERROR, INFO;
-	}
 
 	/**
 	 * This is the main initialization method for the ViewManager. This method
@@ -167,8 +161,20 @@ public class ViewManager {
 	 */
 	public void setStatus(String text, StatusType type) {
 		statusBar.setText(text);
-		statusBar.getStyleClass().removeAll(STATUS_STYLE_SUCCESS, STATUS_STYLE_ERROR, STATUS_STYLE_INFO);
+		statusBar.getStyleClass().removeAll(ViewConstants.STATUS_STYLE_SUCCESS, ViewConstants.STATUS_STYLE_ERROR,
+				ViewConstants.STATUS_STYLE_INFO);
 		statusBar.getStyleClass().add(determineStatusStyleClass(type));
+	}
+
+	/**
+	 * Sets the current theme of the program.
+	 * 
+	 * @param themeCss The new theme to use. This parameter is either
+	 *            ViewConstants.THEME_LIGHT_CSS or ViewConstants.THEME_DARK_CSS.
+	 */
+	public void setTheme(String themeCss) {
+		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
+		rootLayout.getStylesheets().add(themeCss);
 	}
 
 	/**
@@ -181,12 +187,12 @@ public class ViewManager {
 	private String determineStatusStyleClass(StatusType type) {
 		switch (type) {
 		case SUCCESS:
-			return STATUS_STYLE_SUCCESS;
+			return ViewConstants.STATUS_STYLE_SUCCESS;
 		case ERROR:
-			return STATUS_STYLE_ERROR;
+			return ViewConstants.STATUS_STYLE_ERROR;
 		case INFO:
 		default:
-			return STATUS_STYLE_INFO;
+			return ViewConstants.STATUS_STYLE_INFO;
 		}
 	}
 

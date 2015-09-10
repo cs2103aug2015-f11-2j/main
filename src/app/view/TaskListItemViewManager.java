@@ -87,6 +87,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 			case LOW:
 				setPriorityImage("priorityLow");
 				return;
+			case NONE:	// Intentional fall-through and default case
 			default:
 				return;
 			}
