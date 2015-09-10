@@ -1,4 +1,4 @@
-package app.model;
+package app.model.command;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,32 +6,40 @@ import java.util.Date;
 import java.util.List;
 
 import app.model.Task.Priority;
+import app.view.ViewManager.StatusType;
 
-public class Command {
+public abstract class Command {
 
 	private String commandString;
-	private String commandWord;
+	private CommandType commandType;
 	private String taskName;
 	private Date startDate;
 	private Date endDate;
 	private Priority priority;
 	private String feedback;
+	private StatusType statusType;
 	
 	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a");
 	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
 	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
 	
 	public enum CommandType {
-		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP;
-	}
-	
-	private static List<String> getUnmodifiableList(String... args) {
-		return Collections.unmodifiableList(Arrays.asList(args));
+		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, INVALID;
 	}
 
-	public Command(String commandString) {
-		this.commandString = commandString;
+	public Command() {
+		commandString = "";
+		feedback = "";
+		statusType = StatusType.INFO;
+		priority = Priority.NONE;
 	}
+	
+	public Command(CommandType type) {
+		this();
+		this.commandType = type;
+	}
+	
+	public abstract	void execute();
 
 	public String getTaskName() {
 		return taskName;
@@ -49,12 +57,12 @@ public class Command {
 		this.commandString = commandString;
 	}
 
-	public String getCommandWord() {
-		return commandWord;
+	public CommandType getCommandType() {
+		return commandType;
 	}
 
-	public void setCommandWord(String commandWord) {
-		this.commandWord = commandWord;
+	public void setCommandType(CommandType commandType) {
+		this.commandType = commandType;
 	}
 
 	public Date getStartDate() {
@@ -87,6 +95,18 @@ public class Command {
 
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
+	}
+	
+	public StatusType getStatusType() {
+		return statusType;
+	}
+
+	public void setStatusType(StatusType statusType) {
+		this.statusType = statusType;
+	}
+
+	private static List<String> getUnmodifiableList(String... args) {
+		return Collections.unmodifiableList(Arrays.asList(args));
 	}
 
 }

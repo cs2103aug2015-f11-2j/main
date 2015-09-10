@@ -24,6 +24,6 @@
 	</bottom>
 	<stylesheets>
 		<URL value="@../css/base.css" />
-		<URL value="@../css/theme_light.css" />
+		<URL value="@../css/theme_dark.css" />
 	</stylesheets>
 </BorderPane>

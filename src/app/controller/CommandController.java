@@ -1,11 +1,9 @@
 package app.controller;
 
-import app.model.Command;
-import app.model.Task;
+import app.helper.CommandParser;
 import app.model.TaskList;
-import app.model.Task.Priority;
+import app.model.command.Command;
 import app.view.ViewManager;
-import app.view.ViewManager.StatusType;
 
 public class CommandController {
 	
@@ -13,9 +11,11 @@ public class CommandController {
 
 	private ViewManager viewManager;
 	private TaskList taskList;
+	private CommandParser parser;
 
 	private CommandController() {
 		taskList = new TaskList();
+		parser = new CommandParser();
 	}
 	
 	public static CommandController getInstance() {
@@ -34,30 +34,20 @@ public class CommandController {
 	public void executeCommand(String commandString) {
 		/*
 		 * TODO: parse command, build Task object, update taskList, update view
-		 * THIS IS ALL PLACEHOLDER CODE! This whole chuck should be removed once
-		 * parsing is done. now we're just setting the task name to the user
-		 * input
 		 */
 		// placeholder example of showing the help.
 		if (commandString.equalsIgnoreCase("help")) {
 			showHelp();
 			return;
 		}
-		Command cmd = new Command(commandString);
-		cmd.setTaskName(commandString);
 		
-		// placeholder logic for priority levels
-		if (commandString.contains("priority high")) {
-			cmd.setPriority(Priority.HIGH);
-		} else if (commandString.contains("priority medium")) {
-			cmd.setPriority(Priority.MEDIUM);
-		} else if (commandString.contains("priority low")) {
-			cmd.setPriority(Priority.LOW);
-		}
-
-		taskList.addTask(new Task(cmd));
+		Command cmd = parser.parseCommand(commandString);
+		cmd.execute();
 		viewManager.updateTaskList(taskList);
-		viewManager.setStatus("Added task: " + cmd.getTaskName(), StatusType.SUCCESS);
+		
+		if (!cmd.getFeedback().isEmpty()) {
+			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
+		}
 	}
 
 	private void showHelp() {
@@ -65,7 +55,15 @@ public class CommandController {
 		viewManager.setStatus("Showing list of commands");
 	}
 
+	public ViewManager getViewManager() {
+		return viewManager;
+	}
+
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
+	}
+	
+	public TaskList getTaskList() {
+		return taskList;
 	}
 }
