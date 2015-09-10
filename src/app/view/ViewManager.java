@@ -167,6 +167,17 @@ public class ViewManager {
 	}
 
 	/**
+	 * Sets the current theme of the program.
+	 * 
+	 * @param themeCss The new theme to use. This parameter is either
+	 *            ViewConstants.THEME_LIGHT_CSS or ViewConstants.THEME_DARK_CSS.
+	 */
+	public void setTheme(String themeCss) {
+		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
+		rootLayout.getStylesheets().add(themeCss);
+	}
+
+	/**
 	 * Determines the style class for the specified StatusType. This style class
 	 * will be used by the theme CSS files to properly color the text.
 	 * 

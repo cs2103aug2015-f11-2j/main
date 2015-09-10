@@ -5,8 +5,13 @@ import app.model.TaskList;
 import app.model.command.Command;
 import app.view.ViewManager;
 
+/**
+ * This class provides the layer of logic between the ViewManager and the rest
+ * of the program. Classes from this app.controller package are the only ones to
+ * interact with the ViewManager.
+ */
 public class CommandController {
-	
+
 	private static CommandController commandController;
 
 	private ViewManager viewManager;
@@ -17,7 +22,13 @@ public class CommandController {
 		taskList = new TaskList();
 		parser = new CommandParser();
 	}
-	
+
+	/**
+	 * This method implements the Singleton design pattern.
+	 * 
+	 * @return This instance of CommandController.
+	 */
+
 	public static CommandController getInstance() {
 		if (commandController == null) {
 			commandController = new CommandController();
@@ -35,16 +46,18 @@ public class CommandController {
 		/*
 		 * TODO: parse command, build Task object, update taskList, update view
 		 */
-		// placeholder example of showing the help.
+		// placeholder example of showing the help. Implement as a CommandHelp
+		// object instead.
 		if (commandString.equalsIgnoreCase("help")) {
 			showHelp();
 			return;
 		}
-		
+
 		Command cmd = parser.parseCommand(commandString);
 		cmd.execute();
 		viewManager.updateTaskList(taskList);
-		
+
+		// Set new status bar message if feedback exists.
 		if (!cmd.getFeedback().isEmpty()) {
 			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
 		}
@@ -55,14 +68,14 @@ public class CommandController {
 		viewManager.setStatus("Showing list of commands");
 	}
 
-	public ViewManager getViewManager() {
-		return viewManager;
+	public void setTheme(String themeCss) {
+		viewManager.setTheme(themeCss);
 	}
 
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
 	}
-	
+
 	public TaskList getTaskList() {
 		return taskList;
 	}

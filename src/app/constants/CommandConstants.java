@@ -8,9 +8,10 @@ public class CommandConstants {
 	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a");
 	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
 	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
+	public static final List<String> ALIASES_THEME = getUnmodifiableList("theme");
 	
 	public enum CommandType {
-		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, INVALID;
+		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID;
 	}
 	
 	private static List<String> getUnmodifiableList(String... args) {

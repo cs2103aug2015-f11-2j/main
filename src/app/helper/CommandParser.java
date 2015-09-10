@@ -6,6 +6,7 @@ import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
 import app.model.command.CommandInvalid;
+import app.model.command.CommandTheme;
 
 public class CommandParser {
 
@@ -14,7 +15,7 @@ public class CommandParser {
 		cmd.setCommandString(commandString);
 		
 		// TODO: this is placeholder code
-		cmd.setTaskName(removeFirstWord(commandString));
+		cmd.setContent(removeFirstWord(commandString));
 		if (commandString.contains("priority high")) {
 			cmd.setPriority(Priority.HIGH);
 		} else if (commandString.contains("priority medium")) {
@@ -32,6 +33,8 @@ public class CommandParser {
 		switch (commandType) {
 		case ADD:
 			return new CommandAdd(commandType);
+		case THEME:
+			return new CommandTheme(commandType);
 		case INVALID: // Intentional fall-through and default case
 		default:
 			return new CommandInvalid(commandType);
@@ -44,6 +47,8 @@ public class CommandParser {
 			return CommandType.ADD;
 		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
 			return CommandType.REMOVE;
+		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
+			return CommandType.THEME;
 		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
 			return CommandType.HELP;
 		}

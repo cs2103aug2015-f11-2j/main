@@ -25,11 +25,11 @@ public class CommandAdd extends Command {
 		
 		try {
 			CommandController.getInstance().getTaskList().addTask(task);
-			setFeedback("Added task: " + getTaskName());
+			setFeedback("Added task: " + task.getName());
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback("Error adding task: " + getTaskName());
+			setFeedback("Error adding task: " + task.getName());
 			setStatusType(StatusType.ERROR);
 		}
 	}

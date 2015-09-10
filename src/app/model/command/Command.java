@@ -11,7 +11,7 @@ public abstract class Command {
 
 	private String commandString;
 	private CommandType commandType;
-	private String taskName;
+	private String content;
 	private Date startDate;
 	private Date endDate;
 	private Priority priority;
@@ -32,12 +32,12 @@ public abstract class Command {
 	
 	public abstract	void execute();
 
-	public String getTaskName() {
-		return taskName;
+	public String getContent() {
+		return content;
 	}
 
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public String getCommandString() {

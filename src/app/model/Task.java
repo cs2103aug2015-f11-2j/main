@@ -15,7 +15,7 @@ public class Task {
 	private boolean isCompleted;
 	
 	public Task(Command cmd) {
-		name = cmd.getTaskName();
+		name = cmd.getContent();
 		startDate = cmd.getStartDate();
 		endDate = cmd.getEndDate();
 		priority = cmd.getPriority();
