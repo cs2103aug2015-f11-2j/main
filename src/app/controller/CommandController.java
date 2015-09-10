@@ -1,7 +1,7 @@
 package app.controller;
 
+import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
-import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.command.Command;
@@ -20,6 +20,7 @@ public class CommandController {
 	private ViewManager viewManager;
 	private TaskList taskList;
 	private CommandParser parser;
+	private ViewType activeView;
 
 	private CommandController() {
 		parser = new CommandParser();
@@ -60,12 +61,14 @@ public class CommandController {
 		// object instead.
 		if (commandString.equalsIgnoreCase("help")) {
 			showHelp();
+			activeView = ViewType.TEXT_VIEW;
+			showActiveView();
 			return;
 		}
 
 		Command cmd = parser.parseCommand(commandString);
 		cmd.execute();
-		viewManager.showTaskList();
+		showActiveView();
 
 		// Set new status bar message if feedback exists.
 		if (!cmd.getFeedback().isEmpty()) {
@@ -77,6 +80,14 @@ public class CommandController {
 		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
 		viewManager.setStatus("Showing list of commands");
 	}
+	
+	private void showActiveView() {
+		if (activeView == ViewType.TASK_LIST) {
+			viewManager.showTaskList();
+		} else if (activeView == ViewType.TEXT_VIEW) {
+			viewManager.showTextView();
+		}
+	}
 
 	/**
 	 * Updates the view with the specified theme.
@@ -85,6 +96,10 @@ public class CommandController {
 	 */
 	public void setTheme(String themeCss) {
 		viewManager.setTheme(themeCss);
+	}
+
+	public void setActiveView(ViewType activeView) {
+		this.activeView = activeView;
 	}
 
 	public void setViewManager(ViewManager viewManager) {

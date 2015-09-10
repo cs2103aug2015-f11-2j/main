@@ -17,4 +17,9 @@ public class ViewConstants {
 	public enum StatusType {
 		SUCCESS, ERROR, INFO;
 	}
+	
+	// Enum values for the different primary views
+	public enum ViewType {
+		TASK_LIST, TEXT_VIEW;
+	}
 }
