@@ -53,14 +53,14 @@
 
 /* Status bar */
 .statusBar.success {
-	-fx-text-fill: green;
+	-fx-text-fill: #78CA5C;
 }
 
 .statusBar.error {
-	-fx-text-fill: red;
+	-fx-text-fill: #F64641;
 }
 
 .statusBar.info {
-	-fx-text-fill: black;
+	-fx-text-fill: #FDFDFD;
 }
 /* End status bar */
