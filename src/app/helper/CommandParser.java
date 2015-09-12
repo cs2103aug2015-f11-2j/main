@@ -45,17 +45,6 @@ public class CommandParser {
 		Command cmd = createCommand(commandString);
 		cmd.setCommandString(commandString);
 		parse(cmd);
-
-		// TODO: this is placeholder code
-		/*
-		 * cmd.setContent(removeFirstWord(commandString)); if
-		 * (commandString.contains("priority high")) {
-		 * cmd.setPriority(Priority.HIGH); } else if (commandString.contains(
-		 * "priority medium")) { cmd.setPriority(Priority.MEDIUM); } else if
-		 * (commandString.contains("priority low")) {
-		 * cmd.setPriority(Priority.LOW); }
-		 */
-
 		return cmd;
 	}
 

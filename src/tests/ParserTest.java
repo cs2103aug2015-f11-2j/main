@@ -173,6 +173,23 @@ public class ParserTest {
 	}
 	
 	@Test
+	public void testEmptyContentWithOtherKeywords() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		// after parsing keywords, content will be empty ("").
+		String input = "add priority high from 3pm to 5pm";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = buildDate(0, 15, 0);
+		expectedEndDate = buildDate(0, 17, 0);
+		assertTrue(areDatesSame(cmd.getStartDate(), expectedStartDate));
+		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
+		assertEquals(Priority.HIGH, cmd.getPriority());
+		assertEquals("", cmd.getContent());
+	}
+	
+	@Test
 	public void testParsePriority() {
 		CommandParser parser = new CommandParser();
 		
