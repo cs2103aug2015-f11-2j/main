@@ -24,7 +24,7 @@ public class CommandParser {
 	private static final List<String> DATE_PATTERNS = getUnmodifiableList("dd/MM/yy", "d/MM/yy", "dd/M/yy", "d/M/yy",
 			"dd/MM/yyyy", "d/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "dd-MM-yy", "d-MM-yy", "dd-M-yy", "d-M-yy",
 			"dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy", "d-M-yyyy");
-	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "hhmm", "hhmm'hr's");
+	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "hhmm", "hhmm'hr's", "ha", "hha");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private List<String> allKeywords;
@@ -60,12 +60,9 @@ public class CommandParser {
 
 	private void parse(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
-
-		int rangeStart = -1;
-		int rangeEnd = -1;
-
-		int endStart = -1;
-		int endEnd = -1;
+		
+		int dateStart = -1;
+		int dateEnd = -1;
 
 		int priorityStart = -1;
 		int priorityEnd = -1;
@@ -81,7 +78,7 @@ public class CommandParser {
 		for (int i = 0; i < arr.length; i++) {
 			if (START_DATE_KEYWORDS.contains(arr[i])) {
 				boolean endFound = false;
-				rangeStart = i;
+				dateStart = i;
 				int j = i + 1;
 				while (j < arr.length && !START_DATE_KEYWORDS.contains(arr[j]) && !PRIORITY_KEYWORDS.contains(arr[j])) {
 					if (END_DATE_KEYWORDS.contains(arr[j])) {
@@ -90,14 +87,14 @@ public class CommandParser {
 						}
 						endFound = true;
 					}
-					rangeEnd = j;
+					dateEnd = j;
 					i = j++;
 				}
 			} else if (END_DATE_KEYWORDS.contains(arr[i])) {
-				endStart = i;
+				dateStart = i;
 				int j = i + 1;
 				while (j < arr.length && !allKeywords.contains(arr[j])) {
-					endEnd = j;
+					dateEnd = j;
 					i = j++;
 				}
 			} else if (PRIORITY_KEYWORDS.contains(arr[i])) {
@@ -108,7 +105,7 @@ public class CommandParser {
 				}
 			}
 		}
-
+		
 		/*
 		 * Merge disjointed content tokens. For example:
 		 * 
@@ -120,51 +117,82 @@ public class CommandParser {
 		 * 
 		 */
 		for (int i = 1; i < arr.length; i++) {
-			if (!betweenInclusive(i, priorityStart, priorityEnd) && !betweenInclusive(i, rangeStart, rangeEnd)
-					&& !betweenInclusive(i, endStart, endEnd)) {
+			if (!betweenInclusive(i, priorityStart, priorityEnd) && !betweenInclusive(i, dateStart, dateEnd)) {
 				contentEnd = i;
 			}
 		}
-
 		// Remove any tokens we merged over.
 		if (priorityEnd < contentEnd) {
 			priorityStart = priorityEnd = -1;
 		}
-		if (rangeEnd < contentEnd) {
-			rangeStart = rangeEnd = -1;
+		if (dateEnd < contentEnd) {
+			dateStart = dateEnd = -1;
 		}
-		if (endEnd < contentEnd) {
-			endStart = endEnd = -1;
-		}
-		if (rangeEnd != -1 && rangeEnd < endStart) {
-			rangeStart = rangeEnd = -1;
-			contentEnd = rangeEnd;
-		} else if (endEnd != -1 && endEnd < rangeStart) {
-			endStart = endEnd = -1;
-			contentEnd = endEnd;
-		}
+
+		String dateString = getStringFromArrayIndexRange(dateStart, dateEnd, arr);
+		String startDate = getStartDate(dateString);
+		String endDate = getEndDate(dateString);
+		Date parsedStart = determineDate(startDate);
+		Date parsedEnd = determineDate(endDate, parsedStart);
 		
-		
-		String rangeDate = "";
-		String endDate = "";
-		for (int i=rangeStart;i<=rangeEnd && i >= 0;i++) {
-			rangeDate += arr[i] + " ";
-		}
-		for (int i=endStart;i<=endEnd && i >= 0;i++) {
-			endDate += arr[i] + " ";
-		}
+		/*
 		System.out.println(cmd.getCommandString());
-		System.out.println(rangeStart + " " + rangeEnd);
-		System.out.println(endStart + " " + endEnd);
-		//System.out.println("start: " + start);
-		//System.out.println("end: " + getEndDate(endDate));
-		System.out.println("---");
-		setDates(endDate.trim(), cmd);
-		System.out.println("===================================");
+		System.out.println(dateStart + " " + dateEnd);
+		System.out.println(priorityStart + " " + priorityEnd);
+		System.out.println("start: " + startDate);
+		System.out.println("end: " + endDate);
+		
+		if (parsedStart != null) {
+			System.out.println("parsed start: " + parsedStart.toString());
+		}
+		if (parsedEnd != null) {
+			System.out.println("parsed end: " + parsedEnd.toString());
+		}
+		System.out.println("=================================");
+		*/
+		
+		cmd.setStartDate(parsedStart);
+		cmd.setEndDate(parsedEnd);
 	}
 	
-	private String getEndDate(String endDateString) {
-		return removeFirstWord(endDateString);
+	private String getStringFromArrayIndexRange(int start, int end, String[] array) {
+		String result = "";
+		for (int i=start; i<array.length && i<=end; i++) {
+			result += array[i] + " ";
+		}
+		return result;
+	}
+	
+	private String getStartDate(String dateString) {
+		String[] arr = dateString.split(" ");
+		String startDate = "";
+		for (int i=0;i<arr.length;i++) {
+			if (START_DATE_KEYWORDS.contains(arr[i])) {
+				int j = i+1;
+				while (j < arr.length && !END_DATE_KEYWORDS.contains(arr[j])) {
+					startDate += arr[j] + " ";
+					j++;
+				}
+				break;
+			}
+		}
+		return startDate.trim();
+	}
+	
+	private String getEndDate(String dateString) {
+		String[] arr = dateString.split(" ");
+		String endDate = "";
+		for (int i=0;i<arr.length;i++) {
+			if (END_DATE_KEYWORDS.contains(arr[i])) {
+				int j = i+1;
+				while (j < arr.length) {
+					endDate += arr[j] + " ";
+					j++;
+				}
+				break;
+			}
+		}
+		return endDate.trim();
 	}
 
 	private boolean betweenInclusive(int subject, int lower, int upper) {
@@ -172,33 +200,63 @@ public class CommandParser {
 		return result;
 	}
 	
-	private boolean setDates(String dateString, Command cmd) {
-		String keyword = getFirstWord(dateString);
-		String endDateString = "";
-		if (END_DATE_KEYWORDS.contains(keyword)) {
-			endDateString = removeFirstWord(dateString);
-		}
-		System.out.println(dateString);
-		
+	private Date determineDate(String dateString) {
+		return determineDate(dateString, null);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private Date determineDate(String dateString, Date reference) {
+		Date date = null;
+		// check date patterns only
 		for (String datePattern : DATE_PATTERNS) {
+			date = getDateFromPattern(dateString, datePattern);
+			if (date != null) {
+				return date;
+			}
+			
+			//check date + time patterns
 			for (String timePattern : TIME_PATTERNS) {
-				SimpleDateFormat sdf = new SimpleDateFormat(datePattern + " " + timePattern);
-				try {
-					Date date = sdf.parse(endDateString);
-					String dateTimeFormat = sdf.format(date);
-					if (dateTimeFormat.equalsIgnoreCase(endDateString)) {
-						cmd.setEndDate(date);
-					}
-				} catch (ParseException e) {
-					// nothing
+				date = getDateFromPattern(dateString, datePattern + " " + timePattern);
+				if (date != null) {
+					return date;
 				}
 			}
 		}
-		System.out.println("start: " + cmd.getStartDate());
-		System.out.println("end: " + cmd.getEndDate());
-		return true;
+		
+		// check time patterns only
+		for (String timePattern : TIME_PATTERNS) {
+			date = getDateFromPattern(dateString, timePattern);
+			if (date != null) {
+				if (reference != null) {
+					Date newDate = (Date) reference.clone();
+					newDate.setHours(date.getHours());
+					newDate.setMinutes(date.getMinutes());
+					return newDate;
+				} else {
+					Date todayDate = new Date();
+					todayDate.setHours(date.getHours());
+					todayDate.setMinutes(date.getMinutes());
+					return todayDate;
+				}
+			}
+		}
+		return null;
 	}
-
+	
+	private Date getDateFromPattern(String dateString, String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		try {
+			Date date = sdf.parse(dateString);
+			String dateTimeFormat = sdf.format(date);
+			if (dateTimeFormat.equalsIgnoreCase(dateString)) {
+				return date;
+			}
+		} catch (ParseException e) {
+			// nothing
+		}
+		return null;
+	}
+	
 	/**
 	 * Creates the relevant Command subclass based on the specified command
 	 * string. The created subclass only has its commandType variable set.
