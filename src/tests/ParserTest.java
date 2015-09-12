@@ -108,7 +108,7 @@ public class ParserTest {
 	}
 	
 	@Test
-	public void testParseStartKeywordInContent() {
+	public void testParseOnlyStartKeywordInContent() {
 		CommandParser parser = new CommandParser();
 
 		// Has a `from` keyword but no corresponding `to` keyword
@@ -117,6 +117,59 @@ public class ParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from store", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseContentEndingWithStartKeyword() {
+		CommandParser parser = new CommandParser();
+
+		// Content ending with `from` keyword
+		String input = "add buy milk from";
+		Command cmd = parser.parseCommand(input);
+		assertNull(cmd.getStartDate());
+		assertNull(cmd.getEndDate());
+		assertEquals("buy milk from", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseImpossibleDate() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+
+		// 15/15/15 is impossible, hence up to this word is considered content
+		String input = "add buy milk from store from 15/15/15 to 5pm";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 17, 0);
+		assertNull(cmd.getStartDate());
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+		assertEquals("buy milk from store from 15/15/15", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseInvalidDateRange() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+
+		// from store to 5pm is invalid because 'store' is not a date,
+		// hence up to 'store' is considered content.
+		String input = "add buy milk from store to 5pm";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 17, 0);
+		assertNull(cmd.getStartDate());
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+		assertEquals("buy milk from store", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseValidStartDateWithNoEndKeyword() {
+		CommandParser parser = new CommandParser();
+
+		// Has a `from <date>` sequence without end date.
+		String input = "add buy milk from 25/12/15";
+		Command cmd = parser.parseCommand(input);
+		assertNull(cmd.getStartDate());
+		assertNull(cmd.getEndDate());
+		assertEquals("buy milk from 25/12/15", cmd.getContent());
 	}
 	
 	@Test

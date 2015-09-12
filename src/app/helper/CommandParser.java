@@ -80,6 +80,12 @@ public class CommandParser {
 		 * 
 		 * For "from <date> to <date>" ranges, START_DATE and END_DATE tokens
 		 * will always be touching.
+		 * 
+		 * Example result:
+		 * 
+		 * Input: ---------- add buy milk from store from 3pm to 5pm
+		 * 
+		 * Tokenized output: [add] [buy milk from store] [from 3pm] [to 5pm]
 		 */
 		for (int i = 0; i < arr.length; i++) {
 			if (START_DATE_KEYWORDS.contains(arr[i])) {
@@ -97,10 +103,6 @@ public class CommandParser {
 					}
 					endDateEnd = j;
 					i = j++;
-				}
-				// Not a valid range of dates if no end_keyword found.
-				if (!endFound) {
-					// dateStart = dateEnd = -1;
 				}
 			} else if (END_DATE_KEYWORDS.contains(arr[i])) {
 				startDateStart = startDateEnd = -1; // reset
@@ -167,12 +169,6 @@ public class CommandParser {
 		String priorityString = getStringFromArrayIndexRange(priorityStart, priorityEnd, arr);
 		Priority priority = getPriority(priorityString);
 
-		/*
-		 * System.out.println(cmd.getCommandString());
-		 * System.out.println(startDateStart + " " +startDateEnd);
-		 * System.out.println(endDateStart + " " + endDateEnd);
-		 */
-
 		cmd.setContent(content);
 		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
@@ -200,22 +196,8 @@ public class CommandParser {
 		return null;
 	}
 
-	/*
-	 * private String getStartDateString(String dateString) { String[] arr =
-	 * dateString.split(" "); String startDate = ""; for (int i = 0; i <
-	 * arr.length; i++) { if (START_DATE_KEYWORDS.contains(arr[i])) { int j = i
-	 * + 1; while (j < arr.length && !END_DATE_KEYWORDS.contains(arr[j])) {
-	 * startDate += arr[j] + " "; j++; } break; } } return startDate.trim(); }
-	 * 
-	 * private String getEndDateString(String dateString) { String[] arr =
-	 * dateString.split(" "); String endDate = ""; for (int i = 0; i <
-	 * arr.length; i++) { if (END_DATE_KEYWORDS.contains(arr[i])) { int j = i +
-	 * 1; while (j < arr.length) { endDate += arr[j] + " "; j++; } break; } }
-	 * return endDate.trim(); }
-	 */
-
 	private boolean betweenInclusive(int subject, int lower, int upper) {
-		boolean result = subject >= lower && subject <= upper;
+		boolean result = (subject >= lower && subject <= upper);
 		return result;
 	}
 
