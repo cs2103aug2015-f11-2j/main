@@ -24,7 +24,8 @@ public class CommandParser {
 	private static final List<String> DATE_PATTERNS = getUnmodifiableList("dd/MM/yy", "d/MM/yy", "dd/M/yy", "d/M/yy",
 			"dd/MM/yyyy", "d/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "dd-MM-yy", "d-MM-yy", "dd-M-yy", "d-M-yy",
 			"dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy", "d-M-yyyy");
-	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "hhmm", "hhmm'hr's", "ha", "hha");
+	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "hhmm", "hhmm'hr's", "ha",
+			"hha");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private List<String> allKeywords;
@@ -46,21 +47,21 @@ public class CommandParser {
 		parse(cmd);
 
 		// TODO: this is placeholder code
-		cmd.setContent(removeFirstWord(commandString));
-		if (commandString.contains("priority high")) {
-			cmd.setPriority(Priority.HIGH);
-		} else if (commandString.contains("priority medium")) {
-			cmd.setPriority(Priority.MEDIUM);
-		} else if (commandString.contains("priority low")) {
-			cmd.setPriority(Priority.LOW);
-		}
+		/*
+		 * cmd.setContent(removeFirstWord(commandString)); if
+		 * (commandString.contains("priority high")) {
+		 * cmd.setPriority(Priority.HIGH); } else if (commandString.contains(
+		 * "priority medium")) { cmd.setPriority(Priority.MEDIUM); } else if
+		 * (commandString.contains("priority low")) {
+		 * cmd.setPriority(Priority.LOW); }
+		 */
 
 		return cmd;
 	}
 
 	private void parse(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
-		
+
 		int dateStart = -1;
 		int dateEnd = -1;
 
@@ -69,7 +70,7 @@ public class CommandParser {
 
 		int contentStart = 1; // 2nd word
 		int contentEnd = -1;
-		
+
 		/*
 		 * Tokenize the input string into the following tokens:
 		 * 
@@ -105,7 +106,7 @@ public class CommandParser {
 				}
 			}
 		}
-		
+
 		/*
 		 * Merge disjointed content tokens. For example:
 		 * 
@@ -130,45 +131,61 @@ public class CommandParser {
 		}
 
 		String dateString = getStringFromArrayIndexRange(dateStart, dateEnd, arr);
-		String startDate = getStartDate(dateString);
-		String endDate = getEndDate(dateString);
+		String content = getStringFromArrayIndexRange(contentStart, contentEnd, arr);
+		String priorityString = getStringFromArrayIndexRange(priorityStart, priorityEnd, arr);
+
+		String startDate = getStartDateString(dateString);
+		String endDate = getEndDateString(dateString);
 		Date parsedStart = determineDate(startDate);
 		Date parsedEnd = determineDate(endDate, parsedStart);
-		
+		Priority priority = getPriority(priorityString);
+
 		/*
-		System.out.println(cmd.getCommandString());
-		System.out.println(dateStart + " " + dateEnd);
-		System.out.println(priorityStart + " " + priorityEnd);
-		System.out.println("start: " + startDate);
-		System.out.println("end: " + endDate);
-		
-		if (parsedStart != null) {
-			System.out.println("parsed start: " + parsedStart.toString());
-		}
-		if (parsedEnd != null) {
-			System.out.println("parsed end: " + parsedEnd.toString());
-		}
-		System.out.println("=================================");
-		*/
-		
+		 * System.out.println(cmd.getCommandString());
+		 * System.out.println(dateStart + " " + dateEnd);
+		 * System.out.println(priorityStart + " " + priorityEnd);
+		 * System.out.println("start: " + startDate); System.out.println("end: "
+		 * + endDate);
+		 * 
+		 * if (parsedStart != null) { System.out.println("parsed start: " +
+		 * parsedStart.toString()); } if (parsedEnd != null) {
+		 * System.out.println("parsed end: " + parsedEnd.toString()); }
+		 * System.out.println("=================================");
+		 */
+
+		cmd.setContent(content);
+		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
 	}
-	
+
 	private String getStringFromArrayIndexRange(int start, int end, String[] array) {
 		String result = "";
-		for (int i=start; i<array.length && i<=end; i++) {
+		for (int i = start; i < array.length && i >= 0 && i <= end; i++) {
 			result += array[i] + " ";
 		}
-		return result;
+		return result.trim();
 	}
-	
-	private String getStartDate(String dateString) {
+
+	private Priority getPriority(String priorityString) {
+		assert priorityString.length() == 2;
+		String priorityLevel = removeFirstWord(priorityString);
+		if (priorityLevel.contains("high")) {
+			return Priority.HIGH;
+		} else if (priorityLevel.contains("medium")) {
+			return Priority.MEDIUM;
+		} else if (priorityLevel.contains("low")) {
+			return Priority.LOW;
+		}
+		return null;
+	}
+
+	private String getStartDateString(String dateString) {
 		String[] arr = dateString.split(" ");
 		String startDate = "";
-		for (int i=0;i<arr.length;i++) {
+		for (int i = 0; i < arr.length; i++) {
 			if (START_DATE_KEYWORDS.contains(arr[i])) {
-				int j = i+1;
+				int j = i + 1;
 				while (j < arr.length && !END_DATE_KEYWORDS.contains(arr[j])) {
 					startDate += arr[j] + " ";
 					j++;
@@ -178,13 +195,13 @@ public class CommandParser {
 		}
 		return startDate.trim();
 	}
-	
-	private String getEndDate(String dateString) {
+
+	private String getEndDateString(String dateString) {
 		String[] arr = dateString.split(" ");
 		String endDate = "";
-		for (int i=0;i<arr.length;i++) {
+		for (int i = 0; i < arr.length; i++) {
 			if (END_DATE_KEYWORDS.contains(arr[i])) {
-				int j = i+1;
+				int j = i + 1;
 				while (j < arr.length) {
 					endDate += arr[j] + " ";
 					j++;
@@ -199,11 +216,11 @@ public class CommandParser {
 		boolean result = subject >= lower && subject <= upper;
 		return result;
 	}
-	
+
 	private Date determineDate(String dateString) {
 		return determineDate(dateString, null);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private Date determineDate(String dateString, Date reference) {
 		Date date = null;
@@ -213,8 +230,8 @@ public class CommandParser {
 			if (date != null) {
 				return date;
 			}
-			
-			//check date + time patterns
+
+			// check date + time patterns
 			for (String timePattern : TIME_PATTERNS) {
 				date = getDateFromPattern(dateString, datePattern + " " + timePattern);
 				if (date != null) {
@@ -222,7 +239,7 @@ public class CommandParser {
 				}
 			}
 		}
-		
+
 		// check time patterns only
 		for (String timePattern : TIME_PATTERNS) {
 			date = getDateFromPattern(dateString, timePattern);
@@ -242,7 +259,7 @@ public class CommandParser {
 		}
 		return null;
 	}
-	
+
 	private Date getDateFromPattern(String dateString, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		try {
@@ -256,7 +273,7 @@ public class CommandParser {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Creates the relevant Command subclass based on the specified command
 	 * string. The created subclass only has its commandType variable set.
