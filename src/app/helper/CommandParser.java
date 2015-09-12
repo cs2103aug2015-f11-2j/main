@@ -62,8 +62,10 @@ public class CommandParser {
 	private void parse(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
 
-		int dateStart = -1;
-		int dateEnd = -1;
+		int startDateStart = -1;
+		int startDateEnd = -1;
+		int endDateStart = -1;
+		int endDateEnd = -1;
 
 		int priorityStart = -1;
 		int priorityEnd = -1;
@@ -74,28 +76,38 @@ public class CommandParser {
 		/*
 		 * Tokenize the input string into the following tokens:
 		 * 
-		 * PRIORITY, RANGE (from <date> to <date>), DEADLINE (due <date>).
+		 * PRIORITY, START_DATE ("from <date>"), END_DATE ("due <date")
+		 * 
+		 * For "from <date> to <date>" ranges, START_DATE and END_DATE tokens
+		 * will always be touching.
 		 */
 		for (int i = 0; i < arr.length; i++) {
 			if (START_DATE_KEYWORDS.contains(arr[i])) {
 				boolean endFound = false;
-				dateStart = i;
+				startDateStart = i;
 				int j = i + 1;
 				while (j < arr.length && !START_DATE_KEYWORDS.contains(arr[j]) && !PRIORITY_KEYWORDS.contains(arr[j])) {
 					if (END_DATE_KEYWORDS.contains(arr[j])) {
 						if (endFound) {
 							break; // break if we hit a 2nd occurrence
 						}
+						startDateEnd = j - 1;
+						endDateStart = j;
 						endFound = true;
 					}
-					dateEnd = j;
+					endDateEnd = j;
 					i = j++;
 				}
+				// Not a valid range of dates if no end_keyword found.
+				if (!endFound) {
+					// dateStart = dateEnd = -1;
+				}
 			} else if (END_DATE_KEYWORDS.contains(arr[i])) {
-				dateStart = i;
+				startDateStart = startDateEnd = -1; // reset
+				endDateStart = i;
 				int j = i + 1;
 				while (j < arr.length && !allKeywords.contains(arr[j])) {
-					dateEnd = j;
+					endDateEnd = j;
 					i = j++;
 				}
 			} else if (PRIORITY_KEYWORDS.contains(arr[i])) {
@@ -105,6 +117,23 @@ public class CommandParser {
 					i++;
 				}
 			}
+		}
+
+		String startDateString = getStringFromArrayIndexRange(startDateStart + 1, startDateEnd, arr);
+		String endDateString = getStringFromArrayIndexRange(endDateStart + 1, endDateEnd, arr);
+
+		Date parsedStart = determineDate(startDateString);
+		Date parsedEnd = determineDate(endDateString, parsedStart);
+
+		/*
+		 * if start/end date is detected but cannot be parsed, we treat it as
+		 * part of the content instead.
+		 */
+		if (!startDateString.isEmpty() && parsedStart == null) {
+			startDateStart = startDateEnd = -1;
+		}
+		if (!endDateString.isEmpty() && parsedEnd == null) {
+			endDateStart = endDateEnd = -1;
 		}
 
 		/*
@@ -118,7 +147,8 @@ public class CommandParser {
 		 * 
 		 */
 		for (int i = 1; i < arr.length; i++) {
-			if (!betweenInclusive(i, priorityStart, priorityEnd) && !betweenInclusive(i, dateStart, dateEnd)) {
+			if (!betweenInclusive(i, priorityStart, priorityEnd) && !betweenInclusive(i, startDateStart, startDateEnd)
+					&& !betweenInclusive(i, endDateStart, endDateEnd)) {
 				contentEnd = i;
 			}
 		}
@@ -126,31 +156,21 @@ public class CommandParser {
 		if (priorityEnd < contentEnd) {
 			priorityStart = priorityEnd = -1;
 		}
-		if (dateEnd < contentEnd) {
-			dateStart = dateEnd = -1;
+		if (startDateEnd < contentEnd) {
+			startDateStart = startDateEnd = -1;
+		}
+		if (endDateEnd < contentEnd) {
+			endDateStart = endDateEnd = -1;
 		}
 
-		String dateString = getStringFromArrayIndexRange(dateStart, dateEnd, arr);
 		String content = getStringFromArrayIndexRange(contentStart, contentEnd, arr);
 		String priorityString = getStringFromArrayIndexRange(priorityStart, priorityEnd, arr);
-
-		String startDate = getStartDateString(dateString);
-		String endDate = getEndDateString(dateString);
-		Date parsedStart = determineDate(startDate);
-		Date parsedEnd = determineDate(endDate, parsedStart);
 		Priority priority = getPriority(priorityString);
 
 		/*
 		 * System.out.println(cmd.getCommandString());
-		 * System.out.println(dateStart + " " + dateEnd);
-		 * System.out.println(priorityStart + " " + priorityEnd);
-		 * System.out.println("start: " + startDate); System.out.println("end: "
-		 * + endDate);
-		 * 
-		 * if (parsedStart != null) { System.out.println("parsed start: " +
-		 * parsedStart.toString()); } if (parsedEnd != null) {
-		 * System.out.println("parsed end: " + parsedEnd.toString()); }
-		 * System.out.println("=================================");
+		 * System.out.println(startDateStart + " " +startDateEnd);
+		 * System.out.println(endDateStart + " " + endDateEnd);
 		 */
 
 		cmd.setContent(content);
@@ -180,37 +200,19 @@ public class CommandParser {
 		return null;
 	}
 
-	private String getStartDateString(String dateString) {
-		String[] arr = dateString.split(" ");
-		String startDate = "";
-		for (int i = 0; i < arr.length; i++) {
-			if (START_DATE_KEYWORDS.contains(arr[i])) {
-				int j = i + 1;
-				while (j < arr.length && !END_DATE_KEYWORDS.contains(arr[j])) {
-					startDate += arr[j] + " ";
-					j++;
-				}
-				break;
-			}
-		}
-		return startDate.trim();
-	}
-
-	private String getEndDateString(String dateString) {
-		String[] arr = dateString.split(" ");
-		String endDate = "";
-		for (int i = 0; i < arr.length; i++) {
-			if (END_DATE_KEYWORDS.contains(arr[i])) {
-				int j = i + 1;
-				while (j < arr.length) {
-					endDate += arr[j] + " ";
-					j++;
-				}
-				break;
-			}
-		}
-		return endDate.trim();
-	}
+	/*
+	 * private String getStartDateString(String dateString) { String[] arr =
+	 * dateString.split(" "); String startDate = ""; for (int i = 0; i <
+	 * arr.length; i++) { if (START_DATE_KEYWORDS.contains(arr[i])) { int j = i
+	 * + 1; while (j < arr.length && !END_DATE_KEYWORDS.contains(arr[j])) {
+	 * startDate += arr[j] + " "; j++; } break; } } return startDate.trim(); }
+	 * 
+	 * private String getEndDateString(String dateString) { String[] arr =
+	 * dateString.split(" "); String endDate = ""; for (int i = 0; i <
+	 * arr.length; i++) { if (END_DATE_KEYWORDS.contains(arr[i])) { int j = i +
+	 * 1; while (j < arr.length) { endDate += arr[j] + " "; j++; } break; } }
+	 * return endDate.trim(); }
+	 */
 
 	private boolean betweenInclusive(int subject, int lower, int upper) {
 		boolean result = subject >= lower && subject <= upper;

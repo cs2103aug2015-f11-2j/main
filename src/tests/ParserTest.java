@@ -104,7 +104,19 @@ public class ParserTest {
 		expectedEndDate = buildDate(2015, 12, 25, 21, 0);
 		assertNull(cmd.getStartDate());
 		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
-		//assertEquals("buy milk from store", cmd.getContent());
+		assertEquals("buy milk from store", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseStartKeywordInContent() {
+		CommandParser parser = new CommandParser();
+
+		// Has a `from` keyword but no corresponding `to` keyword
+		String input = "add buy milk from store";
+		Command cmd = parser.parseCommand(input);
+		assertNull(cmd.getStartDate());
+		assertNull(cmd.getEndDate());
+		assertEquals("buy milk from store", cmd.getContent());
 	}
 	
 	@Test
