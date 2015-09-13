@@ -285,6 +285,20 @@ public class ParserTest {
 		expectedEndDate = buildDateDaysFromNow(6, 15, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
+	
+	@Test
+	public void testParseRangeOfDaysWithTime() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+		
+		String input = "add buy milk from monday 5:30pm to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = buildDateDaysFromNow(1, 17, 30);
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
 
 	@Test
 	public void testParseSupportedTimeFormats() {
