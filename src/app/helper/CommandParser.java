@@ -30,10 +30,6 @@ public class CommandParser {
 
 	private List<String> allKeywords;
 
-	private static List<String> getUnmodifiableList(String... args) {
-		return Collections.unmodifiableList(Arrays.asList(args));
-	}
-
 	public CommandParser() {
 		allKeywords = new ArrayList<String>();
 		allKeywords.addAll(START_DATE_KEYWORDS);
@@ -41,14 +37,41 @@ public class CommandParser {
 		allKeywords.addAll(PRIORITY_KEYWORDS);
 	}
 
+	/**
+	 * This method takes an input command string and parses it appropriately
+	 * based on its determined CommandType.
+	 * 
+	 * @param commandString The command string to parse
+	 * @return The constructed Command object with parameters set
+	 */
 	public Command parseCommand(String commandString) {
 		Command cmd = createCommand(commandString);
 		cmd.setCommandString(commandString);
-		parse(cmd);
+		cmd.setContent(removeFirstWord(cmd.getCommandString()));
+
+		switch (cmd.getCommandType()) {
+		case ADD:
+			parseCommandParams(cmd);
+			break;
+		default:
+			break;
+		}
+
 		return cmd;
 	}
 
-	private void parse(Command cmd) {
+	/**
+	 * Parses and sets parameters for the Command object specified. The
+	 * commandString of the specified Command object should already be set
+	 * before calling this method.
+	 * 
+	 * The following parameters are set:
+	 * 
+	 * - Content, and if exists, startDate, endDate, priority.
+	 * 
+	 * @param cmd The Command object to set parameters for
+	 */
+	private void parseCommandParams(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
 
 		int startDateStart = -1;
@@ -110,9 +133,9 @@ public class CommandParser {
 			}
 		}
 
+		// Try to parse the dates detected.
 		String startDateString = getStringFromArrayIndexRange(startDateStart + 1, startDateEnd, arr);
 		String endDateString = getStringFromArrayIndexRange(endDateStart + 1, endDateEnd, arr);
-
 		Date parsedStart = determineDate(startDateString);
 		Date parsedEnd = determineDate(endDateString, parsedStart);
 
@@ -154,16 +177,28 @@ public class CommandParser {
 			endDateStart = endDateEnd = -1;
 		}
 
+		// Builds the content from the token indexes
+		// Parses the priority level if exists
 		String content = getStringFromArrayIndexRange(contentStart, contentEnd, arr);
 		String priorityString = getStringFromArrayIndexRange(priorityStart, priorityEnd, arr);
 		Priority priority = getPriority(priorityString);
 
+		// Sets the parsed parameters
 		cmd.setContent(content);
 		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
 	}
 
+	/**
+	 * Builds a string from a string array using specified start/end indexes.
+	 * The start and end indexes are both inclusive.
+	 * 
+	 * @param start The start index
+	 * @param end The end index
+	 * @param array The array of strings
+	 * @return The constructed string
+	 */
 	private String getStringFromArrayIndexRange(int start, int end, String[] array) {
 		String result = "";
 		for (int i = start; i < array.length && i >= 0 && i <= end; i++) {
@@ -172,6 +207,12 @@ public class CommandParser {
 		return result.trim();
 	}
 
+	/**
+	 * Returns the Priority object representing the priority level
+	 * 
+	 * @param priorityString The priority level as a string
+	 * @return The corresponding priority level
+	 */
 	private Priority getPriority(String priorityString) {
 		assert priorityString.length() == 2;
 		String priorityLevel = removeFirstWord(priorityString);
@@ -185,15 +226,39 @@ public class CommandParser {
 		return null;
 	}
 
+	/**
+	 * Compares the subject with a given range and returns true if subject is
+	 * between or equal to lower and upper indexes.
+	 * 
+	 * @param subject The subject of the comparison
+	 * @param lower The lower index
+	 * @param upper The upper index
+	 * @return True if subject is between or equal to lower and upper
+	 */
 	private boolean betweenInclusive(int subject, int lower, int upper) {
 		boolean result = (subject >= lower && subject <= upper);
 		return result;
 	}
 
+	/**
+	 * Tries to return a Date object from a given string representation. No
+	 * reference date is specified.
+	 * 
+	 * @param dateString The string representation of the date
+	 * @return Date if date can be parsed, else null
+	 */
 	private Date determineDate(String dateString) {
 		return determineDate(dateString, null);
 	}
 
+	/**
+	 * Tries to return a Date object from a given string representation. A
+	 * reference date is specified. For instance, "3pm" would result in a date
+	 * equal to the reference date but with a time of "3pm".
+	 * 
+	 * @param dateString The string representation of the date
+	 * @return Date if date can be parsed, else null
+	 */
 	@SuppressWarnings("deprecation")
 	private Date determineDate(String dateString, Date reference) {
 		Date date = null;
@@ -233,6 +298,13 @@ public class CommandParser {
 		return null;
 	}
 
+	/**
+	 * Tries to parse a string representation of a date using the given pattern.
+	 * 
+	 * @param dateString The string representation of the date
+	 * @param pattern The pattern to try parsing with
+	 * @return Date if date can be parsed, else null
+	 */
 	private Date getDateFromPattern(String dateString, String pattern) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		try {
@@ -307,5 +379,15 @@ public class CommandParser {
 	 */
 	private static String removeFirstWord(String commandString) {
 		return commandString.replace(getFirstWord(commandString), "").trim();
+	}
+
+	/**
+	 * Builds a read-only list from the given arguments.
+	 * 
+	 * @param args Elements used to create the list
+	 * @return A read-only list with the specified elements
+	 */
+	private static List<String> getUnmodifiableList(String... args) {
+		return Collections.unmodifiableList(Arrays.asList(args));
 	}
 }
