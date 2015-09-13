@@ -65,12 +65,31 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 * Sets the item labels using the supplied Task.
 	 */
 	private void setLabels() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
-		// TODO: placeholder ID
-		taskId.setText("#10");
+		setIndex();
+		setContent();
+		setDates();
+	}
+
+	/**
+	 * Sets the 1-index of this task cell.
+	 */
+	private void setIndex() {
+		taskId.setText(String.valueOf(getIndex() + 1));
+	}
+
+	/**
+	 * Sets the main content of this task cell as well as its tooltip.
+	 */
+	private void setContent() {
 		taskName.setText(task.getName());
 		taskNameTooltip.setText(task.getName());
-		
+	}
+
+	/**
+	 * Sets the dates of this task cell.
+	 */
+	public void setDates() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
 		if (task.getStartDate() != null && task.getEndDate() != null) {
 			taskTopDate.setText("From " + dateFormat.format(task.getStartDate()));
 			taskBottomDate.setText("To " + dateFormat.format(task.getEndDate()));
@@ -94,7 +113,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 			case LOW:
 				setPriorityImage("priorityLow");
 				return;
-			case NONE:	// Intentional fall-through and default case
+			case NONE: // Intentional fall-through and default case
 			default:
 				return;
 			}
@@ -105,7 +124,8 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 * Displays the priority image by setting the style class and making the
 	 * image visible.
 	 * 
-	 * @param styleClass A style class of the form: .priority[High | Medium | Low]
+	 * @param styleClass A style class of the form: .priority[High | Medium |
+	 *            Low]
 	 */
 	private void setPriorityImage(String styleClass) {
 		taskListItemViewLayout.getStyleClass().add(styleClass);

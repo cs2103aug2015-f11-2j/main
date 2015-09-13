@@ -1,12 +1,13 @@
 package app.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 
 public class Task {
-	private String id;
+	private UUID id;
 	private String name;
 	private Date startDate;
 	private Date endDate;
@@ -15,6 +16,7 @@ public class Task {
 	private boolean isCompleted;
 	
 	public Task(Command cmd) {
+		id = UUID.randomUUID();
 		name = cmd.getContent();
 		startDate = cmd.getStartDate();
 		endDate = cmd.getEndDate();
@@ -22,14 +24,10 @@ public class Task {
 		isCompleted = false;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
