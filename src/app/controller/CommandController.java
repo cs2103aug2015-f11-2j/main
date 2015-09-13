@@ -65,7 +65,8 @@ public class CommandController {
 			showActiveView();
 			return;
 		}
-
+		
+		commandString = commandString.trim();
 		Command cmd = parser.parseCommand(commandString);
 		cmd.execute();
 		showActiveView();
