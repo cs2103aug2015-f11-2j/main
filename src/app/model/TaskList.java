@@ -17,8 +17,8 @@ public class TaskList {
 		return taskList;
 	}
 	
-	public void addAll(TaskList tasks) {
-		taskList.addAll(tasks.getTaskList());
+	public void setAll(TaskList tasks) {
+		taskList.setAll(tasks.getTaskList());
 	}
 	
 	

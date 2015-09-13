@@ -40,6 +40,10 @@ public class TaskListViewManager {
 			}
 		});
 	}
+	
+	public void scrollTo(Task task) {
+		taskListViewLayout.scrollTo(task);
+	}
 
 	/**
 	 * Updates the list of tasks shown to the user

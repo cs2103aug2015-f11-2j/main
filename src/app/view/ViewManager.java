@@ -123,6 +123,10 @@ public class ViewManager {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
 	}
+	
+	public void scrollTaskListTo(Task task) {
+		taskListViewManager.scrollTo(task);
+	}
 
 	/**
 	 * Updates and shows the task list to the user.
@@ -133,6 +137,9 @@ public class ViewManager {
 		taskListViewManager.updateView(tasks);
 	}
 
+	/**
+	 * Shows the task list to the user.
+	 */
 	public void showTaskList() {
 		rootLayout.setCenter(taskListViewLayout);
 	}
@@ -146,6 +153,9 @@ public class ViewManager {
 		textViewManager.setText(text);
 	}
 
+	/**
+	 * Shows the text area to the user.
+	 */
 	public void showTextView() {
 		rootLayout.setCenter(textViewLayout);
 	}

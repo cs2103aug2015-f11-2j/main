@@ -27,7 +27,7 @@ public class CommandController {
 		parser = new CommandParser();
 		masterTaskList = new TaskList();
 		displayedTaskList = new TaskList();
-		
+
 		// Updates the view whenever taskList is changed.
 		displayedTaskList.getTaskList().addListener(new ListChangeListener<Task>() {
 			public void onChanged(ListChangeListener.Change<? extends Task> c) {
@@ -67,7 +67,7 @@ public class CommandController {
 			showActiveView();
 			return;
 		}
-		
+
 		commandString = commandString.trim();
 		Command cmd = parser.parseCommand(commandString);
 		cmd.execute();
@@ -83,7 +83,7 @@ public class CommandController {
 		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
 		viewManager.setStatus("Showing list of commands");
 	}
-	
+
 	private void showActiveView() {
 		if (activeView == ViewType.TASK_LIST) {
 			viewManager.showTaskList();
@@ -101,14 +101,28 @@ public class CommandController {
 		viewManager.setTheme(themeCss);
 	}
 
+	/**
+	 * Sets the view that should be currently shown to the user.
+	 * 
+	 * @param activeView The view to show to the user
+	 */
 	public void setActiveView(ViewType activeView) {
 		this.activeView = activeView;
+	}
+
+	/**
+	 * Scrolls the task list shown to the user to the specified task.
+	 * 
+	 * @param task The task to scroll to
+	 */
+	public void scrollTaskListTo(Task task) {
+		viewManager.scrollTaskListTo(task);
 	}
 
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
 	}
-	
+
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
 	}
