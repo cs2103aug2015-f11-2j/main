@@ -106,7 +106,7 @@ public class ParserTest {
 		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
 		assertEquals("buy milk from store", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParseOnlyStartKeywordInContent() {
 		CommandParser parser = new CommandParser();
@@ -118,7 +118,7 @@ public class ParserTest {
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from store", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParseContentEndingWithStartKeyword() {
 		CommandParser parser = new CommandParser();
@@ -130,7 +130,7 @@ public class ParserTest {
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParseImpossibleDate() {
 		CommandParser parser = new CommandParser();
@@ -144,7 +144,7 @@ public class ParserTest {
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 		assertEquals("buy milk from store from 15/15/15", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParseInvalidDateRange() {
 		CommandParser parser = new CommandParser();
@@ -159,7 +159,7 @@ public class ParserTest {
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 		assertEquals("buy milk from store", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParseValidStartDateWithNoEndKeyword() {
 		CommandParser parser = new CommandParser();
@@ -171,7 +171,7 @@ public class ParserTest {
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 25/12/15", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testEmptyContentWithOtherKeywords() {
 		CommandParser parser = new CommandParser();
@@ -188,17 +188,17 @@ public class ParserTest {
 		assertEquals(Priority.HIGH, cmd.getPriority());
 		assertEquals("", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParsePriority() {
 		CommandParser parser = new CommandParser();
-		
+
 		// high priority
 		String input = "add buy milk priority high";
 		Command cmd = parser.parseCommand(input);
 		assertEquals(Priority.HIGH, cmd.getPriority());
 		assertEquals("buy milk", cmd.getContent());
-		
+
 		// medium priority
 		input = "add buy milk priority medium";
 		cmd = parser.parseCommand(input);
@@ -209,12 +209,12 @@ public class ParserTest {
 		cmd = parser.parseCommand(input);
 		assertEquals(Priority.LOW, cmd.getPriority());
 	}
-	
+
 	@Test
 	public void testParsePriorityWithDueDate() {
 		CommandParser parser = new CommandParser();
 		Date expectedEndDate = new Date();
-		
+
 		String input = "add buy milk priority high due 25/12/2015 5pm";
 		Command cmd = parser.parseCommand(input);
 		expectedEndDate = buildDate(2015, 12, 25, 17, 0);
@@ -222,13 +222,13 @@ public class ParserTest {
 		assertEquals(Priority.HIGH, cmd.getPriority());
 		assertEquals("buy milk", cmd.getContent());
 	}
-	
+
 	@Test
 	public void testParsePriorityWithRangeOfDates() {
 		CommandParser parser = new CommandParser();
 		Date expectedStartDate = new Date();
 		Date expectedEndDate = new Date();
-		
+
 		String input = "add buy milk from store priority high start 21/12/15 6:30am due 25/12/2015 5pm";
 		Command cmd = parser.parseCommand(input);
 		expectedStartDate = buildDate(2015, 12, 21, 6, 30);
@@ -238,8 +238,94 @@ public class ParserTest {
 		assertEquals(Priority.HIGH, cmd.getPriority());
 		assertEquals("buy milk from store", cmd.getContent());
 	}
-	
-	
+
+	@Test
+	public void testParseSupportedDateFormats() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+
+		String input = "add buy milk due 9/5/16";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 09/5/16";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 9/05/16";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 09/05/16";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 9/5/2016";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 9-5-16";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
+	@Test
+	public void testParseSupportedTimeFormats() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+
+		String input = "add buy milk due 3pm";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 15, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 03pm";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 15, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 3:30pm";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 15, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 03:30pm";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 15, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 1530";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 15, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 0930";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 9, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 930";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 9, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 0930hrs";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 9, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+
+		input = "add buy milk due 930hrs";
+		cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(0, 9, 30);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
 	private boolean areDatesSame(Date date1, Date date2) {
 		Calendar cal = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -265,7 +351,7 @@ public class ParserTest {
 	@SuppressWarnings("deprecation")
 	private Date buildDate(int year, int month, int day, int hours, int minutes) {
 		Date date = new Date();
-		date.setHours(year - 1900);
+		date.setYear(year - 1900);
 		date.setMonth(month - 1);
 		date.setDate(day);
 		date.setHours(hours);

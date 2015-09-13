@@ -24,7 +24,7 @@ public class CommandParser {
 	private static final List<String> DATE_PATTERNS = getUnmodifiableList("dd/MM/yy", "d/MM/yy", "dd/M/yy", "d/M/yy",
 			"dd/MM/yyyy", "d/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "dd-MM-yy", "d-MM-yy", "dd-M-yy", "d-M-yy",
 			"dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy", "d-M-yyyy");
-	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "hhmm", "hhmm'hr's", "ha",
+	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "HHmm", "Hmm", "HHmm'hrs'", "Hmm'hrs'", "ha",
 			"hha");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
