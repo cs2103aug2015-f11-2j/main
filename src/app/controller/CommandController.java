@@ -18,18 +18,20 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private ViewManager viewManager;
-	private TaskList taskList;
+	private TaskList masterTaskList;
+	private TaskList displayedTaskList;
 	private CommandParser parser;
 	private ViewType activeView;
 
 	private CommandController() {
 		parser = new CommandParser();
-		taskList = new TaskList();
+		masterTaskList = new TaskList();
+		displayedTaskList = new TaskList();
 		
 		// Updates the view whenever taskList is changed.
-		taskList.getTaskList().addListener(new ListChangeListener<Task>() {
+		displayedTaskList.getTaskList().addListener(new ListChangeListener<Task>() {
 			public void onChanged(ListChangeListener.Change<? extends Task> c) {
-				viewManager.updateTaskList(taskList);
+				viewManager.updateTaskList(displayedTaskList);
 			}
 		});
 	}
@@ -106,8 +108,12 @@ public class CommandController {
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
 	}
+	
+	public TaskList getMasterTaskList() {
+		return masterTaskList;
+	}
 
-	public TaskList getTaskList() {
-		return taskList;
+	public TaskList getDisplayedTaskList() {
+		return displayedTaskList;
 	}
 }

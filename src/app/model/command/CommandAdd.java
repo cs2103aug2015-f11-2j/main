@@ -6,6 +6,7 @@ import app.constants.ViewConstants.ViewType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
+import app.model.TaskList;
 
 public class CommandAdd extends Command {
 	
@@ -30,7 +31,10 @@ public class CommandAdd extends Command {
 		
 		task = new Task(this);
 		try {
-			CommandController.getInstance().getTaskList().addTask(task);
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+			master.addTask(task);
+			CommandController.getInstance().getDisplayedTaskList().addAll(master);
+			
 			setFeedback("Added task: " + task.getName());
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
