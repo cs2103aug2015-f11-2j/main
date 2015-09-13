@@ -24,8 +24,9 @@ public class CommandParser {
 	private static final List<String> DATE_PATTERNS = getUnmodifiableList("dd/MM/yy", "d/MM/yy", "dd/M/yy", "d/M/yy",
 			"dd/MM/yyyy", "d/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "dd-MM-yy", "d-MM-yy", "dd-M-yy", "d-M-yy",
 			"dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy", "d-M-yyyy");
-	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "HHmm", "Hmm", "HHmm'hrs'", "Hmm'hrs'", "ha",
-			"hha");
+	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "HHmm", "Hmm", "HHmm'hrs'",
+			"Hmm'hrs'", "ha", "hha");
+	private static final List<String> DAY_PATTERNS = getUnmodifiableList("EEEE", "EEE");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private List<String> allKeywords;
@@ -262,13 +263,19 @@ public class CommandParser {
 	@SuppressWarnings("deprecation")
 	private Date determineDate(String dateString, Date reference) {
 		Date date = null;
+
+		// Special case: now
+		if (dateString.equalsIgnoreCase("now")) {
+			date = new Date();
+			return date;
+		}
+
 		// check date patterns only
 		for (String datePattern : DATE_PATTERNS) {
 			date = getDateFromPattern(dateString, datePattern);
 			if (date != null) {
 				return date;
 			}
-
 			// check date + time patterns
 			for (String timePattern : TIME_PATTERNS) {
 				date = getDateFromPattern(dateString, datePattern + " " + timePattern);
@@ -294,8 +301,49 @@ public class CommandParser {
 					return todayDate;
 				}
 			}
+
+			// check day + time patterns
+			for (String dayPattern : DAY_PATTERNS) {
+				date = getDateFromPattern(dateString, dayPattern + " " + timePattern);
+				if (date != null) {
+					date = buildDateWithNearestDay(date.getDay(), date.getHours(), date.getMinutes());
+					return date;
+				}
+			}
+		}
+
+		// check day pattern only
+		for (String dayPattern : DAY_PATTERNS) {
+			date = getDateFromPattern(dateString, dayPattern);
+			if (date != null) {
+				date = buildDateWithNearestDay(date.getDay(), date.getHours(), date.getMinutes());
+				return date;
+			}
 		}
 		return null;
+	}
+
+	/**
+	 * Builds a Date object with the day set to the nearest day specified by the
+	 * 'day' parameter. The hours and minutes of the Date object are also set as
+	 * specified.
+	 * 
+	 * For example, if 'day' is 2, the returned date is the first Tuesday from
+	 * now.
+	 * 
+	 * @param day An integer indicating the day: 0 -> sunday, 1 -> monday, ...,
+	 *            6 -> saturday
+	 * @param hours The hours to set the date to
+	 * @param minutes The minutes to set the date to
+	 * @return The constructed date with the day, hours, and minutes set.
+	 */
+	private Date buildDateWithNearestDay(int day, int hours, int minutes) {
+		Date date = new Date();
+		date.setHours(hours);
+		date.setMinutes(minutes);
+		int dayOffset = (day - date.getDay()) % 7;
+		date.setDate(date.getDate() + dayOffset);
+		return date;
 	}
 
 	/**

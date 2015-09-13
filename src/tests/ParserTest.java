@@ -274,6 +274,17 @@ public class ParserTest {
 		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
+	
+	@Test
+	public void testParseDayWithTime() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+		
+		String input = "add buy milk due sat 3pm";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDateDaysFromNow(6, 15, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
 
 	@Test
 	public void testParseSupportedTimeFormats() {
@@ -357,6 +368,17 @@ public class ParserTest {
 		date.setHours(hours);
 		date.setMinutes(minutes);
 		date.setSeconds(0);
+		return date;
+	}
+	
+	@SuppressWarnings("deprecation")
+	// day: 0 -> sunday, 1 -> monday, ..., 6 -> saturday
+	private Date buildDateDaysFromNow(int day, int hours, int minutes) {
+		Date date = new Date();
+		date.setHours(hours);
+		date.setMinutes(minutes);
+		int dayOffset = (day - date.getDay()) % 7;
+		date.setDate(date.getDate() + dayOffset);
 		return date;
 	}
 

@@ -56,9 +56,6 @@ public class CommandController {
 	 * @param commandString The full command string.
 	 */
 	public void executeCommand(String commandString) {
-		/*
-		 * TODO: parse command, build Task object, update taskList, update view
-		 */
 		// placeholder example of showing the help. Implement as a CommandHelp
 		// object instead.
 		if (commandString.equalsIgnoreCase("help")) {
