@@ -1,5 +1,7 @@
 package app.view;
 
+import java.text.SimpleDateFormat;
+
 import app.model.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -56,20 +58,25 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		setGraphic(null);
 		taskListItemViewLayout.getStyleClass().removeAll("priorityHigh", "priorityMedium", "priorityLow");
 		priorityImage.setVisible(false);
+		taskCheckbox.setSelected(false);
 	}
 
 	/**
 	 * Sets the item labels using the supplied Task.
 	 */
 	private void setLabels() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
 		// TODO: placeholder ID
 		taskId.setText("#10");
 		taskName.setText(task.getName());
 		taskNameTooltip.setText(task.getName());
-		// TODO: placeholder data.
-		taskTopDate.setText("From 10/11/2015");
-		taskBottomDate.setText("To 15/11/2015 11:59pm");
-		taskCheckbox.setSelected(false);
+		
+		if (task.getStartDate() != null && task.getEndDate() != null) {
+			taskTopDate.setText("From " + dateFormat.format(task.getStartDate()));
+			taskBottomDate.setText("To " + dateFormat.format(task.getEndDate()));
+		} else if (task.getEndDate() != null) {
+			taskTopDate.setText("Due " + dateFormat.format(task.getEndDate()));
+		}
 	}
 
 	/**

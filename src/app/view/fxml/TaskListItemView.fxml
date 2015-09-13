@@ -72,7 +72,7 @@
 				<VBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT">
 					<children>
 						<Label fx:id="taskTopDate" alignment="CENTER_RIGHT"
-							minHeight="-Infinity" minWidth="-Infinity" text="To 10/11/2015 3:15pm">
+							minHeight="-Infinity" minWidth="-Infinity">
 							<font>
 								<Font name="Segoe UI Semilight" size="11.0" />
 							</font>
@@ -81,7 +81,7 @@
 							</VBox.margin>
 						</Label>
 						<Label fx:id="taskBottomDate" alignment="CENTER_RIGHT"
-							minHeight="-Infinity" minWidth="-Infinity" text=" 3:15pm">
+							minHeight="-Infinity" minWidth="-Infinity">
 							<font>
 								<Font name="Segoe UI Semilight" size="11.0" />
 							</font>
