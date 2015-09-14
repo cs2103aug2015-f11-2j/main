@@ -53,7 +53,7 @@ public class CommandParser {
 
 		switch (cmd.getCommandType()) {
 		case ADD:
-			parseCommandParams(cmd);
+			parseDatesAndPriority(cmd);
 			break;
 		default:
 			break;
@@ -73,7 +73,7 @@ public class CommandParser {
 	 * 
 	 * @param cmd The Command object to set parameters for
 	 */
-	private void parseCommandParams(Command cmd) {
+	private void parseDatesAndPriority(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
 
 		int startDateStart = -1;
