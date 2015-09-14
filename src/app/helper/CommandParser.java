@@ -27,6 +27,7 @@ public class CommandParser {
 	private static final List<String> TIME_PATTERNS = getUnmodifiableList("h:mma", "hh:mma", "HHmm", "Hmm", "HHmm'hrs'",
 			"Hmm'hrs'", "ha", "hha");
 	private static final List<String> DAY_PATTERNS = getUnmodifiableList("EEEE", "EEE");
+	private static final List<String> TOMORROW_PATTERNS = getUnmodifiableList("tomorrow", "tmr");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private List<String> allKeywords;
@@ -262,11 +263,18 @@ public class CommandParser {
 	 */
 	@SuppressWarnings("deprecation")
 	private Date determineDate(String dateString, Date reference) {
+		dateString = dateString.toLowerCase();
 		Date date = null;
 
-		// Special case: now
-		if (dateString.equalsIgnoreCase("now")) {
+		// Special case: "now" and "today"
+		if (dateString.equalsIgnoreCase("now") || dateString.equalsIgnoreCase("today")) {
 			date = new Date();
+			return date;
+		}
+
+		if (TOMORROW_PATTERNS.contains(dateString)) {
+			date = new Date();
+			date.setDate(date.getDate() + 1);
 			return date;
 		}
 
@@ -288,14 +296,40 @@ public class CommandParser {
 		// check time patterns only
 		for (String timePattern : TIME_PATTERNS) {
 			date = getDateFromPattern(dateString, timePattern);
+
+			int dayOffset = 0;
+			boolean skipReference = false;
+
+			// check "today" + time pattern
+			if (date == null) {
+				date = getDateFromPattern(dateString, "'today' " + timePattern);
+				if (date != null) {
+					skipReference = true;
+				}
+			}
+
+			// check "tomorrow" + time pattern
+			if (date == null) {
+				for (String tomorrowPattern : TOMORROW_PATTERNS) {
+					String pattern = String.format("'%s' %s", tomorrowPattern, timePattern);
+					date = getDateFromPattern(dateString, pattern);
+					if (date != null) {
+						skipReference = true;
+						dayOffset = 1;
+						break;
+					}
+				}
+			}
+
 			if (date != null) {
-				if (reference != null) {
+				if (!skipReference && reference != null) {
 					Date newDate = (Date) reference.clone();
 					newDate.setHours(date.getHours());
 					newDate.setMinutes(date.getMinutes());
 					return newDate;
 				} else {
 					Date todayDate = new Date();
+					todayDate.setDate(todayDate.getDate() + dayOffset);
 					todayDate.setHours(date.getHours());
 					todayDate.setMinutes(date.getMinutes());
 					return todayDate;
@@ -337,6 +371,7 @@ public class CommandParser {
 	 * @param minutes The minutes to set the date to
 	 * @return The constructed date with the day, hours, and minutes set.
 	 */
+	@SuppressWarnings("deprecation")
 	private Date buildDateWithNearestDay(int day, int hours, int minutes) {
 		Date date = new Date();
 		date.setHours(hours);

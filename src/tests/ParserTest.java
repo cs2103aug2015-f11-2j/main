@@ -173,7 +173,7 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testEmptyContentWithOtherKeywords() {
+	public void testParseEmptyContentWithKeywords() {
 		CommandParser parser = new CommandParser();
 		Date expectedStartDate = new Date();
 		Date expectedEndDate = new Date();
@@ -274,24 +274,24 @@ public class ParserTest {
 		expectedEndDate = buildDate(2016, 5, 9, 0, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
-	
+
 	@Test
 	public void testParseDayWithTime() {
 		CommandParser parser = new CommandParser();
 		Date expectedEndDate = new Date();
-		
+
 		String input = "add buy milk due sat 3pm";
 		Command cmd = parser.parseCommand(input);
 		expectedEndDate = buildDateDaysFromNow(6, 15, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
-	
+
 	@Test
 	public void testParseRangeOfDaysWithTime() {
 		CommandParser parser = new CommandParser();
 		Date expectedStartDate = new Date();
 		Date expectedEndDate = new Date();
-		
+
 		String input = "add buy milk from monday 5:30pm to 14/5/2050";
 		Command cmd = parser.parseCommand(input);
 		expectedStartDate = buildDateDaysFromNow(1, 17, 30);
@@ -351,6 +351,96 @@ public class ParserTest {
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
 
+	@Test
+	public void testParseDateIsNow() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		// Generates a date equal to now. Assert the difference is within 1000
+		// milliseconds due to a possible time difference.
+		String input = "add buy milk from now to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = new Date();
+		int difference = expectedStartDate.compareTo(cmd.getStartDate());
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(difference < 1000 || difference > -1000);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
+	@Test
+	public void testParseDateIsToday() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		// "today" generates a date equals to now.
+		String input = "add buy milk from today to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = new Date();
+		int difference = expectedStartDate.compareTo(cmd.getStartDate());
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(difference < 1000 || difference > -1000);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testParseDateIsTomorrow() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		// "tomorrow" generates a date equal to tomorrow
+		String input = "add buy milk from tomorrow to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = new Date();
+		expectedStartDate.setDate(expectedStartDate.getDate() + 1);
+		int difference = expectedStartDate.compareTo(cmd.getStartDate());
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(difference < 1000 || difference > -1000);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
+	@Test
+	public void testParseDateIsTodayWithTime() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		String input = "add buy milk from today 5:30pm to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = buildDate(0, 17, 30);
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
+	@Test
+	public void testParseDateIsTomorrowWithTime() {
+		CommandParser parser = new CommandParser();
+		Date expectedStartDate = new Date();
+		Date expectedEndDate = new Date();
+
+		String input = "add buy milk from tomorrow 5:30pm to 14/5/2050";
+		Command cmd = parser.parseCommand(input);
+		expectedStartDate = buildDate(1, 17, 30);
+		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
+		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+	
+	@Test
+	public void testParseUppercaseDate() {
+		CommandParser parser = new CommandParser();
+		Date expectedEndDate = new Date();
+
+		String input = "add buy milk by TomorroW 5pm";
+		Command cmd = parser.parseCommand(input);
+		expectedEndDate = buildDate(1, 17, 0);
+		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
+	}
+
 	private boolean areDatesSame(Date date1, Date date2) {
 		Calendar cal = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -384,7 +474,7 @@ public class ParserTest {
 		date.setSeconds(0);
 		return date;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	// day: 0 -> sunday, 1 -> monday, ..., 6 -> saturday
 	private Date buildDateDaysFromNow(int day, int hours, int minutes) {
