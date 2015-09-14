@@ -11,6 +11,7 @@ public class CommandConstants {
 	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
 	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
 	public static final List<String> ALIASES_THEME = getUnmodifiableList("theme");
+	public static final List<String> ALIASES_EXIT = getUnmodifiableList("exit");
 
 	// Enum values for the different types of commands
 	public enum CommandType {

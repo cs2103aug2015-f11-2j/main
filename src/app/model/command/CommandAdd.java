@@ -16,8 +16,8 @@ public class CommandAdd extends Command {
 		super();
 	}
 
-	public CommandAdd(CommandType commandType) {
-		super(commandType);
+	public CommandAdd(CommandType type) {
+		super(type);
 	}
 
 	@Override

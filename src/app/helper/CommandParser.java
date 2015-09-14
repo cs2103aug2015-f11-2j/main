@@ -13,6 +13,7 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
+import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandTheme;
 
@@ -51,6 +52,7 @@ public class CommandParser {
 		cmd.setCommandString(commandString);
 		cmd.setContent(removeFirstWord(cmd.getCommandString()));
 
+		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
 			parseDatesAndPriority(cmd);
@@ -418,6 +420,8 @@ public class CommandParser {
 			return new CommandAdd(commandType);
 		case THEME:
 			return new CommandTheme(commandType);
+		case EXIT:
+			return new CommandExit(commandType);
 		case INVALID: // Intentional fall-through and default case
 		default:
 			return new CommandInvalid(commandType);
@@ -440,6 +444,8 @@ public class CommandParser {
 			return CommandType.THEME;
 		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
 			return CommandType.HELP;
+		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
+			return CommandType.EXIT;
 		}
 		return CommandType.INVALID;
 	}
