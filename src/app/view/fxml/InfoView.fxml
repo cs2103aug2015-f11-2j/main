@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="50.0" prefHeight="47.0" prefWidth="295.0" styleClass="infoView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.InfoViewManager">
+	<children>
+		<Label layoutX="14.0" layoutY="17.0" text="Hi there" />
+	</children>
+</AnchorPane>

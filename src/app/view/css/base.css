@@ -54,3 +54,7 @@
 .commandInput {
 	-fx-background-radius: 0;
 }
+
+.infoView {
+	-fx-background-color: linear-gradient(from 0px 0px to 0px 6px, #DDDDDD, #FCFCFC);
+}

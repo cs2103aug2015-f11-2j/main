@@ -29,12 +29,14 @@ public class ViewManager {
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
 	private AnchorPane textViewLayout;
+	private AnchorPane infoViewLayout;
 	private ListView<Task> taskListViewLayout;
 
 	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
 	private TextViewManager textViewManager;
+	private InfoViewManager infoViewManager;
 
 	@FXML
 	private Label statusBar;
@@ -65,6 +67,7 @@ public class ViewManager {
 		initializeTaskListView();
 		initializeInputView();
 		initializeTextView();
+		initializeInfoView();
 	}
 
 	/**
@@ -119,6 +122,20 @@ public class ViewManager {
 			textViewLayout = loader.load();
 			textViewManager = loader.getController();
 			textViewManager.setViewManager(this);
+		} catch (IOException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+		}
+	}
+	
+	private void initializeInfoView() {
+		LogHelper.getLogger().info("Initializing text view");
+		try {
+			FXMLLoader loader = buildFxmlLoader("view/fxml/InfoView.fxml");
+			infoViewLayout = loader.load();
+			infoViewManager = loader.getController();
+			infoViewManager.setViewManager(this);
+			VBox vbox = (VBox) rootLayout.getBottom();
+			vbox.getChildren().add(infoViewLayout);
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
