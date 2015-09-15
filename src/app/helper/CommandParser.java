@@ -176,9 +176,11 @@ public class CommandParser {
 		}
 		if (startDateEnd < contentEnd) {
 			startDateStart = startDateEnd = -1;
+			parsedStart = null;
 		}
 		if (endDateEnd < contentEnd) {
 			endDateStart = endDateEnd = -1;
+			parsedEnd = null;
 		}
 
 		// Builds the content from the token indexes
