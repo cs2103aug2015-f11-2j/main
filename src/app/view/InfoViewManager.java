@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -25,10 +27,16 @@ public class InfoViewManager {
 	@FXML
 	public void initialize() {
 		dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
-	}
 
-	public void setViewManager(ViewManager viewManager) {
-		this.viewManager = viewManager;
+		// Modify the height of the window so that the info view appears to
+		// extend from the bottom
+		infoViewLayout.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				double difference = newValue.doubleValue() - oldValue.doubleValue();
+				viewManager.getPrimaryStage().setHeight(viewManager.getPrimaryStage().getHeight() + difference);
+			}
+		});
 	}
 
 	public void updateView(Command cmd) {
@@ -68,6 +76,10 @@ public class InfoViewManager {
 			addInfoRow(buildLabel("Priority "), buildLabel(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY));
 		}
 	}
+	
+	public void clearLabels() {
+		infoViewLayout.getChildren().clear();
+	}
 
 	private void addInfoRow(Label... args) {
 		TextFlow textFlow = new TextFlow();
@@ -91,15 +103,15 @@ public class InfoViewManager {
 		return label;
 	}
 
-	public void clearLabels() {
-		infoViewLayout.getChildren().clear();
-	}
-
 	private void setPaddingIfNoChildren() {
 		Insets padding = new Insets(0);
 		if (!infoViewLayout.getChildren().isEmpty()) {
 			padding = new Insets(5);
 		}
 		infoViewLayout.setPadding(padding);
+	}
+	
+	public void setViewManager(ViewManager viewManager) {
+		this.viewManager = viewManager;
 	}
 }

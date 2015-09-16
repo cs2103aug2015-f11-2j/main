@@ -1,8 +1,5 @@
 package app.model;
 
-
-import java.util.Collection;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

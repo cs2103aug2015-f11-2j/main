@@ -26,6 +26,8 @@ import javafx.stage.Stage;
  * only one to interact with its child views.
  */
 public class ViewManager {
+	
+	private Stage primaryStage;
 
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
@@ -50,6 +52,7 @@ public class ViewManager {
 	 * @param primaryStage The main window.
 	 */
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
+		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
 		commandController = CommandController.getInstance();
 		commandController.setViewManager(this);
@@ -246,5 +249,9 @@ public class ViewManager {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource(fxml));
 		return loader;
+	}
+	
+	public Stage getPrimaryStage() {
+		return primaryStage;
 	}
 }
