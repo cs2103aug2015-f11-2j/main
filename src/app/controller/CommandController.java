@@ -1,10 +1,15 @@
 package app.controller;
 
+import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.command.Command;
+import app.model.command.CommandAdd;
+import app.model.command.CommandExit;
+import app.model.command.CommandInvalid;
+import app.model.command.CommandTheme;
 import app.view.ViewManager;
 import javafx.collections.ListChangeListener;
 
@@ -66,13 +71,64 @@ public class CommandController {
 		}
 
 		commandString = commandString.trim();
-		Command cmd = parser.parseCommand(commandString);
+		Command cmd = createCommand(commandString);
 		cmd.execute();
 		showActiveView();
 
 		// Set new status bar message if feedback exists.
 		if (!cmd.getFeedback().isEmpty()) {
 			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
+		}
+	}
+
+	/**
+	 * Creates the relevant Command subclass based on the CommandType parsed
+	 * from the supplied input parameter. Also based on the CommandType, the
+	 * created Command subclass is then parsed appropriately. The result is a
+	 * Command object with all its fields populated based on the input
+	 * parameter.
+	 * 
+	 * @param commandString The command string
+	 * @return A Command subclass with its fields set to the parsed result
+	 */
+	public Command createCommand(String commandString) {
+		CommandType commandType = parser.determineCommandType(commandString);
+		Command cmd;
+
+		switch (commandType) {
+		case ADD:
+			cmd = new CommandAdd();
+			break;
+		case THEME:
+			cmd = new CommandTheme();
+			break;
+		case EXIT:
+			cmd = new CommandExit();
+			break;
+		case INVALID: // Intentional fall-through and default case
+		default:
+			cmd = new CommandInvalid();
+		}
+
+		cmd.setCommandString(commandString);
+		cmd.setContent(parser.removeFirstWord(cmd.getCommandString()));
+		parseCommand(cmd);
+		return cmd;
+	}
+
+	/**
+	 * Parses the supplied Command object based on its CommandType.
+	 * 
+	 * @param cmd The object to parse
+	 */
+	private void parseCommand(Command cmd) {
+		// Additional parsing for certain command types
+		switch (cmd.getCommandType()) {
+		case ADD:
+			parser.parseDatesAndPriority(cmd);
+			break;
+		default:
+			break;
 		}
 	}
 

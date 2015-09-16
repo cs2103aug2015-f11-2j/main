@@ -40,3 +40,7 @@
 	-fx-text-fill: black;
 }
 /* End status bar */
+
+.infoView .infoDate, .infoView .infoPriority {
+	-fx-text-fill: #0056BD;
+}

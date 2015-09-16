@@ -9,6 +9,7 @@ import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskList;
+import app.model.command.Command;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,16 +26,20 @@ import javafx.stage.Stage;
  * only one to interact with its child views.
  */
 public class ViewManager {
+	
+	private Stage primaryStage;
 
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
 	private AnchorPane textViewLayout;
+	private VBox infoViewLayout;
 	private ListView<Task> taskListViewLayout;
 
 	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
 	private TextViewManager textViewManager;
+	private InfoViewManager infoViewManager;
 
 	@FXML
 	private Label statusBar;
@@ -47,6 +52,7 @@ public class ViewManager {
 	 * @param primaryStage The main window.
 	 */
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
+		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
 		commandController = CommandController.getInstance();
 		commandController.setViewManager(this);
@@ -65,6 +71,7 @@ public class ViewManager {
 		initializeTaskListView();
 		initializeInputView();
 		initializeTextView();
+		initializeInfoView();
 	}
 
 	/**
@@ -119,6 +126,20 @@ public class ViewManager {
 			textViewLayout = loader.load();
 			textViewManager = loader.getController();
 			textViewManager.setViewManager(this);
+		} catch (IOException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+		}
+	}
+	
+	private void initializeInfoView() {
+		LogHelper.getLogger().info("Initializing text view");
+		try {
+			FXMLLoader loader = buildFxmlLoader("view/fxml/InfoView.fxml");
+			infoViewLayout = loader.load();
+			infoViewManager = loader.getController();
+			infoViewManager.setViewManager(this);
+			VBox vbox = (VBox) rootLayout.getBottom();
+			vbox.getChildren().add(infoViewLayout);
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
@@ -193,6 +214,10 @@ public class ViewManager {
 		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
 		rootLayout.getStylesheets().add(themeCss);
 	}
+	
+	public void updateInfoView(Command cmd) {
+		infoViewManager.updateView(cmd);
+	}
 
 	/**
 	 * Determines the style class for the specified StatusType. This style class
@@ -224,5 +249,9 @@ public class ViewManager {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource(fxml));
 		return loader;
+	}
+	
+	public Stage getPrimaryStage() {
+		return primaryStage;
 	}
 }
