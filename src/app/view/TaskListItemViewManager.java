@@ -56,6 +56,8 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 */
 	private void clearContent() {
 		setGraphic(null);
+		taskTopDate.setText("");
+		taskBottomDate.setText("");
 		taskListItemViewLayout.getStyleClass().removeAll("priorityHigh", "priorityMedium", "priorityLow");
 		priorityImage.setVisible(false);
 		taskCheckbox.setSelected(false);
