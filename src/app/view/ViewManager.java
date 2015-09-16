@@ -1,16 +1,15 @@
 package app.view;
 
 import java.io.IOException;
-import java.util.Date;
 
 import app.Main;
 import app.constants.ViewConstants;
-import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.StatusType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskList;
+import app.model.command.Command;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -213,8 +212,8 @@ public class ViewManager {
 		rootLayout.getStylesheets().add(themeCss);
 	}
 	
-	public void updateInfoView(String content, Date start, Date end, Priority priority) {
-		infoViewManager.updateView(content, start, end, priority);
+	public void updateInfoView(Command cmd) {
+		infoViewManager.updateView(cmd);
 	}
 
 	/**

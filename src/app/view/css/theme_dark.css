@@ -72,3 +72,7 @@
 .infoView .label {
 	-fx-text-fill: #FDFDFD;
 }
+
+.infoView .infoDate, .infoView .infoPriority {
+	-fx-text-fill: #008ED6;
+}
