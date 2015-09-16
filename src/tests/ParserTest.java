@@ -282,7 +282,7 @@ public class ParserTest {
 
 		String input = "add buy milk due sat 3pm";
 		Command cmd = parser.parseCommand(input);
-		expectedEndDate = buildDateDaysFromNow(6, 15, 0);
+		expectedEndDate = buildDateWithNextDay(6, 15, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
 
@@ -294,7 +294,7 @@ public class ParserTest {
 
 		String input = "add buy milk from monday 5:30pm to 14/5/2050";
 		Command cmd = parser.parseCommand(input);
-		expectedStartDate = buildDateDaysFromNow(1, 17, 30);
+		expectedStartDate = buildDateWithNextDay(1, 17, 30);
 		expectedEndDate = buildDate(2050, 5, 14, 0, 0);
 		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
@@ -477,12 +477,15 @@ public class ParserTest {
 
 	@SuppressWarnings("deprecation")
 	// day: 0 -> sunday, 1 -> monday, ..., 6 -> saturday
-	private Date buildDateDaysFromNow(int day, int hours, int minutes) {
+	private Date buildDateWithNextDay(int day, int hours, int minutes) {
 		Date date = new Date();
+		int diff = day - date.getDay();
+		if (diff < 0) {
+			diff += 7;
+		}
+		date.setDate(date.getDate()+diff);
 		date.setHours(hours);
 		date.setMinutes(minutes);
-		int dayOffset = (day - date.getDay()) % 7;
-		date.setDate(date.getDate() + dayOffset);
 		return date;
 	}
 

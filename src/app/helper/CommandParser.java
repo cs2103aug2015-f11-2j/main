@@ -344,7 +344,7 @@ public class CommandParser {
 			for (String dayPattern : DAY_PATTERNS) {
 				date = getDateFromPattern(dateString, dayPattern + " " + timePattern);
 				if (date != null) {
-					date = buildDateWithNearestDay(date.getDay(), date.getHours(), date.getMinutes());
+					date = buildDateWithNextDay(date.getDay(), date.getHours(), date.getMinutes());
 					return date;
 				}
 			}
@@ -354,7 +354,7 @@ public class CommandParser {
 		for (String dayPattern : DAY_PATTERNS) {
 			date = getDateFromPattern(dateString, dayPattern);
 			if (date != null) {
-				date = buildDateWithNearestDay(date.getDay(), date.getHours(), date.getMinutes());
+				date = buildDateWithNextDay(date.getDay(), date.getHours(), date.getMinutes());
 				return date;
 			}
 		}
@@ -376,12 +376,15 @@ public class CommandParser {
 	 * @return The constructed date with the day, hours, and minutes set.
 	 */
 	@SuppressWarnings("deprecation")
-	private Date buildDateWithNearestDay(int day, int hours, int minutes) {
+	private Date buildDateWithNextDay(int day, int hours, int minutes) {
 		Date date = new Date();
+		int diff = (day - date.getDay()) % 7;
+		if (diff < 0) {
+			diff += 7;
+		}
+		date.setDate(date.getDate() + diff);
 		date.setHours(hours);
 		date.setMinutes(minutes);
-		int dayOffset = (day - date.getDay()) % 7;
-		date.setDate(date.getDate() + dayOffset);
 		return date;
 	}
 
