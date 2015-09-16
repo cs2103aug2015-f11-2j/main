@@ -12,10 +12,6 @@ import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
-import app.model.command.CommandAdd;
-import app.model.command.CommandExit;
-import app.model.command.CommandInvalid;
-import app.model.command.CommandTheme;
 
 public class CommandParser {
 
@@ -41,30 +37,6 @@ public class CommandParser {
 	}
 
 	/**
-	 * This method takes an input command string and parses it appropriately
-	 * based on its determined CommandType.
-	 * 
-	 * @param commandString The command string to parse
-	 * @return The constructed Command object with parameters set
-	 */
-	public Command parseCommand(String commandString) {
-		Command cmd = createCommand(commandString);
-		cmd.setCommandString(commandString);
-		cmd.setContent(removeFirstWord(cmd.getCommandString()));
-
-		// Additional parsing for certain command types
-		switch (cmd.getCommandType()) {
-		case ADD:
-			parseDatesAndPriority(cmd);
-			break;
-		default:
-			break;
-		}
-
-		return cmd;
-	}
-
-	/**
 	 * Parses and sets parameters for the Command object specified. The
 	 * commandString of the specified Command object should already be set
 	 * before calling this method.
@@ -75,7 +47,7 @@ public class CommandParser {
 	 * 
 	 * @param cmd The Command object to set parameters for
 	 */
-	private void parseDatesAndPriority(Command cmd) {
+	public void parseDatesAndPriority(Command cmd) {
 		String[] arr = cmd.getCommandString().split(" ");
 
 		int startDateStart = -1;
@@ -116,6 +88,8 @@ public class CommandParser {
 						startDateEnd = j - 1;
 						endDateStart = j;
 						endFound = true;
+						i = j++;
+						continue;
 					}
 					endDateEnd = j;
 					i = j++;
@@ -170,6 +144,7 @@ public class CommandParser {
 				contentEnd = i;
 			}
 		}
+		
 		// Remove any tokens we merged over.
 		if (priorityEnd < contentEnd) {
 			priorityStart = priorityEnd = -1;
@@ -410,36 +385,12 @@ public class CommandParser {
 	}
 
 	/**
-	 * Creates the relevant Command subclass based on the specified command
-	 * string. The created subclass only has its commandType variable set.
-	 * 
-	 * @param commandString The command string
-	 * @return The relevant Command subclass with appropriate commandType
-	 *         variable set.
-	 */
-	private Command createCommand(String commandString) {
-		CommandType commandType = determineCommandType(commandString);
-
-		switch (commandType) {
-		case ADD:
-			return new CommandAdd(commandType);
-		case THEME:
-			return new CommandTheme(commandType);
-		case EXIT:
-			return new CommandExit(commandType);
-		case INVALID: // Intentional fall-through and default case
-		default:
-			return new CommandInvalid(commandType);
-		}
-	}
-
-	/**
 	 * Determines the CommandType of the specified command string
 	 * 
 	 * @param commandString The command string
 	 * @return The determined CommandType object
 	 */
-	private CommandType determineCommandType(String commandString) {
+	public CommandType determineCommandType(String commandString) {
 		String word = getFirstWord(commandString).toLowerCase();
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
@@ -461,7 +412,7 @@ public class CommandParser {
 	 * @param words The string to get the first word from
 	 * @return The first word of the specified string
 	 */
-	public static String getFirstWord(String words) {
+	public String getFirstWord(String words) {
 		return words.trim().split("\\s+")[0];
 	}
 
@@ -471,7 +422,7 @@ public class CommandParser {
 	 * @param commandString The string to remove the first word from
 	 * @return The resultant string without the first word
 	 */
-	private static String removeFirstWord(String commandString) {
+	public String removeFirstWord(String commandString) {
 		return commandString.replace(getFirstWord(commandString), "").trim();
 	}
 

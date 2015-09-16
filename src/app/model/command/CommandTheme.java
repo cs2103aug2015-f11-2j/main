@@ -9,10 +9,7 @@ public class CommandTheme extends Command {
 
 	public CommandTheme() {
 		super();
-	}
-
-	public CommandTheme(CommandType type) {
-		super(type);
+		this.setCommandType(CommandType.THEME);
 	}
 
 	@Override

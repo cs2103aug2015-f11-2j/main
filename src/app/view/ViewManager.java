@@ -1,9 +1,11 @@
 package app.view;
 
 import java.io.IOException;
+import java.util.Date;
 
 import app.Main;
 import app.constants.ViewConstants;
+import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.StatusType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
@@ -29,7 +31,7 @@ public class ViewManager {
 	private BorderPane rootLayout;
 	private AnchorPane inputViewLayout;
 	private AnchorPane textViewLayout;
-	private AnchorPane infoViewLayout;
+	private VBox infoViewLayout;
 	private ListView<Task> taskListViewLayout;
 
 	private CommandController commandController;
@@ -209,6 +211,10 @@ public class ViewManager {
 	public void setTheme(String themeCss) {
 		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
 		rootLayout.getStylesheets().add(themeCss);
+	}
+	
+	public void updateInfoView(String content, Date start, Date end, Priority priority) {
+		infoViewManager.updateView(content, start, end, priority);
 	}
 
 	/**

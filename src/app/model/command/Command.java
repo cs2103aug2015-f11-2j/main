@@ -25,11 +25,6 @@ public abstract class Command {
 		priority = Priority.NONE;
 	}
 	
-	public Command(CommandType type) {
-		this();
-		this.commandType = type;
-	}
-	
 	public abstract	void execute();
 
 	public String getContent() {

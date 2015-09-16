@@ -1,7 +1,11 @@
 package app.view;
 
 import app.controller.CommandController;
+import app.helper.CommandParser;
 import app.helper.LogHelper;
+import app.model.command.Command;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -13,9 +17,29 @@ import javafx.scene.control.TextField;
 public class InputViewManager {
 
 	private ViewManager viewManager;
+	private CommandParser parser;
 
 	@FXML
 	private TextField commandInput;
+	
+	@FXML
+	public void initialize() {
+		parser = new CommandParser();
+		commandInput.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {	
+				updateInfoView();
+			}
+		});
+	}
+	
+	private void updateInfoView() {
+		String commandString = commandInput.getText();
+		Command cmd = CommandController.getInstance().createCommand(commandString);
+		if (cmd != null) {
+			viewManager.updateInfoView(cmd.getContent(), cmd.getStartDate(), cmd.getEndDate(), cmd.getPriority());
+		}
+	}
 
 	/**
 	 * This method will be executed when the user presses the ENTER key on the

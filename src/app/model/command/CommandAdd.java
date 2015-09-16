@@ -14,10 +14,7 @@ public class CommandAdd extends Command {
 
 	public CommandAdd() {
 		super();
-	}
-
-	public CommandAdd(CommandType type) {
-		super(type);
+		this.setCommandType(CommandType.ADD);
 	}
 
 	@Override

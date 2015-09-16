@@ -6,10 +6,7 @@ public class CommandExit extends Command {
 
 	public CommandExit() {
 		super();
-	}
-
-	public CommandExit(CommandType type) {
-		super(type);
+		this.setCommandType(CommandType.EXIT);
 	}
 
 	@Override

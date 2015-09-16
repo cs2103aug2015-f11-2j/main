@@ -8,10 +8,7 @@ public class CommandInvalid extends Command {
 
 	public CommandInvalid() {
 		super();
-	}
-
-	public CommandInvalid(CommandType type) {
-		super(type);
+		this.setCommandType(CommandType.INVALID);
 	}
 
 	@Override
@@ -20,8 +17,9 @@ public class CommandInvalid extends Command {
 		if (getCommandString().isEmpty()) {
 			return;
 		}
+		CommandParser parser = new CommandParser();
 		
-		String word = CommandParser.getFirstWord(getCommandString());
+		String word = parser.getFirstWord(getCommandString());
 		setFeedback("Invalid command: " + word);
 	}
 
