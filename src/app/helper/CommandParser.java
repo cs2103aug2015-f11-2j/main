@@ -378,7 +378,7 @@ public class CommandParser {
 	@SuppressWarnings("deprecation")
 	private Date buildDateWithNextDay(int day, int hours, int minutes) {
 		Date date = new Date();
-		int diff = (day - date.getDay()) % 7;
+		int diff = (day - date.getDay());
 		if (diff < 0) {
 			diff += 7;
 		}
