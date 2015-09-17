@@ -1,6 +1,8 @@
 package app.view;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
@@ -53,27 +55,55 @@ public class InfoViewManager {
 	}
 
 	private void setCommandParamLabels(Command cmd) {
-		// Add parsed task content
+		setContentLabel(cmd);
+		setDateAndPriorityLabels(cmd);
+	}
+	
+	private void setContentLabel(Command cmd) {
+		ArrayList<Label> labels = new ArrayList<Label>();
 		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
-			addInfoRow(buildLabel(cmd.getContent(), STYLE_INFOVIEW_CONTENT));
+			Label startQuote = buildLabel("\"");
+			Label endQuote = buildLabel("\"");
+			Label content = buildLabel(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
+			addLabelsToList(labels, startQuote, content, endQuote);
+			addInfoRow(labels);
 		}
+	}
+	
+	private void setDateAndPriorityLabels(Command cmd) {
+		if (cmd.getContent().isEmpty()) {
+			return;
+		}
+		ArrayList<Label> labels = new ArrayList<Label>();
 
 		// Add parsed dates
 		if (cmd.getStartDate() == null && cmd.getEndDate() != null) {
-			Label due = buildLabel("Due ");
+			Label due = buildLabel(" due ");
 			Label endDate = buildLabel(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
-			addInfoRow(due, endDate);
+			addLabelsToList(labels, due, endDate);
 		} else if (cmd.getStartDate() != null && cmd.getEndDate() != null) {
-			Label from = buildLabel("From ");
+			Label from = buildLabel(" from ");
 			Label startDate = buildLabel(dateFormat.format(cmd.getStartDate()), STYLE_INFOVIEW_DATE);
 			Label to = buildLabel(" to ");
 			Label endDate = buildLabel(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
-			addInfoRow(from, startDate, to, endDate);
+			addLabelsToList(labels, from, startDate, to, endDate);
 		}
 
 		// Add parsed priority
 		if (cmd.getPriority() != null && cmd.getPriority() != Priority.NONE) {
-			addInfoRow(buildLabel("Priority "), buildLabel(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY));
+			Label withPriority = buildLabel(" with priority ");
+			Label priorityLevel = buildLabel(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY);
+			addLabelsToList(labels, withPriority, priorityLevel);
+		}
+		
+		if (!labels.isEmpty()) {
+			addInfoRow(labels);
+		}
+	}
+	
+	private void addLabelsToList(List<Label> list, Label... labels) {
+		for (Label label : labels) {
+			list.add(label);
 		}
 	}
 	
@@ -81,11 +111,11 @@ public class InfoViewManager {
 		infoViewLayout.getChildren().clear();
 	}
 
-	private void addInfoRow(Label... args) {
+	private void addInfoRow(List<Label> labels) {
 		TextFlow textFlow = new TextFlow();
 		Insets padding = new Insets(0, 5, 0, 5);
 		textFlow.setPadding(padding);
-		for (Label label : args) {
+		for (Label label : labels) {
 			textFlow.getChildren().add(label);
 		}
 		infoViewLayout.getChildren().add(textFlow);
