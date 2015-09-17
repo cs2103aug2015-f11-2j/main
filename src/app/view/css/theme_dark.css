@@ -69,10 +69,11 @@
 	-fx-background-color: linear-gradient(from 0px 0px to 0px 5px, #14181D, #292E39);
 }
 
-.infoView .label {
-	-fx-text-fill: #FDFDFD;
+.infoView .text {
+	-fx-fill: #FDFDFD;
 }
 
 .infoView .infoDate, .infoView .infoPriority {
 	-fx-text-fill: #008ED6;
+	-fx-fill: #008ED6;
 }

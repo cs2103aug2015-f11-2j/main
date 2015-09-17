@@ -10,8 +10,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 public class InfoViewManager {
@@ -42,7 +42,7 @@ public class InfoViewManager {
 	}
 
 	public void updateView(Command cmd) {
-		clearLabels();
+		clearView();
 
 		switch (cmd.getCommandType()) {
 		case ADD:
@@ -51,89 +51,91 @@ public class InfoViewManager {
 			break;
 		}
 
-		setPaddingIfNoChildren();
+		setPaddingIfHasChildren();
 	}
 
 	private void setCommandParamLabels(Command cmd) {
-		setContentLabel(cmd);
-		setDateAndPriorityLabels(cmd);
+		setContentText(cmd);
+		setDateAndPriorityTexts(cmd);
 	}
 	
-	private void setContentLabel(Command cmd) {
-		ArrayList<Label> labels = new ArrayList<Label>();
+	private void setContentText(Command cmd) {
+		ArrayList<Text> texts = new ArrayList<Text>();
 		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
-			Label startQuote = buildLabel("\"");
-			Label endQuote = buildLabel("\"");
-			Label content = buildLabel(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
-			addLabelsToList(labels, startQuote, content, endQuote);
-			addInfoRow(labels);
+			Text startQuote = buildText("\"");
+			Text endQuote = buildText("\"");
+			Text content = buildText(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
+			addTextsToList(texts, startQuote, content, endQuote);
+			addInfoRow(texts);
 		}
 	}
 	
-	private void setDateAndPriorityLabels(Command cmd) {
+	private void setDateAndPriorityTexts(Command cmd) {
 		if (cmd.getContent().isEmpty()) {
 			return;
 		}
-		ArrayList<Label> labels = new ArrayList<Label>();
+		ArrayList<Text> texts = new ArrayList<Text>();
 
 		// Add parsed dates
 		if (cmd.getStartDate() == null && cmd.getEndDate() != null) {
-			Label due = buildLabel(" due ");
-			Label endDate = buildLabel(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
-			addLabelsToList(labels, due, endDate);
+			Text due = buildText(" due ");
+			Text endDate = buildText(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
+			addTextsToList(texts, due, endDate);
 		} else if (cmd.getStartDate() != null && cmd.getEndDate() != null) {
-			Label from = buildLabel(" from ");
-			Label startDate = buildLabel(dateFormat.format(cmd.getStartDate()), STYLE_INFOVIEW_DATE);
-			Label to = buildLabel(" to ");
-			Label endDate = buildLabel(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
-			addLabelsToList(labels, from, startDate, to, endDate);
+			Text from = buildText(" from ");
+			Text startDate = buildText(dateFormat.format(cmd.getStartDate()), STYLE_INFOVIEW_DATE);
+			Text to = buildText(" to ");
+			Text endDate = buildText(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
+			addTextsToList(texts, from, startDate, to, endDate);
 		}
 
 		// Add parsed priority
 		if (cmd.getPriority() != null && cmd.getPriority() != Priority.NONE) {
-			Label withPriority = buildLabel(" with priority ");
-			Label priorityLevel = buildLabel(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY);
-			addLabelsToList(labels, withPriority, priorityLevel);
+			Text withPriority = buildText(" with priority ");
+			Text priorityLevel = buildText(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY);
+			addTextsToList(texts, withPriority, priorityLevel);
 		}
 		
-		if (!labels.isEmpty()) {
-			addInfoRow(labels);
+		if (!texts.isEmpty()) {
+			addInfoRow(texts);
 		}
 	}
 	
-	private void addLabelsToList(List<Label> list, Label... labels) {
-		for (Label label : labels) {
-			list.add(label);
+	private void addTextsToList(List<Text> list, Text... texts) {
+		for (Text text : texts) {
+			list.add(text);
 		}
 	}
 	
-	public void clearLabels() {
+	public void clearView() {
 		infoViewLayout.getChildren().clear();
 	}
 
-	private void addInfoRow(List<Label> labels) {
+	private void addInfoRow(List<Text> list) {
 		TextFlow textFlow = new TextFlow();
 		Insets padding = new Insets(0, 5, 0, 5);
+		textFlow.setPrefWidth(300);
 		textFlow.setPadding(padding);
-		for (Label label : labels) {
-			textFlow.getChildren().add(label);
+		for (Text text : list) {
+			textFlow.getChildren().add(text);
 		}
 		infoViewLayout.getChildren().add(textFlow);
 	}
 
-	private Label buildLabel(String content) {
-		return buildLabel(content, null);
+	private Text buildText(String content) {
+		return buildText(content, null);
 	}
 
-	private Label buildLabel(String content, String styleClass) {
-		Label label = new Label(content);
+	private Text buildText(String content, String styleClass) {
+		Text text = new Text(content);
+		text.getStyleClass().add("text");
 		if (styleClass != null) {
-			label.getStyleClass().add(styleClass);
+			text.getStyleClass().add(styleClass);
 		}
-		return label;
+		return text;
 	}
 
-	private void setPaddingIfNoChildren() {
+	private void setPaddingIfHasChildren() {
 		Insets padding = new Insets(0);
 		if (!infoViewLayout.getChildren().isEmpty()) {
 			padding = new Insets(5);

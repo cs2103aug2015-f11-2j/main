@@ -43,4 +43,5 @@
 
 .infoView .infoDate, .infoView .infoPriority {
 	-fx-text-fill: #0056BD;
+	-fx-fill: #0056BD;
 }
