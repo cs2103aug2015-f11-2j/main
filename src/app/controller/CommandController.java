@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
@@ -80,6 +81,28 @@ public class CommandController {
 			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
 		}
 	}
+	
+	/**
+	 * Determines the CommandType of the specified command string
+	 * 
+	 * @param commandString The command string
+	 * @return The determined CommandType object
+	 */
+	private CommandType determineCommandType(String commandString) {
+		String word = parser.getFirstWord(commandString).toLowerCase();
+		if (CommandConstants.ALIASES_ADD.contains(word)) {
+			return CommandType.ADD;
+		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
+			return CommandType.REMOVE;
+		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
+			return CommandType.THEME;
+		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
+			return CommandType.HELP;
+		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
+			return CommandType.EXIT;
+		}
+		return CommandType.INVALID;
+	}
 
 	/**
 	 * Creates the relevant Command subclass based on the CommandType parsed
@@ -92,7 +115,7 @@ public class CommandController {
 	 * @return A Command subclass with its fields set to the parsed result
 	 */
 	public Command createCommand(String commandString) {
-		CommandType commandType = parser.determineCommandType(commandString);
+		CommandType commandType = determineCommandType(commandString);
 		Command cmd;
 
 		switch (commandType) {

@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import app.constants.CommandConstants;
-import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 
@@ -382,28 +380,6 @@ public class CommandParser {
 			// nothing
 		}
 		return null;
-	}
-
-	/**
-	 * Determines the CommandType of the specified command string
-	 * 
-	 * @param commandString The command string
-	 * @return The determined CommandType object
-	 */
-	public CommandType determineCommandType(String commandString) {
-		String word = getFirstWord(commandString).toLowerCase();
-		if (CommandConstants.ALIASES_ADD.contains(word)) {
-			return CommandType.ADD;
-		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
-			return CommandType.REMOVE;
-		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
-			return CommandType.THEME;
-		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
-			return CommandType.HELP;
-		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
-			return CommandType.EXIT;
-		}
-		return CommandType.INVALID;
 	}
 
 	/**
