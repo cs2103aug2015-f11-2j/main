@@ -15,18 +15,18 @@ public class CommandTheme extends Command {
 	@Override
 	public void execute() {
 		if (getContent().isEmpty()) {
-			setFeedback("Available themes: light, dark");
+			setFeedback(ViewConstants.MESSAGE_AVAILABLE_THEMES);
 		}
-		if (getContent().equalsIgnoreCase("light")) {
+		if (getContent().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
 			CommandController.getInstance().setTheme(ViewConstants.THEME_LIGHT_CSS);
-			setFeedback("Current theme: light");
+			setFeedback(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_LIGHT));
 			setStatusType(StatusType.SUCCESS);
-		} else if (getContent().equalsIgnoreCase("dark")) {
+		} else if (getContent().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
 			CommandController.getInstance().setTheme(ViewConstants.THEME_DARK_CSS);
-			setFeedback("Current theme: dark");
+			setFeedback(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_DARK));
 			setStatusType(StatusType.SUCCESS);
 		} else {
-			setFeedback("Available themes: light, dark");
+			setFeedback(ViewConstants.MESSAGE_AVAILABLE_THEMES);
 		}
 	}
 

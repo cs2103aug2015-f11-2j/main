@@ -1,6 +1,7 @@
 package app.model.command;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
 import app.helper.CommandParser;
 
@@ -20,7 +21,7 @@ public class CommandInvalid extends Command {
 		CommandParser parser = new CommandParser();
 		
 		String word = parser.getFirstWord(getCommandString());
-		setFeedback("Invalid command: " + word);
+		setFeedback(String.format(ViewConstants.ERROR_INVALID_CMD, word));
 	}
 
 }

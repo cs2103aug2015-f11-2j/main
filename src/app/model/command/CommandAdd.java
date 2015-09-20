@@ -1,5 +1,6 @@
 package app.model.command;
 
+import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
@@ -21,7 +22,7 @@ public class CommandAdd extends Command {
 	public void execute() {
 		LogHelper.getLogger().info("Executing CommandAdd object.");
 		if (this.getContent().isEmpty()) {
-			setFeedback("No task specified");
+			setFeedback(ViewConstants.ERROR_ADD_NO_TASK);
 			setStatusType(StatusType.ERROR);
 			return;
 		}
@@ -33,11 +34,11 @@ public class CommandAdd extends Command {
 			CommandController.getInstance().getDisplayedTaskList().setAll(master);
 			CommandController.getInstance().scrollTaskListTo(task);
 			
-			setFeedback("Added task: " + task.getName());
+			setFeedback(String.format(ViewConstants.MESSAGE_ADD, task.getName()));
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback("Error adding task: " + task.getName());
+			setFeedback(String.format(ViewConstants.ERROR_ADD, task.getName()));
 			setStatusType(StatusType.ERROR);
 		}
 		
