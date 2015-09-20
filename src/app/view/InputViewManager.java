@@ -19,17 +19,25 @@ public class InputViewManager {
 
 	@FXML
 	private TextField commandInput;
-	
+
+	/**
+	 * This method is implicitly called when loaded from the FXMLLoader. A
+	 * listener is bound to the text property of the input field and executed
+	 * whenever the property changes.
+	 */
 	@FXML
 	public void initialize() {
 		commandInput.textProperty().addListener(new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {	
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				updateInfoView();
 			}
 		});
 	}
-	
+
+	/**
+	 * Updates the view showing information about the current input
+	 */
 	private void updateInfoView() {
 		String commandString = commandInput.getText();
 		Command cmd = CommandController.getInstance().createCommand(commandString);

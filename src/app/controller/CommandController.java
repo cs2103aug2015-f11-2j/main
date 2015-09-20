@@ -160,6 +160,9 @@ public class CommandController {
 		viewManager.setStatus("Showing list of commands");
 	}
 
+	/**
+	 * Shows appropriate view to the user
+	 */
 	private void showActiveView() {
 		if (activeView == ViewType.TASK_LIST) {
 			viewManager.showTaskList();

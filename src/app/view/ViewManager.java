@@ -26,7 +26,7 @@ import javafx.stage.Stage;
  * only one to interact with its child views.
  */
 public class ViewManager {
-	
+
 	private Stage primaryStage;
 
 	private BorderPane rootLayout;
@@ -61,8 +61,8 @@ public class ViewManager {
 	}
 
 	/**
-	 * Initializes all views for the program. Views initialized: RootView,
-	 * TaskListView, InputView.
+	 * Initializes all views for the program. Views initialized: TaskList,
+	 * Input, Text, Info.
 	 * 
 	 * @param primaryStage The stage (window) for which the views will be
 	 *            attached to.
@@ -119,6 +119,10 @@ public class ViewManager {
 		}
 	}
 
+	/**
+	 * Initializes the TextView, which is simply a text area to show information
+	 * (such as help).
+	 */
 	private void initializeTextView() {
 		LogHelper.getLogger().info("Initializing text view");
 		try {
@@ -130,7 +134,11 @@ public class ViewManager {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Initializes the InfoView, which contains information about the current
+	 * user input.
+	 */
 	private void initializeInfoView() {
 		LogHelper.getLogger().info("Initializing text view");
 		try {
@@ -144,7 +152,12 @@ public class ViewManager {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Scrolls the task list to show the specified task.
+	 * 
+	 * @param task The task to scroll to
+	 */
 	public void scrollTaskListTo(Task task) {
 		taskListViewManager.scrollTo(task);
 	}
@@ -214,7 +227,13 @@ public class ViewManager {
 		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
 		rootLayout.getStylesheets().add(themeCss);
 	}
-	
+
+	/**
+	 * Updates the info view using parameters from the specified Command object
+	 * parsed from the user's input
+	 * 
+	 * @param cmd The Command object parsed from user input
+	 */
 	public void updateInfoView(Command cmd) {
 		infoViewManager.updateView(cmd);
 	}
@@ -250,7 +269,10 @@ public class ViewManager {
 		loader.setLocation(Main.class.getResource(fxml));
 		return loader;
 	}
-	
+
+	/**
+	 * @return The primary stage (window)
+	 */
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
