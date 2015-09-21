@@ -61,9 +61,6 @@ public class CommandMark extends Command {
 			master.markTaskByIndex(masterIdsList.get(i));
 		}
 	}
-
-	// toggle the complete/incomplete state of the task in the taskList by given list of task ID
-
 	
 	// converts the ArrayList of id into a String, with each id separated by comma
 	private String getIdList(ArrayList<Integer> arr) {
