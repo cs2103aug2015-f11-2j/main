@@ -32,7 +32,7 @@ public class ViewConstants {
 	// DISPLAY command
 	public static String MESSAGE_DISPLAY = "Displaying %1$s tasks";
 	public static String ERROR_DISPLAY = "Error displaying tasks";
-	public static String ERROR_DISPLAY_INVALID_ARGUMENT = "Error displaying tasks, no such argument";
+	public static String ERROR_DISPLAY_INVALID_ARGUMENT = "Invalid option. Available: all, completed, uncompleted(default)";
 	
 	// INVALID command
 	public static String ERROR_INVALID_CMD = "Invalid command: %1$s";

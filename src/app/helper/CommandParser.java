@@ -446,14 +446,14 @@ public class CommandParser {
 	 */
 	public String getCommandDisplayArg(String content) {
 		String arg = "";
-		if (DISPLAY_COMPLETED.contains(content.trim())) {
+		if (DISPLAY_COMPLETED.contains(content.toLowerCase().trim())) {
 			arg = "completed";
-		} else if (DISPLAY_PENDING.contains(content.trim())) {
+		} else if (DISPLAY_PENDING.contains(content.toLowerCase().trim())) {
 			arg = "uncompleted";
-		} else if (DISPLAY_ALL.contains(content.trim())) {
+		} else if (DISPLAY_ALL.contains(content.toLowerCase().trim())) {
 			arg = "all";
 		} else {
-			arg = "No such argument";
+			arg = "Invalid Argument";
 		}
 		return arg;
 	}
