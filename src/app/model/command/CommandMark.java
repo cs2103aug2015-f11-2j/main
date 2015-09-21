@@ -29,8 +29,8 @@ public class CommandMark extends Command {
 		}
 		
 		CommandParser parser = new CommandParser();
-		ArrayList<Integer> idToMark = parser.getIdArrayList(this.getContent());
-		if (idToMark.get(0) == -1) {
+		ArrayList<Integer> idsToMark = parser.getIdArrayList(this.getContent());
+		if (idsToMark.get(0) == -1) {
 			setFeedback(ViewConstants.ERROR_MARK_INVALID_ID);
 			setStatusType(StatusType.ERROR);
 			return;
@@ -38,19 +38,24 @@ public class CommandMark extends Command {
 
 		try {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
-			for (int i = 0; i < idToMark.size(); i++) {
-				master.markTaskById(idToMark.get(i));
-			}
+			markTasksByIdList(idsToMark, master);
 			CommandController.getInstance().getDisplayedTaskList().setAll(master);
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(idToMark)));
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(idsToMark)));
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK, getIdList(idToMark)));
+			setFeedback(String.format(ViewConstants.ERROR_MARK, getIdList(idsToMark)));
 			setStatusType(StatusType.ERROR);
 		}
 		
 		CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
+	}
+
+	// toggle the complete/incomplete state of the task in the taskList by given list of task ID
+	private void markTasksByIdList(ArrayList<Integer> idsToMark, TaskList master) {
+		for (int i = 0; i < idsToMark.size(); i++) {
+			master.markTaskById(idsToMark.get(i));
+		}
 	}
 	
 	// converts the ArrayList of id into a String, with each id separated by comma
