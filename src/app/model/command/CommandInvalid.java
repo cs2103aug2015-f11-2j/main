@@ -18,9 +18,7 @@ public class CommandInvalid extends Command {
 		if (getCommandString().isEmpty()) {
 			return;
 		}
-		CommandParser parser = new CommandParser();
-		
-		String word = parser.getFirstWord(getCommandString());
+		String word = CommandParser.getFirstWord(getCommandString());
 		setFeedback(String.format(ViewConstants.ERROR_INVALID_CMD, word));
 	}
 

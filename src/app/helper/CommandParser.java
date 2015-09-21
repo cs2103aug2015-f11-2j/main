@@ -388,7 +388,7 @@ public class CommandParser {
 	 * @param words The string to get the first word from
 	 * @return The first word of the specified string
 	 */
-	public String getFirstWord(String words) {
+	public static String getFirstWord(String words) {
 		return words.trim().split("\\s+")[0];
 	}
 
@@ -398,7 +398,7 @@ public class CommandParser {
 	 * @param commandString The string to remove the first word from
 	 * @return The resultant string without the first word
 	 */
-	public String removeFirstWord(String commandString) {
+	public static String removeFirstWord(String commandString) {
 		return commandString.replace(getFirstWord(commandString), "").trim();
 	}
 
