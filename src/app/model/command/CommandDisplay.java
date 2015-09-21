@@ -45,7 +45,7 @@ public class CommandDisplay extends Command {
 				CommandController.getInstance().getDisplayedTaskList().setAll(master);
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
-			} else if (arg.equals("Invalid Argument")) {
+			} else if (arg.equals("invalid")) {
 				setFeedback(String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
 				setStatusType(StatusType.ERROR);
 			}

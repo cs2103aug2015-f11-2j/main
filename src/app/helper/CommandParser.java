@@ -453,7 +453,7 @@ public class CommandParser {
 		} else if (DISPLAY_ALL.contains(content.toLowerCase().trim())) {
 			arg = "all";
 		} else {
-			arg = "Invalid Argument";
+			arg = "invalid";
 		}
 		return arg;
 	}
