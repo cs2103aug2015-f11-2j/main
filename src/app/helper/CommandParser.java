@@ -411,4 +411,26 @@ public class CommandParser {
 	private static List<String> getUnmodifiableList(String... args) {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
+	
+	/**
+	 * Builds an Integer ArrayList from the command content containing task id(s)
+	 * 
+	 * @param content The content of the Command object
+	 * @return An ArrayList of the content(id) separated by comma
+	 */
+	public ArrayList<Integer> getIdArrayList(String content) {
+		ArrayList<Integer> idArray = new ArrayList<Integer>();
+		try {
+			String[] arr = content.split(",");	
+			for (int i = 0; i < arr.length; i++) {
+				idArray.add(Integer.valueOf(arr[i].trim()));
+			}
+			return idArray;
+		} catch (Exception e) {
+			idArray.clear();
+			Integer invalidTaskId = -1;
+			idArray.add(invalidTaskId);
+			return idArray;
+		}
+	}
 }
