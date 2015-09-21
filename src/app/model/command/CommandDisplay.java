@@ -29,20 +29,24 @@ public class CommandDisplay extends Command {
 				// default display argument is uncompleted
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				CommandController.getInstance().getDisplayedTaskList().setAll(retrievedTaskList);
+				CommandController.getInstance().setHeader("Displaying uncompleted tasks");
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, "uncompleted"));
 				setStatusType(StatusType.SUCCESS);
 			} else if (arg.equals("uncompleted")) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				CommandController.getInstance().getDisplayedTaskList().setAll(retrievedTaskList);
+				CommandController.getInstance().setHeader("Displaying uncompleted tasks");
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
 			} else if (arg.equals("completed")) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				CommandController.getInstance().getDisplayedTaskList().setAll(retrievedTaskList);
+				CommandController.getInstance().setHeader("Displaying completed tasks");
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
 			} else if (arg.equals("all")) {
 				CommandController.getInstance().getDisplayedTaskList().setAll(master);
+				CommandController.getInstance().setHeader("Displaying all tasks");
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
 			} else if (arg.equals("invalid")) {

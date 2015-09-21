@@ -8,6 +8,7 @@ import app.model.Task;
 import app.model.TaskList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -17,6 +18,8 @@ public class TaskListViewManager {
 
 	@FXML
 	private ListView<Task> taskListViewLayout;
+	@FXML
+	private Label taskListHeader;
 
 	/**
 	 * This method is implicitly called when the TaskListView is loaded from the
@@ -39,10 +42,23 @@ public class TaskListViewManager {
 				return null;
 			}
 		});
+		hideHeaderIfEmpty();
+	}
+
+	public void hideHeaderIfEmpty() {
+		if (taskListViewLayout.getChildrenUnmodifiable().isEmpty()) {
+			taskListHeader.setPrefHeight(0);
+		} else {
+			taskListHeader.setPrefHeight(-1);
+		}
 	}
 	
 	public void scrollTo(Task task) {
 		taskListViewLayout.scrollTo(task);
+	}
+	
+	public void setHeader(String text) {
+		taskListHeader.setText(text);
 	}
 
 	/**
@@ -52,6 +68,7 @@ public class TaskListViewManager {
 	 */
 	public void updateView(TaskList tasks) {
 		taskListViewLayout.setItems(tasks.getTaskList());
+		hideHeaderIfEmpty();
 	}
 
 	/**

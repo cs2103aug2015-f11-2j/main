@@ -182,6 +182,10 @@ public class CommandController {
 			viewManager.showTextView();
 		}
 	}
+	
+	public void setHeader(String text) {
+		viewManager.setHeader(text);
+	}
 
 	/**
 	 * Updates the view with the specified theme.
