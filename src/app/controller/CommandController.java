@@ -182,6 +182,15 @@ public class CommandController {
 			viewManager.showTextView();
 		}
 	}
+	
+	/**
+	 * Updates the header with the specified text
+	 * 
+	 * @param text The text the header should read
+	 */
+	public void setHeader(String text) {
+		viewManager.setHeader(text);
+	}
 
 	/**
 	 * Updates the view with the specified theme.

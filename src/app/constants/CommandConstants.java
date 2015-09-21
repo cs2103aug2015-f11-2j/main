@@ -7,13 +7,13 @@ import java.util.List;
 public class CommandConstants {
 
 	// Aliases for commands
-	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a");
-	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm");
+	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a", "+");
+	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm", "-");
 	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
 	public static final List<String> ALIASES_THEME = getUnmodifiableList("theme");
-	public static final List<String> ALIASES_EXIT = getUnmodifiableList("exit");
+	public static final List<String> ALIASES_EXIT = getUnmodifiableList("exit", "quit");
 	public static final List<String> ALIASES_MARK = getUnmodifiableList("mark", "m");
-	public static final List<String> ALIASES_DISPLAY = getUnmodifiableList("display");
+	public static final List<String> ALIASES_DISPLAY = getUnmodifiableList("display", "show", "view");
 
 	// Enum values for the different types of commands
 	public enum CommandType {

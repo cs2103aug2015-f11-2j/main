@@ -9,7 +9,7 @@
 }
 
 .list-view {
-	-fx-border-width: 0.0 0.0 1.0px 0.0;
+	-fx-border-width: 2.0px 0.0 1.0px 0.0;
 }
 
 .textViewTextArea {

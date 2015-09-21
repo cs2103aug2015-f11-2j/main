@@ -1,7 +1,7 @@
 
 .list-view {
 	-fx-background-color: #FCFCFC;
-	-fx-border-color: transparent transparent #CCCCCC transparent;
+	-fx-border-color: #CCCCCC transparent #CCCCCC transparent;
 }
 
 .list-cell {

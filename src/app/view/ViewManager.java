@@ -33,7 +33,7 @@ public class ViewManager {
 	private AnchorPane inputViewLayout;
 	private AnchorPane textViewLayout;
 	private VBox infoViewLayout;
-	private ListView<Task> taskListViewLayout;
+	private VBox taskListViewLayout;
 
 	private CommandController commandController;
 	private InputViewManager inputViewManager;
@@ -151,6 +151,15 @@ public class ViewManager {
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
+	}
+
+	/**
+	 * Updates text of the task list header
+	 * 
+	 * @param text The text for the header to read
+	 */
+	public void setHeader(String text) {
+		taskListViewManager.setHeader(text);
 	}
 
 	/**
