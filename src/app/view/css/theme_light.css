@@ -42,6 +42,21 @@
 /* End status bar */
 
 .infoView .infoDate, .infoView .infoPriority {
-	-fx-text-fill: #0056BD;
 	-fx-fill: #0056BD;
+}
+
+.infoView .infoDescription, .infoView .infoContent {
+	-fx-fill: #232323;
+}
+
+.infoView .infoCommand {
+	-fx-fill: #E35B2C;
+}
+
+.infoView .infoRequired {
+	-fx-fill: #0056BD;
+}
+
+.infoView .infoOptional {
+	-fx-fill: #666666;
 }

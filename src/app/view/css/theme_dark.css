@@ -74,6 +74,17 @@
 }
 
 .infoView .infoDate, .infoView .infoPriority {
-	-fx-text-fill: #008ED6;
 	-fx-fill: #008ED6;
+}
+
+.infoView .infoCommand {
+	-fx-fill: #EA7640;
+}
+
+.infoView .infoRequired {
+	-fx-fill: #008ED6;
+}
+
+.infoView .infoOptional {
+	-fx-fill: #A4A4A4;
 }
