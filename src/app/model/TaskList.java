@@ -25,11 +25,7 @@ public class TaskList {
 
 	public void markTaskById(Integer index) {
 		Task specifiedTask = taskList.get(index-1);
-		if (specifiedTask.isCompleted() == false) {
-			specifiedTask.setCompleted(true);
-		} else if (specifiedTask.isCompleted() == true) {
-			specifiedTask.setCompleted(false);
-		}
+		specifiedTask.setCompleted(!specifiedTask.isCompleted());
 	}
 	
 }
