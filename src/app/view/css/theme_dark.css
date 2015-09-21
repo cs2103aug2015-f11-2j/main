@@ -1,6 +1,6 @@
 .list-view {
 	-fx-background-color: #323A43;
-	-fx-border-color: transparent transparent #101010 transparent;
+	-fx-border-color: #101010 transparent #101010 transparent;
 }
 
 .list-cell {
@@ -19,6 +19,11 @@
 /* Even task items */
 .list-cell:even .taskItem {
 	-fx-background-color: #323A43;
+}
+
+.taskListHeader {
+	-fx-background-color: #292E39;
+	-fx-text-fill: #FDFDFD;
 }
 
 .taskItem {
