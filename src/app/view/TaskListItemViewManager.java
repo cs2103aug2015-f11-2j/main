@@ -59,6 +59,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		taskTopDate.setText("");
 		taskBottomDate.setText("");
 		taskListItemViewLayout.getStyleClass().removeAll("priorityHigh", "priorityMedium", "priorityLow");
+		taskListItemViewLayout.getStyleClass().remove("completed");
 		priorityImage.setVisible(false);
 		taskCheckbox.setSelected(false);
 	}
@@ -70,6 +71,18 @@ public class TaskListItemViewManager extends ListCell<Task> {
 		setIndex();
 		setContent();
 		setDates();
+		setCompleted();
+	}
+
+	/**
+	 * Sets strike-through effect for completed task
+	 */
+	private void setCompleted() {
+		if (this.task.isCompleted()) {
+			taskListItemViewLayout.getStyleClass().add("completed");
+		} else if (!this.task.isCompleted()) {
+			taskListItemViewLayout.getStyleClass().remove("completed");
+		}
 	}
 
 	/**
