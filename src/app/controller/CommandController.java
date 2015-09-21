@@ -8,6 +8,7 @@ import app.model.Task;
 import app.model.TaskList;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
+import app.model.command.CommandDisplay;
 import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandMark;
@@ -101,6 +102,8 @@ public class CommandController {
 			return CommandType.HELP;
 		} else if (CommandConstants.ALIASES_MARK.contains(word)) {
 			return CommandType.MARK;
+		} else if (CommandConstants.ALIASES_DISPLAY.contains(word)) {
+			return CommandType.DISPLAY;
 		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -130,6 +133,9 @@ public class CommandController {
 			break;
 		case MARK:
 			cmd = new CommandMark();
+			break;
+		case DISPLAY:
+			cmd = new CommandDisplay();
 			break;
 		case EXIT:
 			cmd = new CommandExit();

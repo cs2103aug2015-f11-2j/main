@@ -24,6 +24,10 @@ public class CommandParser {
 	private static final List<String> DAY_PATTERNS = getUnmodifiableList("EEEE", "EEE");
 	private static final List<String> TOMORROW_PATTERNS = getUnmodifiableList("tomorrow", "tmr");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
+	
+	private static final List<String> DISPLAY_COMPLETED = getUnmodifiableList("c", "comp", "complete", "completed");
+	private static final List<String> DISPLAY_PENDING = getUnmodifiableList("p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted");
+	private static final List<String> DISPLAY_ALL = getUnmodifiableList("a", "al", "all");
 
 	private List<String> allKeywords;
 
@@ -432,5 +436,25 @@ public class CommandParser {
 			idArray.add(invalidTaskId);
 			return idArray;
 		}
+	}
+	
+	/**
+	 * Compare the command content with possible arguments and return the intended argument for CommandDisplay
+	 * 
+	 * @param content The content of the Command object
+	 * @return A String containing the intended argument
+	 */
+	public String getCommandDisplayArg(String content) {
+		String arg = "";
+		if (DISPLAY_COMPLETED.contains(content.trim())) {
+			arg = "completed";
+		} else if (DISPLAY_PENDING.contains(content.trim())) {
+			arg = "uncompleted";
+		} else if (DISPLAY_ALL.contains(content.trim())) {
+			arg = "all";
+		} else {
+			arg = "No such argument";
+		}
+		return arg;
 	}
 }

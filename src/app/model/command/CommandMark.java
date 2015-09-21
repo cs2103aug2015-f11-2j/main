@@ -3,6 +3,7 @@ package app.model.command;
 import app.constants.ViewConstants;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.StatusType;
@@ -29,34 +30,40 @@ public class CommandMark extends Command {
 		}
 		
 		CommandParser parser = new CommandParser();
-		ArrayList<Integer> idsToMark = parser.getIdArrayList(this.getContent());
-		if (idsToMark.get(0) == -1) {
+		ArrayList<Integer> displayIdsToMarkList = parser.getIdArrayList(this.getContent());
+		if (displayIdsToMarkList.get(0) == -1) {
 			setFeedback(ViewConstants.ERROR_MARK_INVALID_ID);
 			setStatusType(StatusType.ERROR);
 			return;
 		}
 
 		try {
+			TaskList display = CommandController.getInstance().getDisplayedTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
-			markTasksByIdList(idsToMark, master);
+			markSelectedTasks(displayIdsToMarkList, display, master);
 			CommandController.getInstance().getDisplayedTaskList().setAll(master);
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(idsToMark)));
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK, getIdList(idsToMark)));
+			setFeedback(String.format(ViewConstants.ERROR_MARK, getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.ERROR);
 		}
 		
 		CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
 	}
 
-	// toggle the complete/incomplete state of the task in the taskList by given list of task ID
-	private void markTasksByIdList(ArrayList<Integer> idsToMark, TaskList master) {
-		for (int i = 0; i < idsToMark.size(); i++) {
-			master.markTaskById(idsToMark.get(i));
+	// Locate the specific tasks based on displayed id and mark them
+	private void markSelectedTasks(ArrayList<Integer> displayIdsToMarkList, TaskList display, TaskList master) {
+		ArrayList<UUID> tasksUuidList = display.getTasksUuidList(displayIdsToMarkList);
+		ArrayList<Integer> masterIdsList = master.getTasksIdList(tasksUuidList);
+		for (int i = 0; i < masterIdsList.size(); i++) {
+			master.markTaskByIndex(masterIdsList.get(i));
 		}
 	}
+
+	// toggle the complete/incomplete state of the task in the taskList by given list of task ID
+
 	
 	// converts the ArrayList of id into a String, with each id separated by comma
 	private String getIdList(ArrayList<Integer> arr) {

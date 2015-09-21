@@ -29,6 +29,11 @@ public class ViewConstants {
 	public static String ERROR_MARK_NO_TASK = "No task specified to mark";
 	public static String ERROR_MARK_INVALID_ID = "Error marking tasks, invalid task ID";
 	
+	// DISPLAY command
+	public static String MESSAGE_DISPLAY = "Displaying %1$s tasks";
+	public static String ERROR_DISPLAY = "Error displaying tasks";
+	public static String ERROR_DISPLAY_INVALID_ARGUMENT = "Error displaying tasks, no such argument";
+	
 	// INVALID command
 	public static String ERROR_INVALID_CMD = "Invalid command: %1$s";
 
