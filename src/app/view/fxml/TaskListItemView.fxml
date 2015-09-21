@@ -48,7 +48,8 @@
 					</children>
 				</HBox>
 				<Label fx:id="taskName" maxWidth="1.7976931348623157E308"
-					prefWidth="300.0" text="Task Name" wrapText="true" HBox.hgrow="ALWAYS">
+					prefWidth="300.0" styleClass="taskName" text="Task Name" wrapText="true"
+					HBox.hgrow="ALWAYS">
 					<font>
 						<Font name="Segoe UI Semibold" size="13.0" />
 					</font>
