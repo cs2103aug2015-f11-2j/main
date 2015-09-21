@@ -183,6 +183,11 @@ public class CommandController {
 		}
 	}
 	
+	/**
+	 * Updates the header with the specified text
+	 * 
+	 * @param text The text the header should read
+	 */
 	public void setHeader(String text) {
 		viewManager.setHeader(text);
 	}

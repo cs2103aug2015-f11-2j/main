@@ -36,6 +36,9 @@ public class ViewConstants {
 	
 	// INVALID command
 	public static String ERROR_INVALID_CMD = "Invalid command: %1$s";
+	
+	// Header constants
+	public static String HEADER_DISPLAY = "Displaying %1$s tasks";
 
 	// Enum values for the different statusbar statuses
 	public enum StatusType {
