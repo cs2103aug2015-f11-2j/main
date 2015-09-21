@@ -1,5 +1,5 @@
 .commandInput {
-	-fx-background-radius: 0;
+	-fx-background-radius: 0.0;
 }
 
 /* Default background color for items */
@@ -9,20 +9,20 @@
 }
 
 .list-view {
-	-fx-border-width: 0.0 0 1px 0;
+	-fx-border-width: 0.0 0.0 1.0px 0.0;
 }
 
 .textViewTextArea {
-	-fx-background-radius: 0;
+	-fx-background-radius: 0.0;
 }
 
 .textViewTextArea .content {
-	-fx-background-radius: 0;
+	-fx-background-radius: 0.0;
 }
 
 /* Individual task items. */
 .taskItem {
-	-fx-border-width: 0.0 0 1px 0;
+	-fx-border-width: 0.0 0.0 1.0px 0.0;
 }
 
 /* Begin completed tasks */
@@ -62,13 +62,15 @@
 /* End priority indicators */
 
 .commandInput {
-	-fx-background-radius: 0;
+	-fx-background-radius: 0.0;
 }
 
 .infoView {
-	-fx-background-color: linear-gradient(from 0px 0px to 0px 6px, #DDDDDD, #FCFCFC);
+	-fx-background-color: linear-gradient(from 0.0px 0.0px to 0.0px 6.0px, #DDDDDD, #FCFCFC);
 }
 
-.infoView .infoContent, .infoView .infoDate, .infoView .infoPriority {
+.infoView .infoContent, .infoView .infoDate, .infoView .infoPriority, 
+.infoView .infoDescription, .infoView .infoCommand, 
+.infoView .infoRequired, .infoView .infoOptional {
 	-fx-font-family: "Segoe UI Semibold";
 }

@@ -91,7 +91,7 @@ public class CommandController {
 	 * @return The determined CommandType object
 	 */
 	private CommandType determineCommandType(String commandString) {
-		String word = parser.getFirstWord(commandString).toLowerCase();
+		String word = CommandParser.getFirstWord(commandString).toLowerCase();
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
 		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
@@ -146,7 +146,7 @@ public class CommandController {
 		}
 
 		cmd.setCommandString(commandString);
-		cmd.setContent(parser.removeFirstWord(cmd.getCommandString()));
+		cmd.setContent(CommandParser.removeFirstWord(cmd.getCommandString()));
 		parseCommand(cmd);
 		return cmd;
 	}
