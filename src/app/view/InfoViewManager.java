@@ -4,12 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.constants.HelpConstants;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -46,6 +49,7 @@ public class InfoViewManager {
 
 		switch (cmd.getCommandType()) {
 		case ADD:
+			setHelpText(HelpConstants.HELP_ADD_OVERVIEW, HelpConstants.HELP_ADD_DESCRIPTION);
 			setCommandParamLabels(cmd);
 		default:
 			break;
@@ -54,11 +58,28 @@ public class InfoViewManager {
 		setPaddingIfHasChildren();
 	}
 
+	private void setHelpText(String overview, String description) {
+		ArrayList<Text> texts = new ArrayList<Text>();
+		texts.add(buildText(overview));
+		addInfoRow(texts);
+		texts = new ArrayList<Text>();
+		texts.add(buildText(description));
+		addInfoRow(texts);
+	}
+
 	private void setCommandParamLabels(Command cmd) {
 		setContentText(cmd);
 		setDateAndPriorityTexts(cmd);
+		addSeparator();
 	}
-	
+
+	private void addSeparator() {
+		Separator separator = new Separator();
+		if (infoViewLayout.getChildren().size() > 2) {
+			infoViewLayout.getChildren().add(2, separator);
+		}
+	}
+
 	private void setContentText(Command cmd) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
@@ -69,7 +90,7 @@ public class InfoViewManager {
 			addInfoRow(texts);
 		}
 	}
-	
+
 	private void setDateAndPriorityTexts(Command cmd) {
 		if (cmd.getContent().isEmpty()) {
 			return;
@@ -95,18 +116,18 @@ public class InfoViewManager {
 			Text priorityLevel = buildText(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY);
 			addTextsToList(texts, withPriority, priorityLevel);
 		}
-		
+
 		if (!texts.isEmpty()) {
 			addInfoRow(texts);
 		}
 	}
-	
+
 	private void addTextsToList(List<Text> list, Text... texts) {
 		for (Text text : texts) {
 			list.add(text);
 		}
 	}
-	
+
 	public void clearView() {
 		infoViewLayout.getChildren().clear();
 	}
@@ -142,7 +163,7 @@ public class InfoViewManager {
 		}
 		infoViewLayout.setPadding(padding);
 	}
-	
+
 	public void setViewManager(ViewManager viewManager) {
 		this.viewManager = viewManager;
 	}
