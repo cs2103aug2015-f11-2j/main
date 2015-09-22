@@ -1,6 +1,6 @@
 package app.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import app.constants.TaskConstants.Priority;
@@ -9,8 +9,8 @@ import app.model.command.Command;
 public class Task {
 	private UUID id;
 	private String name;
-	private Date startDate;
-	private Date endDate;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private Priority priority;
 
 	private boolean isCompleted;
@@ -36,19 +36,19 @@ public class Task {
 		this.name = name;
 	}
 
-	public Date getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 	

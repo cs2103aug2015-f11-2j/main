@@ -1,6 +1,6 @@
 package app.view;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import app.model.Task;
 import javafx.fxml.FXML;
@@ -104,12 +104,12 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 * Sets the dates of this task cell.
 	 */
 	public void setDates() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
 		if (task.getStartDate() != null && task.getEndDate() != null) {
-			taskTopDate.setText("From " + dateFormat.format(task.getStartDate()));
-			taskBottomDate.setText("To " + dateFormat.format(task.getEndDate()));
+			taskTopDate.setText("From " + formatter.format(task.getStartDate()));
+			taskBottomDate.setText("To " + formatter.format(task.getEndDate()));
 		} else if (task.getEndDate() != null) {
-			taskTopDate.setText("Due " + dateFormat.format(task.getEndDate()));
+			taskTopDate.setText("Due " + formatter.format(task.getEndDate()));
 		}
 	}
 

@@ -1,6 +1,6 @@
 package app.view;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +28,14 @@ public class InfoViewManager {
 	private static final String STYLE_INFOVIEW_PRIORITY = "infoPriority";
 
 	private ViewManager viewManager;
-	private SimpleDateFormat dateFormat;
+	DateTimeFormatter dateFormatter;
 
 	@FXML
 	private VBox infoViewLayout;
 
 	@FXML
 	public void initialize() {
-		dateFormat = new SimpleDateFormat("dd/MM/yy hh:mma");
+		dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
 
 		// Modify the height of the window so that the info view appears to
 		// extend from the bottom
@@ -128,13 +128,13 @@ public class InfoViewManager {
 		// Add parsed dates
 		if (cmd.getStartDate() == null && cmd.getEndDate() != null) {
 			Text due = buildText(" due ");
-			Text endDate = buildText(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
+			Text endDate = buildText(dateFormatter.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
 			addTextsToList(texts, due, endDate);
 		} else if (cmd.getStartDate() != null && cmd.getEndDate() != null) {
 			Text from = buildText(" from ");
-			Text startDate = buildText(dateFormat.format(cmd.getStartDate()), STYLE_INFOVIEW_DATE);
+			Text startDate = buildText(dateFormatter.format(cmd.getStartDate()), STYLE_INFOVIEW_DATE);
 			Text to = buildText(" to ");
-			Text endDate = buildText(dateFormat.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
+			Text endDate = buildText(dateFormatter.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
 			addTextsToList(texts, from, startDate, to, endDate);
 		}
 

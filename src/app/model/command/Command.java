@@ -1,6 +1,6 @@
 package app.model.command;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
@@ -12,8 +12,8 @@ public abstract class Command {
 	private String commandString;
 	private CommandType commandType;
 	private String content;
-	private Date startDate;
-	private Date endDate;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private Priority priority;
 	private String feedback;
 	private StatusType statusType;
@@ -51,19 +51,19 @@ public abstract class Command {
 		this.commandType = commandType;
 	}
 
-	public Date getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 
