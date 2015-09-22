@@ -1,10 +1,8 @@
 # Next
 
-> What's my next task?
-
 Next is a task manager that makes managing your daily tasks simple.
 
-Next combines the richness of a graphical interface with the speed of traditional commandline input to maximize your efficiency.
+By combining the richness of a graphical interface with the speed of traditional commandline input, Next offers maximum efficiency and ease of use.
 
 ## Usage
 
