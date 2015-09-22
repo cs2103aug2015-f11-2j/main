@@ -353,6 +353,15 @@ public class ParserTest {
 		LocalDateTime expectedEndDate = buildDate(1, 17, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
+	
+	@Test
+	public void testParseStartAfterEndDate() {
+		String input = "add buy milk from 5pm to 3pm";
+		Command cmd = CommandController.getInstance().createCommand(input);
+		assertNull(cmd.getStartDate());
+		assertNull(cmd.getEndDate());
+		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
+	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);

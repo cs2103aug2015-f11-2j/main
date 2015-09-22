@@ -134,6 +134,15 @@ public class CommandParser {
 		}
 
 		/*
+		 * If start date is after end date, the date range is invalid and is
+		 * removed.
+		 */
+		if (parsedStart != null && parsedEnd != null && !isValidDateRange(parsedStart, parsedEnd)) {
+			startDateStart = startDateEnd = endDateStart = endDateEnd = -1;
+			parsedStart = parsedEnd = null;
+		}
+
+		/*
 		 * Merge disjointed content tokens. For example:
 		 * 
 		 * [ADD] [CONTENT] [PRIORITY] [CONTENT] [DEADLINE]
@@ -227,8 +236,8 @@ public class CommandParser {
 	}
 
 	/**
-	 * Tries to return a LocalDateTime object from a given string representation. No
-	 * reference date is specified.
+	 * Tries to return a LocalDateTime object from a given string
+	 * representation. No reference date is specified.
 	 * 
 	 * @param dateString The string representation of the date
 	 * @return LocalDateTime if date can be parsed, else null
@@ -335,6 +344,17 @@ public class CommandParser {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Checks that start date is before end date
+	 * 
+	 * @param start The start date
+	 * @param end The end date
+	 * @return True if start date is before end date
+	 */
+	private boolean isValidDateRange(LocalDateTime start, LocalDateTime end) {
+		return start.isBefore(end);
 	}
 
 	/**
