@@ -2,19 +2,28 @@ package app.helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class LogHelper {
-	public static Logger logger;
 
-	public static void initializeLogger() {
+	private static final String LOG_DIR = "./logs";
+	private static final String LOG_FILE = "next.log";
+
+	private static Logger logger;
+
+	/**
+	 * Initializes the Logger.
+	 */
+	private static void initializeLogger() {
 		logger = Logger.getLogger(LogHelper.class.getName());
 		try {
-			File logDir = new File("./logs");
+			File logDir = new File(LOG_DIR);
 			logDir.mkdir();
-			FileHandler fileHandler = new FileHandler("./logs/next.log", true);
+			String path = Paths.get(LOG_DIR, LOG_FILE).toString();
+			FileHandler fileHandler = new FileHandler(path, true);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fileHandler.setFormatter(formatter);
 			logger.addHandler(fileHandler);
@@ -23,6 +32,9 @@ public class LogHelper {
 		}
 	}
 
+	/**
+	 * @return The Logger instance
+	 */
 	public static Logger getLogger() {
 		if (logger == null) {
 			initializeLogger();
