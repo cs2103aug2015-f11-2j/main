@@ -2,6 +2,8 @@ package app.helper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,9 +26,10 @@ public class CommandParser {
 	private static final List<String> DAY_PATTERNS = getUnmodifiableList("EEEE", "EEE");
 	private static final List<String> TOMORROW_PATTERNS = getUnmodifiableList("tomorrow", "tmr");
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
-	
+
 	private static final List<String> DISPLAY_COMPLETED = getUnmodifiableList("c", "comp", "complete", "completed");
-	private static final List<String> DISPLAY_PENDING = getUnmodifiableList("p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted");
+	private static final List<String> DISPLAY_PENDING = getUnmodifiableList("p", "pend", "pending", "i", "incomp",
+			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = getUnmodifiableList("a", "al", "all");
 
 	private List<String> allKeywords;
@@ -116,8 +119,8 @@ public class CommandParser {
 		// Try to parse the dates detected.
 		String startDateString = getStringFromArrayIndexRange(startDateStart + 1, startDateEnd, arr);
 		String endDateString = getStringFromArrayIndexRange(endDateStart + 1, endDateEnd, arr);
-		Date parsedStart = determineDate(startDateString);
-		Date parsedEnd = determineDate(endDateString, parsedStart);
+		LocalDateTime parsedStart = determineDate(startDateString);
+		LocalDateTime parsedEnd = determineDate(endDateString, parsedStart);
 
 		/*
 		 * if start/end date is detected but cannot be parsed, we treat it as
@@ -146,7 +149,7 @@ public class CommandParser {
 				contentEnd = i;
 			}
 		}
-		
+
 		// Remove any tokens we merged over.
 		if (priorityEnd < contentEnd) {
 			priorityStart = priorityEnd = -1;
@@ -224,38 +227,37 @@ public class CommandParser {
 	}
 
 	/**
-	 * Tries to return a Date object from a given string representation. No
+	 * Tries to return a LocalDateTime object from a given string representation. No
 	 * reference date is specified.
 	 * 
 	 * @param dateString The string representation of the date
-	 * @return Date if date can be parsed, else null
+	 * @return LocalDateTime if date can be parsed, else null
 	 */
-	private Date determineDate(String dateString) {
+	private LocalDateTime determineDate(String dateString) {
 		return determineDate(dateString, null);
 	}
 
 	/**
-	 * Tries to return a Date object from a given string representation. A
-	 * reference date is specified. For instance, "3pm" would result in a date
-	 * equal to the reference date but with a time of "3pm".
+	 * Tries to return a LocalDateTime object from a given string
+	 * representation. A reference date is specified. For instance, "3pm" would
+	 * result in a date equal to the reference date but with a time of "3pm".
 	 * 
 	 * @param dateString The string representation of the date
-	 * @return Date if date can be parsed, else null
+	 * @return LocalDateTime object if date can be parsed, else null
 	 */
-	@SuppressWarnings("deprecation")
-	private Date determineDate(String dateString, Date reference) {
+	private LocalDateTime determineDate(String dateString, LocalDateTime reference) {
 		dateString = dateString.toLowerCase();
-		Date date = null;
+		LocalDateTime date = null;
 
 		// Special case: "now" and "today"
 		if (dateString.equalsIgnoreCase("now") || dateString.equalsIgnoreCase("today")) {
-			date = new Date();
+			date = LocalDateTime.now();
 			return date;
 		}
 
 		if (TOMORROW_PATTERNS.contains(dateString)) {
-			date = new Date();
-			date.setDate(date.getDate() + 1);
+			date = LocalDateTime.now();
+			date.plusDays(1);
 			return date;
 		}
 
@@ -304,15 +306,12 @@ public class CommandParser {
 
 			if (date != null) {
 				if (!skipReference && reference != null) {
-					Date newDate = (Date) reference.clone();
-					newDate.setHours(date.getHours());
-					newDate.setMinutes(date.getMinutes());
+					LocalDateTime newDate = reference.withHour(date.getHour());
+					newDate = newDate.withMinute(date.getMinute());
 					return newDate;
 				} else {
-					Date todayDate = new Date();
-					todayDate.setDate(todayDate.getDate() + dayOffset);
-					todayDate.setHours(date.getHours());
-					todayDate.setMinutes(date.getMinutes());
+					LocalDateTime todayDate = LocalDateTime.now();
+					todayDate = todayDate.plusDays(dayOffset).withHour(date.getHour()).withMinute(date.getMinute());
 					return todayDate;
 				}
 			}
@@ -321,7 +320,7 @@ public class CommandParser {
 			for (String dayPattern : DAY_PATTERNS) {
 				date = getDateFromPattern(dateString, dayPattern + " " + timePattern);
 				if (date != null) {
-					date = buildDateWithNextDay(date.getDay(), date.getHours(), date.getMinutes());
+					date = buildDateWithNextDay(date.getDayOfWeek().getValue(), date.getHour(), date.getMinute());
 					return date;
 				}
 			}
@@ -331,7 +330,7 @@ public class CommandParser {
 		for (String dayPattern : DAY_PATTERNS) {
 			date = getDateFromPattern(dateString, dayPattern);
 			if (date != null) {
-				date = buildDateWithNextDay(date.getDay(), date.getHours(), date.getMinutes());
+				date = buildDateWithNextDay(date.getDayOfWeek().getValue(), date.getHour(), date.getMinute());
 				return date;
 			}
 		}
@@ -346,22 +345,19 @@ public class CommandParser {
 	 * For example, if 'day' is 2, the returned date is the first Tuesday from
 	 * now.
 	 * 
-	 * @param day An integer indicating the day: 0 -> sunday, 1 -> monday, ...,
-	 *            6 -> saturday
+	 * @param day An integer indicating the day: 1 -> monday, 2 -> tuesday, ...,
+	 *            7 -> sunday
 	 * @param hours The hours to set the date to
 	 * @param minutes The minutes to set the date to
 	 * @return The constructed date with the day, hours, and minutes set.
 	 */
-	@SuppressWarnings("deprecation")
-	private Date buildDateWithNextDay(int day, int hours, int minutes) {
-		Date date = new Date();
-		int diff = (day - date.getDay());
+	private LocalDateTime buildDateWithNextDay(int day, int hours, int minutes) {
+		LocalDateTime date = LocalDateTime.now();
+		int diff = (day - date.getDayOfWeek().getValue());
 		if (diff < 0) {
 			diff += 7;
 		}
-		date.setDate(date.getDate() + diff);
-		date.setHours(hours);
-		date.setMinutes(minutes);
+		date = date.plusDays(diff).withHour(hours).withMinute(minutes);
 		return date;
 	}
 
@@ -370,20 +366,44 @@ public class CommandParser {
 	 * 
 	 * @param dateString The string representation of the date
 	 * @param pattern The pattern to try parsing with
-	 * @return Date if date can be parsed, else null
+	 * @return LocalDateTime object if date can be parsed, else null
 	 */
-	private Date getDateFromPattern(String dateString, String pattern) {
+	private LocalDateTime getDateFromPattern(String dateString, String pattern) {
+		// Use SimpleDateFormat because it's much more flexible for datetimes
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		try {
 			Date date = sdf.parse(dateString);
 			String dateTimeFormat = sdf.format(date);
 			if (dateTimeFormat.equalsIgnoreCase(dateString)) {
-				return date;
+				return toLocalDateTime(date);
 			}
 		} catch (ParseException e) {
 			// nothing
 		}
+
 		return null;
+	}
+
+	/**
+	 * Converts a Date object to LocalDateTime object
+	 * 
+	 * @param date The Date object to convert
+	 * @return The equivalent LocalDateTime object
+	 */
+	public static LocalDateTime toLocalDateTime(Date date) {
+		LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.systemDefault());
+		return dateTime;
+	}
+
+	/**
+	 * Converts a LocalDateTime object to Date object
+	 * 
+	 * @param dateTime The LocalDateTime object to convert
+	 * @return The equivalent Date object
+	 */
+	public static Date toDate(LocalDateTime dateTime) {
+		Date date = Date.from(dateTime.toInstant((ZoneOffset) ZoneOffset.systemDefault()));
+		return date;
 	}
 
 	/**
@@ -415,9 +435,10 @@ public class CommandParser {
 	private static List<String> getUnmodifiableList(String... args) {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
-	
+
 	/**
-	 * Builds an Integer ArrayList from the command content containing task id(s)
+	 * Builds an Integer ArrayList from the command content containing task
+	 * id(s)
 	 * 
 	 * @param content The content of the Command object
 	 * @return An ArrayList of the content(id) separated by comma
@@ -425,7 +446,7 @@ public class CommandParser {
 	public ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
 		try {
-			String[] arr = content.split(",");	
+			String[] arr = content.split(",");
 			for (int i = 0; i < arr.length; i++) {
 				idArray.add(Integer.valueOf(arr[i].trim()));
 			}
@@ -437,9 +458,10 @@ public class CommandParser {
 			return idArray;
 		}
 	}
-	
+
 	/**
-	 * Compare the command content with possible arguments and return the intended argument for CommandDisplay
+	 * Compare the command content with possible arguments and return the
+	 * intended argument for CommandDisplay
 	 * 
 	 * @param content The content of the Command object
 	 * @return A String containing the intended argument
