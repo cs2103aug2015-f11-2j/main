@@ -217,8 +217,8 @@ public class CommandParser {
 			return Priority.MEDIUM;
 		} else if (priorityLevel.contains("low")) {
 			return Priority.LOW;
-		}
-		return null;
+		} 
+		return Priority.NONE;
 	}
 
 	/**
@@ -265,8 +265,7 @@ public class CommandParser {
 		}
 
 		if (TOMORROW_PATTERNS.contains(dateString)) {
-			date = LocalDateTime.now();
-			date.plusDays(1);
+			date = LocalDateTime.now().plusDays(1);
 			return date;
 		}
 

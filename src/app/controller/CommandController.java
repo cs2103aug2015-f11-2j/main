@@ -230,4 +230,9 @@ public class CommandController {
 	public TaskList getDisplayedTaskList() {
 		return displayedTaskList;
 	}
+	
+	public void setDisplayedTaskList(TaskList taskList) {
+		taskList.sort();
+		displayedTaskList.setAll(taskList);
+	}
 }
