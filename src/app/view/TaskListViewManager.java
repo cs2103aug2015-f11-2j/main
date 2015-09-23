@@ -50,6 +50,7 @@ public class TaskListViewManager {
 			taskListHeader.setPrefHeight(0);
 		} else {
 			taskListHeader.setPrefHeight(-1);
+			taskListHeader.setMinHeight(-1);
 		}
 	}
 	
