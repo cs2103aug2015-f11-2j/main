@@ -3,6 +3,7 @@ package app.view;
 import java.time.format.DateTimeFormatter;
 
 import app.model.Task;
+import app.model.TaskCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -11,9 +12,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-public class TaskListItemViewManager extends ListCell<Task> {
+public class TaskListItemViewManager extends ListCell<TaskCell> {
 
 	private Task task;
+	private int index;
 
 	@FXML
 	private AnchorPane taskListItemViewLayout;
@@ -39,15 +41,23 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 * The components of the item is updated with the supplied Task parameter.
 	 */
 	@Override
-	public void updateItem(Task task, boolean empty) {
-		super.updateItem(task, empty);
-		this.task = task;
+	public void updateItem(TaskCell taskCell, boolean empty) {
+		super.updateItem(taskCell, empty);
 		// Always clear the content due to a JavaFX quirk with updating cells.
 		clearContent();
-		if (!empty && task != null) {
-			setGraphic(taskListItemViewLayout);
-			setLabels();
-			setPriority();
+		if (!empty && taskCell != null) {
+			if (taskCell.getTask() != null) {
+				this.task = taskCell.getTask();
+				this.index = taskCell.getIndex();
+				setGraphic(taskListItemViewLayout);
+				setLabels();
+				setPriority();
+			} else {
+				Label label = new Label(taskCell.getLabel());
+				label.setMaxWidth(Double.MAX_VALUE);
+				label.getStyleClass().addAll("taskItem", "taskDateLabel");
+				setGraphic(label);
+			}
 		}
 	}
 
@@ -89,7 +99,7 @@ public class TaskListItemViewManager extends ListCell<Task> {
 	 * Sets the 1-index of this task cell.
 	 */
 	private void setIndex() {
-		taskId.setText(String.valueOf(getIndex() + 1));
+		taskId.setText(String.valueOf(index));
 	}
 
 	/**

@@ -43,8 +43,8 @@ public class TaskList {
 	 * (1) Priority is higher, (2) Name by lexicographical ordering
 	 */
 	private int compareTask(Task task1, Task task2) {
-		LocalDateTime task1Key = getSortKey(task1);
-		LocalDateTime task2Key = getSortKey(task2);
+		LocalDateTime task1Key = task1.getSortKey();
+		LocalDateTime task2Key = task2.getSortKey();
 		int result = 0;
 
 		if (task1Key != null && task2Key != null) {
@@ -64,15 +64,6 @@ public class TaskList {
 		}
 
 		return result;
-	}
-
-	private LocalDateTime getSortKey(Task task) {
-		if (task.getStartDate() == null && task.getEndDate() != null) {
-			return task.getEndDate();
-		} else if (task.getStartDate() != null && task.getEndDate() != null) {
-			return task.getStartDate();
-		}
-		return null;
 	}
 
 	// toggle isCompleted for the task at index location

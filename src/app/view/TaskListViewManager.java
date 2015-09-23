@@ -1,11 +1,17 @@
 package app.view;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.Main;
 import app.helper.LogHelper;
 import app.model.Task;
+import app.model.TaskCell;
 import app.model.TaskList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -17,7 +23,7 @@ public class TaskListViewManager {
 	private ViewManager viewManager;
 
 	@FXML
-	private ListView<Task> taskListViewLayout;
+	private ListView<TaskCell> taskListViewLayout;
 	@FXML
 	private Label taskListHeader;
 
@@ -28,9 +34,9 @@ public class TaskListViewManager {
 	 */
 	@FXML
 	public void initialize() {
-		taskListViewLayout.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+		taskListViewLayout.setCellFactory(new Callback<ListView<TaskCell>, ListCell<TaskCell>>() {
 			@Override
-			public ListCell<Task> call(ListView<Task> listView) {
+			public ListCell<TaskCell> call(ListView<TaskCell> listView) {
 				try {
 					FXMLLoader loader = new FXMLLoader();
 					loader.setLocation(Main.class.getResource("view/fxml/TaskListItemView.fxml"));
@@ -53,11 +59,11 @@ public class TaskListViewManager {
 			taskListHeader.setMinHeight(-1);
 		}
 	}
-	
+
 	public void scrollTo(Task task) {
-		taskListViewLayout.scrollTo(task);
+		// taskListViewLayout.scrollTo(task);
 	}
-	
+
 	public void setHeader(String text) {
 		taskListHeader.setText(text);
 	}
@@ -68,8 +74,37 @@ public class TaskListViewManager {
 	 * @param tasks A TaskList object containing the list of tasks.
 	 */
 	public void updateView(TaskList tasks) {
-		taskListViewLayout.setItems(tasks.getTaskList());
+		taskListViewLayout.setItems(buildTaskCells(tasks));
 		hideHeaderIfEmpty();
+	}
+
+	// TODO: very hacky implementation. clean this up.
+	private ObservableList<TaskCell> buildTaskCells(TaskList tasks) {
+		// assume tasks is sorted already.
+		ObservableList<TaskCell> taskCells = FXCollections.observableArrayList();
+		LocalDate date = null;
+		int index = 1;
+		for (Task task : tasks.getTaskList()) {
+
+			// add label
+			LocalDate sortKey = null;
+			if (task.getSortKey() != null) {
+				sortKey = task.getSortKey().toLocalDate();
+			}
+			if ((sortKey != null && date == null) || (date != null && sortKey != null && !date.isEqual(sortKey))) {
+				date = task.getEndDate().toLocalDate();
+				TaskCell cell = new TaskCell();
+				cell.setLabel(date.toString());
+				taskCells.add(cell);
+			}
+
+			TaskCell cell = new TaskCell();
+			cell.setTask(task);
+			cell.setIndex(index++);
+			taskCells.add(cell);
+		}
+
+		return taskCells;
 	}
 
 	/**

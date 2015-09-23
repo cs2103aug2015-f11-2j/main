@@ -67,4 +67,13 @@ public class Task {
 	public void setCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
 	}
+	
+	public LocalDateTime getSortKey() {
+		if (getStartDate() == null && getEndDate() != null) {
+			return getEndDate();
+		} else if (getStartDate() != null && getEndDate() != null) {
+			return getStartDate();
+		}
+		return null;
+	}
 }

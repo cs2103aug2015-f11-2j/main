@@ -20,7 +20,7 @@
 
 /* Even task items */
 .list-cell:even .taskItem {
-	-fx-background-color: #F5F5F5;
+	-fx-background-color: #FCFCFC;
 }
 
 .taskItemLines .taskItemLine1, .taskItemLines .taskItemLine2 {
