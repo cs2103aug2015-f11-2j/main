@@ -53,12 +53,17 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 				setLabels();
 				setPriority();
 			} else {
-				Label label = new Label(taskCell.getLabel());
-				label.setMaxWidth(Double.MAX_VALUE);
-				label.getStyleClass().addAll("taskItem", "taskDateLabel");
+				Label label = buildDateLabel(taskCell.getLabel());
 				setGraphic(label);
 			}
 		}
+	}
+	
+	private Label buildDateLabel(String labelText) {
+		Label label = new Label(labelText);
+		label.setMaxWidth(Double.MAX_VALUE);
+		label.getStyleClass().addAll("taskItem", "taskDateLabel");
+		return label;
 	}
 
 	/**

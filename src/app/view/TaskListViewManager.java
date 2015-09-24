@@ -78,29 +78,28 @@ public class TaskListViewManager {
 		hideHeaderIfEmpty();
 	}
 
-	// TODO: very hacky implementation. clean this up.
 	private ObservableList<TaskCell> buildTaskCells(TaskList tasks) {
 		// assume tasks is sorted already.
 		ObservableList<TaskCell> taskCells = FXCollections.observableArrayList();
-		LocalDate date = null;
+		LocalDate labelDate = null;
 		int index = 1;
+		
 		for (Task task : tasks.getTaskList()) {
-
-			// add label
 			LocalDate sortKey = null;
 			if (task.getSortKey() != null) {
 				sortKey = task.getSortKey().toLocalDate();
 			}
-			if ((sortKey != null && date == null) || (date != null && sortKey != null && !date.isEqual(sortKey))) {
-				date = task.getEndDate().toLocalDate();
-				TaskCell cell = new TaskCell();
-				cell.setLabel(date.toString());
+			
+			// If first occurrence of a new date, add a TaskCell for the date label
+			if ((sortKey != null && labelDate == null)
+					|| (labelDate != null && sortKey != null && !labelDate.isEqual(sortKey))) {
+				labelDate = task.getSortKey().toLocalDate();
+				TaskCell cell = new TaskCell(labelDate);
 				taskCells.add(cell);
 			}
 
-			TaskCell cell = new TaskCell();
-			cell.setTask(task);
-			cell.setIndex(index++);
+			// Add a TaskCell for the Task item
+			TaskCell cell = new TaskCell(task, index++);
 			taskCells.add(cell);
 		}
 
