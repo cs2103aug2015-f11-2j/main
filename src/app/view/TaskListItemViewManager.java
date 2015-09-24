@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import app.model.Task;
 import app.model.TaskCell;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
