@@ -261,25 +261,25 @@ public class CommandParser {
 		// Special case: "now" and "today"
 		if (dateString.equalsIgnoreCase("now") || dateString.equalsIgnoreCase("today")) {
 			date = LocalDateTime.now();
-			return date;
+			return processDate(date);
 		}
 
 		if (TOMORROW_PATTERNS.contains(dateString)) {
 			date = LocalDateTime.now().plusDays(1);
-			return date;
+			return processDate(date);
 		}
 
 		// check date patterns only
 		for (String datePattern : DATE_PATTERNS) {
 			date = getDateFromPattern(dateString, datePattern);
 			if (date != null) {
-				return date;
+				return processDate(date);
 			}
 			// check date + time patterns
 			for (String timePattern : TIME_PATTERNS) {
 				date = getDateFromPattern(dateString, datePattern + " " + timePattern);
 				if (date != null) {
-					return date;
+					return processDate(date);
 				}
 			}
 		}
@@ -316,11 +316,11 @@ public class CommandParser {
 				if (!skipReference && reference != null) {
 					LocalDateTime newDate = reference.withHour(date.getHour());
 					newDate = newDate.withMinute(date.getMinute());
-					return newDate;
+					return processDate(newDate);
 				} else {
 					LocalDateTime todayDate = LocalDateTime.now();
 					todayDate = todayDate.plusDays(dayOffset).withHour(date.getHour()).withMinute(date.getMinute());
-					return todayDate;
+					return processDate(todayDate);
 				}
 			}
 
@@ -329,7 +329,7 @@ public class CommandParser {
 				date = getDateFromPattern(dateString, dayPattern + " " + timePattern);
 				if (date != null) {
 					date = buildDateWithNextDay(date.getDayOfWeek().getValue(), date.getHour(), date.getMinute());
-					return date;
+					return processDate(date);
 				}
 			}
 		}
@@ -339,8 +339,15 @@ public class CommandParser {
 			date = getDateFromPattern(dateString, dayPattern);
 			if (date != null) {
 				date = buildDateWithNextDay(date.getDayOfWeek().getValue(), date.getHour(), date.getMinute());
-				return date;
+				return processDate(date);
 			}
+		}
+		return null;
+	}
+	
+	private LocalDateTime processDate(LocalDateTime date) {
+		if (date != null) {
+			return date.withSecond(0).withNano(0);
 		}
 		return null;
 	}

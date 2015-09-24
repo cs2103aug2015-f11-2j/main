@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 import app.Main;
 import app.constants.ViewConstants;
@@ -63,7 +64,13 @@ public class TaskListViewManager {
 	}
 
 	public void scrollTo(Task task) {
-		// taskListViewLayout.scrollTo(task);
+		UUID uuid = task.getId();
+		for (TaskCell cell : taskListViewLayout.getItems()) {
+			if (cell.getTask() != null && cell.getTask().getId().equals(uuid)) {
+				taskListViewLayout.scrollTo(cell);
+				break;
+			}
+		}
 	}
 
 	public void setHeader(String text) {
