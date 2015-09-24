@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import app.model.Task;
 import app.model.TaskCell;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -16,6 +17,7 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 
 	private Task task;
 	private int index;
+	private String style;
 
 	@FXML
 	private AnchorPane taskListItemViewLayout;
@@ -46,10 +48,12 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 		// Always clear the content due to a JavaFX quirk with updating cells.
 		clearContent();
 		if (!empty && taskCell != null) {
+			style = taskCell.getStyle();
 			if (taskCell.getTask() != null) {
-				this.task = taskCell.getTask();
-				this.index = taskCell.getIndex();
+				task = taskCell.getTask();
+				index = taskCell.getIndex();
 				setGraphic(taskListItemViewLayout);
+				setStyle();
 				setLabels();
 				setPriority();
 			} else {
@@ -59,10 +63,14 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 		}
 	}
 	
+	private void setStyle() {
+		taskListItemViewLayout.getStyleClass().add(style);
+	}
+	
 	private Label buildDateLabel(String labelText) {
 		Label label = new Label(labelText);
 		label.setMaxWidth(Double.MAX_VALUE);
-		label.getStyleClass().addAll("taskItem", "taskDateLabel");
+		label.getStyleClass().addAll("taskItem", "taskDateLabel", style);
 		return label;
 	}
 
@@ -73,10 +81,14 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 		setGraphic(null);
 		taskTopDate.setText("");
 		taskBottomDate.setText("");
-		taskListItemViewLayout.getStyleClass().removeAll("priorityHigh", "priorityMedium", "priorityLow");
-		taskListItemViewLayout.getStyleClass().remove("completed");
 		priorityImage.setVisible(false);
 		taskCheckbox.setSelected(false);
+		clearStyleClasses();
+	}
+	
+	private void clearStyleClasses() {
+		taskListItemViewLayout.getStyleClass().clear();
+		taskListItemViewLayout.getStyleClass().add("taskItem");
 	}
 
 	/**

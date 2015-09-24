@@ -9,7 +9,8 @@
 }
 
 .list-view {
-	-fx-border-width: 2.0px 0.0 1.0px 0.0;
+	-fx-border-width: 2.0px 0.0 1.0px 0.0px;
+	-fx-padding: 0px;
 }
 
 .textViewTextArea {
@@ -22,7 +23,7 @@
 
 /* Individual task items. */
 .taskItem {
-	-fx-border-width: 0.0 0.0 1.0px 0.0;
+	-fx-border-width: 0.0 0.0 1.0px 2px;
 }
 
 .taskItem.taskDateLabel {

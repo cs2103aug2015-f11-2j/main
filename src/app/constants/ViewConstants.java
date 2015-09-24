@@ -1,5 +1,8 @@
 package app.constants;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import app.Main;
 
 public class ViewConstants {
@@ -8,6 +11,14 @@ public class ViewConstants {
 	public static String STATUS_STYLE_SUCCESS = "success";
 	public static String STATUS_STYLE_ERROR = "error";
 	public static String STATUS_STYLE_INFO = "info";
+	
+	// Style classes for task item colors
+	public static String ITEM_PURPLE = "purple";
+	public static String ITEM_BLUE = "blue";
+	public static String ITEM_LIGHTBLUE = "lightblue";
+	public static String ITEM_GREEN = "green";
+	public static String ITEM_YELLOW = "yellow";
+	public static String ITEM_ORANGE = "orange";
 
 	// THEME command
 	// Resource locations for the theme CSS files.
@@ -48,5 +59,16 @@ public class ViewConstants {
 	// Enum values for the different primary views
 	public enum ViewType {
 		TASK_LIST, TEXT_VIEW;
+	}
+	
+	public static Queue<String> getItemColorsQueue() {
+		Queue<String> queue = new LinkedList<String>();
+		queue.add(ITEM_PURPLE);
+		queue.add(ITEM_BLUE);
+		queue.add(ITEM_LIGHTBLUE);
+		queue.add(ITEM_GREEN);
+		queue.add(ITEM_YELLOW);
+		queue.add(ITEM_ORANGE);
+		return queue;
 	}
 }

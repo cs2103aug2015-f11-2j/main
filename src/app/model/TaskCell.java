@@ -7,6 +7,7 @@ public class TaskCell {
 	private Task task;
 	private LocalDate labelDate;
 	private int index;
+	private String style;
 
 	private DateTimeFormatter dateFormatter;
 	private static final String DATE_PATTERN = "d MMMM ''yy";
@@ -15,15 +16,17 @@ public class TaskCell {
 		dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 	}
 
-	public TaskCell(LocalDate labelDate) {
+	public TaskCell(LocalDate labelDate, String style) {
 		this();
 		this.labelDate = labelDate;
+		this.style = style;
 	}
 
-	public TaskCell(Task task, int index) {
+	public TaskCell(Task task, int index, String style) {
 		this();
 		this.task = task;
 		this.index = index;
+		this.style = style;
 	}
 
 	public Task getTask() {
@@ -48,6 +51,17 @@ public class TaskCell {
 
 	public void setLabelDate(LocalDate labelDate) {
 		this.labelDate = labelDate;
+	}
+
+	public String getStyle() {
+		if (style == null) {
+			return "";
+		}
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public String getLabel() {

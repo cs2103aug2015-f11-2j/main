@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import app.Main;
+import app.constants.ViewConstants;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskCell;
@@ -81,7 +83,10 @@ public class TaskListViewManager {
 	private ObservableList<TaskCell> buildTaskCells(TaskList tasks) {
 		// assume tasks is sorted already.
 		ObservableList<TaskCell> taskCells = FXCollections.observableArrayList();
+		Queue<String> colors = ViewConstants.getItemColorsQueue();
+		
 		LocalDate labelDate = null;
+		String currentColor = "";
 		int index = 1;
 		
 		for (Task task : tasks.getTaskList()) {
@@ -93,13 +98,15 @@ public class TaskListViewManager {
 			// If first occurrence of a new date, add a TaskCell for the date label
 			if ((sortKey != null && labelDate == null)
 					|| (labelDate != null && sortKey != null && !labelDate.isEqual(sortKey))) {
+				currentColor = colors.poll();
+				colors.offer(currentColor);
 				labelDate = task.getSortKey().toLocalDate();
-				TaskCell cell = new TaskCell(labelDate);
+				TaskCell cell = new TaskCell(labelDate, currentColor);
 				taskCells.add(cell);
 			}
 
 			// Add a TaskCell for the Task item
-			TaskCell cell = new TaskCell(task, index++);
+			TaskCell cell = new TaskCell(task, index++, currentColor);
 			taskCells.add(cell);
 		}
 

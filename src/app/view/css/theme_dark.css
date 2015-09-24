@@ -13,7 +13,7 @@
 
 /* Odd task items */
 .list-cell:odd .taskItem {
-	-fx-background-color: #2B303B;
+	-fx-background-color: #323A43;
 }
 
 /* Even task items */
@@ -26,9 +26,65 @@
 	-fx-text-fill: #FDFDFD;
 }
 
+/* Begin task items. */
 .taskItem {
 	-fx-border-color: transparent transparent #151515 transparent;
 }
+
+.taskItem.purple {
+	-fx-border-color: transparent transparent #151515 #5856D6;
+}
+
+.taskItem.taskDateLabel.purple {
+	-fx-background-color: #5856D6;
+	-fx-text-fill: #FCFCFC;
+}
+
+.taskItem.blue {
+	-fx-border-color: transparent transparent #151515 #007AFF;
+}
+
+.taskItem.taskDateLabel.blue {
+	-fx-background-color: #007AFF;
+	-fx-text-fill: #FCFCFC;
+}
+
+.taskItem.lightblue {
+	-fx-border-color: transparent transparent #151515 #34AADC;
+}
+
+.taskItem.taskDateLabel.lightblue {
+	-fx-background-color: #34AADC;
+	-fx-text-fill: #FCFCFC;
+}
+
+.taskItem.green {
+	-fx-border-color: transparent transparent #151515 #4CD964;
+}
+
+.taskItem.taskDateLabel.green {
+	-fx-background-color: #4CD964;
+	-fx-text-fill: #FCFCFC;
+}
+
+.taskItem.yellow {
+	-fx-border-color: transparent transparent #151515 #FFCC00;
+}
+
+.taskItem.taskDateLabel.yellow {
+	-fx-background-color: #FFCC00;
+	-fx-text-fill: #FCFCFC;
+}
+
+.taskItem.orange {
+	-fx-border-color: transparent transparent #151515 #FF9500;
+}
+
+.taskItem.taskDateLabel.orange {
+	-fx-background-color: #FF9500;
+	-fx-text-fill: #FCFCFC;
+}
+/* End task items. */
 
 .list-view .listViewTitle, .list-view .listViewNoTasks, .list-view .listViewInfo1, .list-view .listViewInfo2 {
 	-fx-text-fill: #FDFDFD; 
