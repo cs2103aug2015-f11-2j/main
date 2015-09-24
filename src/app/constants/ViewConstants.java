@@ -15,10 +15,11 @@ public class ViewConstants {
 	// Style classes for task item colors
 	public static String ITEM_PURPLE = "purple";
 	public static String ITEM_BLUE = "blue";
-	public static String ITEM_LIGHTBLUE = "lightblue";
 	public static String ITEM_GREEN = "green";
 	public static String ITEM_YELLOW = "yellow";
 	public static String ITEM_ORANGE = "orange";
+	public static String ITEM_RED = "red";
+	public static String ITEM_PINK = "pink";
 
 	// THEME command
 	// Resource locations for the theme CSS files.
@@ -65,10 +66,11 @@ public class ViewConstants {
 		Queue<String> queue = new LinkedList<String>();
 		queue.add(ITEM_PURPLE);
 		queue.add(ITEM_BLUE);
-		queue.add(ITEM_LIGHTBLUE);
 		queue.add(ITEM_GREEN);
 		queue.add(ITEM_YELLOW);
 		queue.add(ITEM_ORANGE);
+		queue.add(ITEM_RED);
+		queue.add(ITEM_PINK);
 		return queue;
 	}
 }

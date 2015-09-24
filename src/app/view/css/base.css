@@ -23,7 +23,7 @@
 
 /* Individual task items. */
 .taskItem {
-	-fx-border-width: 0.0 0.0 1.0px 2px;
+	-fx-border-width: 0.0 0.0 1.0px 3px;
 }
 
 .taskItem.taskDateLabel {

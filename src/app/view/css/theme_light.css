@@ -10,74 +10,70 @@
 
 /* Begin task items. */
 .taskItem {
+	-fx-background-color: #FCFCFC;
+}
+
+.taskItem {
 	-fx-border-color: transparent transparent #CCCCCC transparent;
 }
 
 .taskItem.purple {
-	-fx-border-color: transparent transparent #CCCCCC #5856D6;
+	-fx-border-color: transparent transparent #CCCCCC #c4c4e1;
 }
 
 .taskItem.taskDateLabel.purple {
-	-fx-background-color: #5856D6;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #c4c4e1;
 }
 
 .taskItem.blue {
-	-fx-border-color: transparent transparent #CCCCCC #007AFF;
+	-fx-border-color: transparent transparent #CCCCCC #bacee5;
 }
 
 .taskItem.taskDateLabel.blue {
-	-fx-background-color: #007AFF;
-	-fx-text-fill: #FCFCFC;
-}
-
-.taskItem.lightblue {
-	-fx-border-color: transparent transparent #CCCCCC #34AADC;
-}
-
-.taskItem.taskDateLabel.lightblue {
-	-fx-background-color: #34AADC;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #bacee5;
 }
 
 .taskItem.green {
-	-fx-border-color: transparent transparent #CCCCCC #4CD964;
+	-fx-border-color: transparent transparent #CCCCCC #afdab6;
 }
 
 .taskItem.taskDateLabel.green {
-	-fx-background-color: #4CD964;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #afdab6;
 }
 
 .taskItem.yellow {
-	-fx-border-color: transparent transparent #CCCCCC #FFCC00;
+	-fx-border-color: transparent transparent #CCCCCC #f4e9c0;
 }
 
 .taskItem.taskDateLabel.yellow {
-	-fx-background-color: #FFCC00;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #f4e9c0;
 }
 
 .taskItem.orange {
-	-fx-border-color: transparent transparent #CCCCCC #FF9500;
+	-fx-border-color: transparent transparent #CCCCCC #f4dcb9;
 }
 
 .taskItem.taskDateLabel.orange {
-	-fx-background-color: #FF9500;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #f4dcb9;
+}
+
+.taskItem.red {
+	-fx-border-color: transparent transparent #CCCCCC #dfa9ac;
+}
+
+.taskItem.taskDateLabel.red {
+	-fx-background-color: #dfa9ac;
+}
+
+.taskItem.pink {
+	-fx-border-color: transparent transparent #CCCCCC #edcedb;
+}
+
+.taskItem.taskDateLabel.pink {
+	-fx-background-color: #edcedb;
 }
 
 /* End task items. */
-
-/* Odd task items */
-.list-cell:odd .taskItem {
-	-fx-background-color: #FCFCFC;
-}
-
-/* Even task items */
-.list-cell:even .taskItem {
-	-fx-background-color: #FCFCFC;
-}
 
 .taskItemLines .taskItemLine1, .taskItemLines .taskItemLine2 {
 	-fx-stroke: #CCCCCC;	

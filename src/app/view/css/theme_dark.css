@@ -11,16 +11,6 @@
 	-fx-text-fill: #FDFDFD; 
 }
 
-/* Odd task items */
-.list-cell:odd .taskItem {
-	-fx-background-color: #323A43;
-}
-
-/* Even task items */
-.list-cell:even .taskItem {
-	-fx-background-color: #323A43;
-}
-
 .taskListHeader {
 	-fx-background-color: #292E39;
 	-fx-text-fill: #FDFDFD;
@@ -28,61 +18,67 @@
 
 /* Begin task items. */
 .taskItem {
+	-fx-background-color: #323A43;
+}
+
+.taskItem {
 	-fx-border-color: transparent transparent #151515 transparent;
 }
 
 .taskItem.purple {
-	-fx-border-color: transparent transparent #151515 #5856D6;
+	-fx-border-color: transparent transparent #151515 #35294F;
 }
 
 .taskItem.taskDateLabel.purple {
-	-fx-background-color: #5856D6;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #35294F;
 }
 
 .taskItem.blue {
-	-fx-border-color: transparent transparent #151515 #007AFF;
+	-fx-border-color: transparent transparent #151515 #233E4B;
 }
 
 .taskItem.taskDateLabel.blue {
-	-fx-background-color: #007AFF;
-	-fx-text-fill: #FCFCFC;
-}
-
-.taskItem.lightblue {
-	-fx-border-color: transparent transparent #151515 #34AADC;
-}
-
-.taskItem.taskDateLabel.lightblue {
-	-fx-background-color: #34AADC;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #233E4B;
 }
 
 .taskItem.green {
-	-fx-border-color: transparent transparent #151515 #4CD964;
+	-fx-border-color: transparent transparent #151515 #234B39;
 }
 
 .taskItem.taskDateLabel.green {
-	-fx-background-color: #4CD964;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #234B39;
 }
 
 .taskItem.yellow {
-	-fx-border-color: transparent transparent #151515 #FFCC00;
+	-fx-border-color: transparent transparent #151515 #503E25;
 }
 
 .taskItem.taskDateLabel.yellow {
-	-fx-background-color: #FFCC00;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #503E25;
 }
 
 .taskItem.orange {
-	-fx-border-color: transparent transparent #151515 #FF9500;
+	-fx-border-color: transparent transparent #151515 #502B25;
 }
 
 .taskItem.taskDateLabel.orange {
-	-fx-background-color: #FF9500;
-	-fx-text-fill: #FCFCFC;
+	-fx-background-color: #502B25;
+}
+
+.taskItem.red {
+	-fx-border-color: transparent transparent #151515 #371010;
+}
+
+.taskItem.taskDateLabel.red {
+	-fx-background-color: #371010;
+}
+
+.taskItem.pink {
+	-fx-border-color: transparent transparent #151515 #43223f;
+}
+
+.taskItem.taskDateLabel.pink {
+	-fx-background-color: #43223f;
 }
 /* End task items. */
 
@@ -127,7 +123,7 @@
 /* End status bar */
 
 .infoView {
-	-fx-background-color: linear-gradient(from 0px 0px to 0px 5px, #14181D, #292E39);
+	-fx-background-color: linear-gradient(from 0.0px 0.0px to 0.0px 5.0px, #14181D, #292E39);
 }
 
 .infoView .text {
