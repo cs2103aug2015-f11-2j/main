@@ -23,6 +23,7 @@
 
 .taskItem.taskDateLabel.purple {
 	-fx-background-color: #c4c4e1;
+	-fx-border-color: transparent transparent #9292de #c4c4e1;
 }
 
 .taskItem.blue {
@@ -31,6 +32,7 @@
 
 .taskItem.taskDateLabel.blue {
 	-fx-background-color: #bacee5;
+	-fx-border-color: transparent transparent #7faee3 #bacee5;
 }
 
 .taskItem.green {
@@ -39,6 +41,7 @@
 
 .taskItem.taskDateLabel.green {
 	-fx-background-color: #afdab6;
+	-fx-border-color: transparent transparent #73d884 #afdab6;
 }
 
 .taskItem.yellow {
@@ -47,6 +50,7 @@
 
 .taskItem.taskDateLabel.yellow {
 	-fx-background-color: #f4e9c0;
+	-fx-border-color: transparent transparent #f2da80 #f4e9c0;
 }
 
 .taskItem.orange {
@@ -55,6 +59,7 @@
 
 .taskItem.taskDateLabel.orange {
 	-fx-background-color: #f4dcb9;
+	-fx-border-color: transparent transparent #f0c17e #f4dcb9;
 }
 
 .taskItem.red {
@@ -63,6 +68,7 @@
 
 .taskItem.taskDateLabel.red {
 	-fx-background-color: #dfa9ac;
+	-fx-border-color: transparent transparent #df7c82 #dfa9ac;
 }
 
 .taskItem.pink {
@@ -71,6 +77,7 @@
 
 .taskItem.taskDateLabel.pink {
 	-fx-background-color: #edcedb;
+	-fx-border-color: transparent transparent #ec8bb5 #edcedb;
 }
 
 /* End task items. */
