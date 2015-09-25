@@ -228,7 +228,7 @@ public class CommandController {
 	}
 
 	public TaskList getDisplayedTaskList() {
-		return displayedTaskList;
+		return new TaskList(displayedTaskList);
 	}
 	
 	public void setDisplayedTaskList(TaskList taskList) {
