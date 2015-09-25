@@ -30,8 +30,10 @@ public class CommandAdd extends Command {
 		task = new Task(this);
 		try {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
+			TaskList displayed = CommandController.getInstance().getDisplayedTaskList();
 			master.addTask(task);
-			CommandController.getInstance().setDisplayedTaskList(master);
+			displayed.addTask(task);
+			CommandController.getInstance().setDisplayedTaskList(displayed);
 			CommandController.getInstance().scrollTaskListTo(task);
 			
 			setFeedback(String.format(ViewConstants.MESSAGE_ADD, task.getName()));
