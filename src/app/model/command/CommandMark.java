@@ -38,7 +38,7 @@ public class CommandMark extends Command {
 		}
 
 		try {
-			TaskList display = CommandController.getInstance().getDisplayedTaskList();
+			TaskList display = CommandController.getInstance().copyDisplayedTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			CommandController.getInstance().setDisplayedTaskList(display);

@@ -227,7 +227,7 @@ public class CommandController {
 		return masterTaskList;
 	}
 
-	public TaskList getDisplayedTaskList() {
+	public TaskList copyDisplayedTaskList() {
 		return new TaskList(displayedTaskList);
 	}
 	
