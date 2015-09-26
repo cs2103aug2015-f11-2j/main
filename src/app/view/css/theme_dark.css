@@ -82,6 +82,11 @@
 }
 /* End task items. */
 
+.taskItemTime, .taskItemDate {
+	-fx-background-color: #4b7adf;
+	-fx-text-fill: #fcfcfc;
+}
+
 .list-view .listViewTitle, .list-view .listViewNoTasks, .list-view .listViewInfo1, .list-view .listViewInfo2 {
 	-fx-text-fill: #FDFDFD; 
 }
