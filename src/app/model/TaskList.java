@@ -13,6 +13,11 @@ public class TaskList {
 	public TaskList() {
 		taskList = FXCollections.observableArrayList();
 	}
+	
+	// Constructor to make a copy from another TaskList
+	public TaskList(TaskList taskList) {
+		this.taskList = FXCollections.observableArrayList(taskList.getTaskList());
+	}
 
 	public ObservableList<Task> getTaskList() {
 		return taskList;
