@@ -3,6 +3,7 @@ package app.helper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,8 +120,8 @@ public class CommandParser {
 		// Try to parse the dates detected.
 		String startDateString = getStringFromArrayIndexRange(startDateStart + 1, startDateEnd, arr);
 		String endDateString = getStringFromArrayIndexRange(endDateStart + 1, endDateEnd, arr);
-		LocalDateTime parsedStart = determineDate(startDateString);
-		LocalDateTime parsedEnd = determineDate(endDateString, parsedStart);
+		LocalDateTime parsedStart = determineStartDate(startDateString);
+		LocalDateTime parsedEnd = determineEndDate(endDateString, parsedStart);
 
 		/*
 		 * if start/end date is detected but cannot be parsed, we treat it as
@@ -217,7 +218,7 @@ public class CommandParser {
 			return Priority.MEDIUM;
 		} else if (priorityLevel.contains("low")) {
 			return Priority.LOW;
-		} 
+		}
 		return Priority.NONE;
 	}
 
@@ -236,14 +237,26 @@ public class CommandParser {
 	}
 
 	/**
-	 * Tries to return a LocalDateTime object from a given string
-	 * representation. No reference date is specified.
+	 * Tries to return a LocalDateTime object from a given string representing a
+	 * start date.
 	 * 
 	 * @param dateString The string representation of the date
 	 * @return LocalDateTime if date can be parsed, else null
 	 */
-	private LocalDateTime determineDate(String dateString) {
-		return determineDate(dateString, null);
+	private LocalDateTime determineStartDate(String dateString) {
+		return determineDate(dateString, null, false);
+	}
+
+	/**
+	 * Tries to return a LocalDateTime object from a given string representing
+	 * an end date.
+	 * 
+	 * @param dateString The string representation of the date
+	 * @param reference The reference used if dateString contains only time
+	 * @return LocalDateTime if date can be parsed, else null
+	 */
+	private LocalDateTime determineEndDate(String dateString, LocalDateTime reference) {
+		return determineDate(dateString, reference, true);
 	}
 
 	/**
@@ -252,20 +265,32 @@ public class CommandParser {
 	 * result in a date equal to the reference date but with a time of "3pm".
 	 * 
 	 * @param dateString The string representation of the date
+	 * @param reference The reference used if dateString contains only time
+	 * @param isEndDate Determines the default time used if dateString contains
+	 *            only date
 	 * @return LocalDateTime object if date can be parsed, else null
 	 */
-	private LocalDateTime determineDate(String dateString, LocalDateTime reference) {
+	private LocalDateTime determineDate(String dateString, LocalDateTime reference, boolean isEndDate) {
 		dateString = dateString.toLowerCase();
 		LocalDateTime date = null;
 
-		// Special case: "now" and "today"
-		if (dateString.equalsIgnoreCase("now") || dateString.equalsIgnoreCase("today")) {
-			date = LocalDateTime.now();
-			return processDate(date);
+		// default time is 0000 if startDate, 2359 if endDate
+		LocalTime defaultTime = LocalTime.of(0, 0);
+		if (isEndDate) {
+			defaultTime = LocalTime.of(23, 59);
 		}
 
-		if (TOMORROW_PATTERNS.contains(dateString)) {
+		// Special cases: "now", "today", "tomorrow"
+		if (dateString.equalsIgnoreCase("now")) {
+			date = LocalDateTime.now();
+			return processDate(date);
+		} else if (dateString.equalsIgnoreCase("today")) {
+			date = LocalDateTime.now();
+			date = setDefaultTime(date, defaultTime);
+			return processDate(date);
+		} else if (TOMORROW_PATTERNS.contains(dateString)) {
 			date = LocalDateTime.now().plusDays(1);
+			date = setDefaultTime(date, defaultTime);
 			return processDate(date);
 		}
 
@@ -273,6 +298,7 @@ public class CommandParser {
 		for (String datePattern : DATE_PATTERNS) {
 			date = getDateFromPattern(dateString, datePattern);
 			if (date != null) {
+				date = setDefaultTime(date, defaultTime);
 				return processDate(date);
 			}
 			// check date + time patterns
@@ -339,12 +365,31 @@ public class CommandParser {
 			date = getDateFromPattern(dateString, dayPattern);
 			if (date != null) {
 				date = buildDateWithNextDay(date.getDayOfWeek().getValue(), date.getHour(), date.getMinute());
+				date = setDefaultTime(date, defaultTime);
 				return processDate(date);
 			}
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Sets date with the default time specified.
+	 * @param date The date to modify
+	 * @param defaultTime The default time to use
+	 * @return The date with the default time applied
+	 */
+	private LocalDateTime setDefaultTime(LocalDateTime date, LocalTime defaultTime) {
+		if (date != null && defaultTime != null) {
+			return date.withHour(defaultTime.getHour()).withMinute(defaultTime.getMinute());
+		}
+		return null;
+	}
+
+	/**
+	 * Strips seconds and nanoseconds from the date (set to zero).
+	 * @param date The date to strip seconds/nanoseconds from
+	 * @return The date without seconds/nanoseconds
+	 */
 	private LocalDateTime processDate(LocalDateTime date) {
 		if (date != null) {
 			return date.withSecond(0).withNano(0);
