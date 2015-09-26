@@ -9,21 +9,15 @@ public class TaskCell {
 	private int index;
 	private String style;
 
-	private DateTimeFormatter dateFormatter;
-	private static final String DATE_PATTERN = "d MMMM ''yy";
-
-	public TaskCell() {
-		dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-	}
+	private static final String DATE_PATTERN = "d MMMM";
+	private static final String DATE_PATTERN_WITH_YEAR = "d MMMM yyyy";
 
 	public TaskCell(LocalDate labelDate, String style) {
-		this();
 		this.labelDate = labelDate;
 		this.style = style;
 	}
 
 	public TaskCell(Task task, int index, String style) {
-		this();
 		this.task = task;
 		this.index = index;
 		this.style = style;
@@ -65,12 +59,22 @@ public class TaskCell {
 	}
 
 	public String getLabel() {
+		// if date is today or tomorrow, append the relevant string
 		String relativeText = "";
 		if (LocalDate.now().isEqual(labelDate)) {
 			relativeText = " (Today)";
 		} else if (LocalDate.now().plusDays(1).isEqual(labelDate)) {
 			relativeText = " (Tomorrow)";
 		}
+		
+		// If date.year == current year, omit the year from the label
+		DateTimeFormatter dateFormatter = null;
+		if (labelDate.getYear() == LocalDate.now().getYear()) {
+			dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+		} else {
+			dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN_WITH_YEAR);
+		}
+		
 		String label = labelDate.format(dateFormatter) + relativeText;
 		return label;
 	}
