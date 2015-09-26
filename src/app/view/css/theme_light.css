@@ -86,6 +86,11 @@
 	-fx-stroke: #CCCCCC;	
 }
 
+.taskItemTime, .taskItemDate {
+	-fx-background-color: #4b7adf;
+	-fx-text-fill: #fcfcfc;
+}
+
 /* Status bar */
 .statusBar.success {
 	-fx-text-fill: green;

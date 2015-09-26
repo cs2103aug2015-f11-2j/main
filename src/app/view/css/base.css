@@ -26,6 +26,13 @@
 	-fx-border-width: 0.0 0.0 1.0px 3px;
 }
 
+.taskItemTime, .taskItemDate {
+	-fx-padding: 2px;
+	-fx-background-radius: 3px;
+	-fx-font-family: "Segoe UI";
+	-fx-font-size: 12px;
+}
+
 .taskItem.taskDateLabel {
 	-fx-font-size: 16px;
 	-fx-padding: 2px 10px 2px 10px;

@@ -1,16 +1,20 @@
 package app.view;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import app.model.Task;
 import app.model.TaskCell;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class TaskListItemViewManager extends ListCell<TaskCell> {
 
@@ -25,15 +29,13 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 	@FXML
 	private Label taskName;
 	@FXML
-	private Label taskTopDate;
-	@FXML
-	private Label taskBottomDate;
-	@FXML
 	private CheckBox taskCheckbox;
 	@FXML
 	private Tooltip taskNameTooltip;
 	@FXML
 	private ImageView priorityImage;
+	@FXML
+	private VBox taskItemDateVbox;
 
 	/**
 	 * This method is implicitly called whenever a item (TaskListItemView) is
@@ -56,17 +58,17 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 				setLabels();
 				setPriority();
 			} else {
-				Label label = buildDateLabel(taskCell.getLabel());
+				Label label = buildDateHeader(taskCell.getLabel());
 				setGraphic(label);
 			}
 		}
 	}
-	
+
 	private void setStyle() {
 		taskListItemViewLayout.getStyleClass().add(style);
 	}
-	
-	private Label buildDateLabel(String labelText) {
+
+	private Label buildDateHeader(String labelText) {
 		Label label = new Label(labelText);
 		label.setMaxWidth(Double.MAX_VALUE);
 		label.getStyleClass().addAll("taskItem", "taskDateLabel", style);
@@ -78,13 +80,12 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 	 */
 	private void clearContent() {
 		setGraphic(null);
-		taskTopDate.setText("");
-		taskBottomDate.setText("");
+		taskItemDateVbox.getChildren().clear();
 		priorityImage.setVisible(false);
 		taskCheckbox.setSelected(false);
 		clearStyleClasses();
 	}
-	
+
 	private void clearStyleClasses() {
 		taskListItemViewLayout.getStyleClass().clear();
 		taskListItemViewLayout.getStyleClass().add("taskItem");
@@ -130,13 +131,74 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 	 * Sets the dates of this task cell.
 	 */
 	public void setDates() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
+		// Duration
 		if (task.getStartDate() != null && task.getEndDate() != null) {
-			taskTopDate.setText("From " + formatter.format(task.getStartDate()));
-			taskBottomDate.setText("To " + formatter.format(task.getEndDate()));
+			Label startTime = buildTimeLabel(task.getStartDate());
+			Label to = new Label("to");
+			Label endTime = buildTimeLabel(task.getEndDate());
+			Label endDate = null;
+
+			// if endDate is on another day, display the endDate in addition to
+			// the default startTime and endTime
+			if (task.getEndDate().toLocalDate() != task.getStartDate().toLocalDate()) {
+				endDate = buildDateLabel(task.getEndDate());
+				addDateRow(startTime);
+				addDateRow(to, endDate, endTime);
+			} else {
+				addDateRow(startTime, to, endTime);
+			}
+
+			// Deadline
 		} else if (task.getEndDate() != null) {
-			taskTopDate.setText("Due " + formatter.format(task.getEndDate()));
+			Label to = new Label("by");
+			Label endTime = buildTimeLabel(task.getEndDate());
+			addDateRow(to, endTime);
 		}
+	}
+
+	/**
+	 * Adds a row to the date section of the task item
+	 * 
+	 * @param labels The labels the row should contain
+	 */
+	private void addDateRow(Label... labels) {
+		HBox row = new HBox();
+		row.setAlignment(Pos.CENTER_RIGHT);
+		row.setSpacing(4);
+		for (Label label : labels) {
+			if (label != null) {
+				row.getChildren().add(label);
+			}
+		}
+		taskItemDateVbox.getChildren().add(row);
+	}
+
+	/**
+	 * Builds the label representing the date
+	 * 
+	 * @param dateTime LocalDateTime to get the date from
+	 * @return The built label
+	 */
+	private Label buildDateLabel(LocalDateTime dateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+		Label label = new Label(dateTime.toLocalDate().format(formatter));
+		label.setAlignment(Pos.CENTER_RIGHT);
+		label.getStyleClass().add("taskItemDate");
+		return label;
+	}
+
+	/**
+	 * Builds the label representing the time
+	 * 
+	 * @param dateTime LocalDateTime to get the time from
+	 * @return The built label
+	 */
+	private Label buildTimeLabel(LocalDateTime dateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
+		Label label = new Label(dateTime.toLocalTime().format(formatter));
+		label.setAlignment(Pos.CENTER_RIGHT);
+		label.getStyleClass().add("taskItemTime");
+		return label;
 	}
 
 	/**
