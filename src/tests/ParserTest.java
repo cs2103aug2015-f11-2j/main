@@ -46,6 +46,17 @@ public class ParserTest {
 	}
 
 	@Test
+	public void testParseDefaultTimes() {
+		// Default start time = 0000, end time = 2359
+		String input = "add buy milk from 15/12/2015 to 16/12/2015";
+		Command cmd = CommandController.getInstance().createCommand(input);
+		LocalDateTime expectedStartDate = buildDate(2015, 12, 15, 0, 0);
+		LocalDateTime expectedEndDate = buildDate(2015, 12, 15, 23, 59);
+		assertTrue(areDatesSame(cmd.getStartDate(), expectedStartDate));
+		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
+	}
+
+	@Test
 	public void testParseEndDateRelatedToStartDate() {
 		// end date only has time, related to start date
 		String input = "add buy milk from 15/12/2015 3pm to 5pm";
@@ -353,7 +364,7 @@ public class ParserTest {
 		LocalDateTime expectedEndDate = buildDate(1, 17, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
-	
+
 	@Test
 	public void testParseStartAfterEndDate() {
 		String input = "add buy milk from 5pm to 3pm";
