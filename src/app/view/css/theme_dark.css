@@ -84,8 +84,15 @@
 /* End task items. */
 
 .taskItemTime, .taskItemDate {
-	-fx-background-color: #4b7adf;
 	-fx-text-fill: #fcfcfc;
+}
+
+.taskItemTime {
+	-fx-background-color: #386ee1;
+}
+
+.taskItemDate {
+	-fx-background-color: #6b42e0;
 }
 
 .list-view .listViewTitle, .list-view .listViewNoTasks, .list-view .listViewInfo1, .list-view .listViewInfo2 {
