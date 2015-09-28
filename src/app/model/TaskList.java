@@ -1,6 +1,5 @@
 package app.model;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -32,45 +31,13 @@ public class TaskList {
 	}
 
 	/**
-	 * Sorts this task list in place.
+	 * Sorts this task list in-place.
 	 */
 	public void sort() {
-		taskList.sort(this::compareTask);
+		taskList.sort((t1, t2) -> t1.compareTo(t2));
 	}
 
-	/**
-	 * The method used to compare tasks. The sorting order is as follows:
-	 * 
-	 * (1) Floating tasks, (2) Start date if not null, (3) End date if not null.
-	 * 
-	 * For similar dates, the subsequent sorting order is used:
-	 * 
-	 * (1) Priority is higher, (2) Name by lexicographical ordering
-	 */
-	private int compareTask(Task task1, Task task2) {
-		LocalDateTime task1Key = task1.getSortKey();
-		LocalDateTime task2Key = task2.getSortKey();
-		int result = 0;
-
-		if (task1Key != null && task2Key != null) {
-			result = task1Key.compareTo(task2Key);
-		} else if (task1Key == null && task2Key != null) {
-			return -1;
-		} else if (task1Key != null && task2Key == null) {
-			return 1;
-		}
-
-		if (result == 0) {
-			result = task1.getPriority().compareTo(task2.getPriority());
-		}
-
-		if (result == 0) {
-			result = task1.getName().compareToIgnoreCase(task2.getName());
-		}
-
-		return result;
-	}
-
+	
 	// toggle isCompleted for the task at index location
 	public void markTaskByIndex(Integer index) {
 		Task specifiedTask = taskList.get(index);

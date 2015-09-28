@@ -140,7 +140,6 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 
 			// if endDate is on another day, display the endDate in addition to
 			// the default startTime and endTime
-			
 			if (!task.getEndDate().toLocalDate().equals(task.getStartDate().toLocalDate())) {
 				endDate = buildDateLabel(task.getEndDate());
 				addDateRow(startTime);
