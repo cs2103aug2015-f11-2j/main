@@ -1,12 +1,14 @@
 package app.view;
 
+import app.constants.ViewConstants.ScrollDirection;
 import app.controller.CommandController;
 import app.helper.LogHelper;
 import app.model.command.Command;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 /**
  * This is the view manager for the command input field.
@@ -27,10 +29,15 @@ public class InputViewManager {
 	 */
 	@FXML
 	public void initialize() {
-		commandInput.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				updateInfoView();
+		commandInput.textProperty().addListener(change -> updateInfoView());
+		
+		commandInput.setOnKeyPressed(event -> {
+			KeyCombination scrollUp = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN);
+			KeyCombination scrollDown = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
+			if (scrollUp.match(event)) {
+				viewManager.scrollTaskList(ScrollDirection.UP);
+			} else if (scrollDown.match(event)) {
+				viewManager.scrollTaskList(ScrollDirection.DOWN);
 			}
 		});
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import app.Main;
 import app.constants.ViewConstants;
+import app.constants.ViewConstants.ScrollDirection;
 import app.constants.ViewConstants.StatusType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
@@ -244,6 +245,10 @@ public class ViewManager {
 	 */
 	public void updateInfoView(Command cmd) {
 		infoViewManager.updateView(cmd);
+	}
+	
+	public void scrollTaskList(ScrollDirection direction) {
+		taskListViewManager.scrollTaskList(direction);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import app.Main;
 import app.constants.ViewConstants;
+import app.constants.ViewConstants.ScrollDirection;
 import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskCell;
@@ -15,9 +16,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollBar;
 import javafx.util.Callback;
 
 public class TaskListViewManager {
@@ -89,18 +92,19 @@ public class TaskListViewManager {
 		// assume tasks is sorted already.
 		ObservableList<TaskCell> taskCells = FXCollections.observableArrayList();
 		Queue<String> colors = ViewConstants.getItemColorsQueue();
-		
+
 		LocalDate labelDate = null;
 		String currentColor = "";
 		int index = 1;
-		
+
 		for (Task task : tasks.getTaskList()) {
 			LocalDate sortKey = null;
 			if (task.getSortKey() != null) {
 				sortKey = task.getSortKey().toLocalDate();
 			}
-			
-			// If first occurrence of a new date, add a TaskCell for the date label
+
+			// If first occurrence of a new date, add a TaskCell for the date
+			// label
 			if ((sortKey != null && labelDate == null)
 					|| (labelDate != null && sortKey != null && !labelDate.isEqual(sortKey))) {
 				currentColor = colors.poll();
@@ -116,6 +120,19 @@ public class TaskListViewManager {
 		}
 
 		return taskCells;
+	}
+
+	public void scrollTaskList(ScrollDirection direction) {
+		double step = 0.2;
+		Node node = taskListViewLayout.lookup(".scroll-bar");
+		if (node instanceof ScrollBar) {
+			ScrollBar scrollBar = (ScrollBar) node;
+			if (direction == ScrollDirection.UP && scrollBar.getValue() != 0) {
+				scrollBar.setValue(scrollBar.getValue() - step);
+			} else if (direction == ScrollDirection.DOWN && scrollBar.getValue() != scrollBar.getMax()) {
+				scrollBar.setValue(scrollBar.getValue() + step);
+			}
+		}
 	}
 
 	/**
