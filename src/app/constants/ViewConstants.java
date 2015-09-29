@@ -37,6 +37,8 @@ public class ViewConstants {
 	
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
+	public static String SEARCH_RESULTS = "Search results for: %1$s";
+	public static String SEARCH_RESULTS_COUNT = "Matching task(s) found: %1$s";
 	
 	// MARK command
 	public static String MESSAGE_MARK = "Marked task(s) by id: %1$s";

@@ -550,4 +550,16 @@ public class CommandParser {
 		}
 		return arg;
 	}
+	
+	/**
+	 * Splits the command content into the keyword(s) 
+	 * intended for CommandSearch
+	 * 
+	 * @param content The content of the Command object
+	 * @return A String containing the search keyword
+	 */
+	public String getCommandSearch(String content) {
+		return content;
+	}
+	
 }
