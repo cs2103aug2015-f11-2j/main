@@ -35,6 +35,9 @@ public class ViewConstants {
 	public static String ERROR_ADD = "Error adding task: %1$s";
 	public static String ERROR_ADD_NO_TASK = "No task specified";
 	
+	// SEARCH command
+	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
+	
 	// MARK command
 	public static String MESSAGE_MARK = "Marked task(s) by id: %1$s";
 	public static String ERROR_MARK = "Error marking task: %1$s";

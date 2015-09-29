@@ -12,6 +12,7 @@ import app.model.command.CommandDisplay;
 import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandMark;
+import app.model.command.CommandSearch;
 import app.model.command.CommandTheme;
 import app.view.ViewManager;
 import javafx.collections.ListChangeListener;
@@ -104,6 +105,8 @@ public class CommandController {
 			return CommandType.MARK;
 		} else if (CommandConstants.ALIASES_DISPLAY.contains(word)) {
 			return CommandType.DISPLAY;
+		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
+			return CommandType.SEARCH;
 		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -136,6 +139,9 @@ public class CommandController {
 			break;
 		case DISPLAY:
 			cmd = new CommandDisplay();
+			break;
+		case SEARCH:
+			cmd = new CommandSearch();
 			break;
 		case EXIT:
 			cmd = new CommandExit();
@@ -170,6 +176,11 @@ public class CommandController {
 	private void showHelp() {
 		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
 		viewManager.setStatus("Showing list of commands");
+	}
+	
+	private void showSearch() {
+		viewManager.updateTextView("Search results should go here. Maybe.");
+		viewManager.setStatus("Found: No sandwiches");
 	}
 
 	/**
