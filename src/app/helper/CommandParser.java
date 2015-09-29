@@ -374,6 +374,7 @@ public class CommandParser {
 
 	/**
 	 * Sets date with the default time specified.
+	 * 
 	 * @param date The date to modify
 	 * @param defaultTime The default time to use
 	 * @return The date with the default time applied
@@ -387,6 +388,7 @@ public class CommandParser {
 
 	/**
 	 * Strips seconds and nanoseconds from the date (set to zero).
+	 * 
 	 * @param date The date to strip seconds/nanoseconds from
 	 * @return The date without seconds/nanoseconds
 	 */
@@ -550,16 +552,20 @@ public class CommandParser {
 		}
 		return arg;
 	}
-	
+
 	/**
-	 * Splits the command content into the keyword(s) 
-	 * intended for CommandSearch
+	 * Splits the command content into the keyword(s) intended for CommandSearch
 	 * 
 	 * @param content The content of the Command object
 	 * @return A String containing the search keyword
 	 */
-	public String getCommandSearch(String content) {
-		return content;
+	public String[] getCommandSearch(String content) {
+		if (!content.contains(",")) {
+			String[] searchterms = { content };
+			return searchterms;
+		} else {
+			String[] searchterms = content.split("\\s*,\\s*");
+			return searchterms;
+		}
 	}
-	
 }

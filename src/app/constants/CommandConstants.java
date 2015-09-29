@@ -7,7 +7,8 @@ import java.util.List;
 public class CommandConstants {
 
 	// Aliases for commands
-	public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a", "+");
+	//public static final List<String> ALIASES_ADD = getUnmodifiableList("add", "a", "+");
+	public static final List<String> ALIASES_ADD = getUnmodifiableList("add");
 	public static final List<String> ALIASES_REMOVE = getUnmodifiableList("remove", "delete", "rm", "-");
 	public static final List<String> ALIASES_HELP = getUnmodifiableList("help", "?");
 	public static final List<String> ALIASES_THEME = getUnmodifiableList("theme");

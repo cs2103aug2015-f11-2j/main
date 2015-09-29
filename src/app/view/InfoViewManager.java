@@ -55,6 +55,11 @@ public class InfoViewManager {
 		case ADD:
 			setHelpText(HelpConstants.HELP_ADD_OVERVIEW, HelpConstants.HELP_ADD_DESCRIPTION);
 			setCommandParamLabels(cmd);
+			break;
+		case SEARCH:
+			setSearchHelpText(HelpConstants.HELP_SEARCH_OVERVIEW, HelpConstants.HELP_SEARCH_DESCRIPTION);
+			setSearchText(cmd);
+			break;
 		default:
 			break;
 		}
@@ -66,19 +71,24 @@ public class InfoViewManager {
 		setHelpOverview(overview);
 		setHelpDescription(description);
 	}
-	
+
+	private void setSearchHelpText(String overview, String description) {
+		setSearchHelpOverview(overview);
+		setHelpDescription(description);
+	}
+
 	private void setHelpOverview(String overview) {
 		String commandWord = CommandParser.getFirstWord(overview);
 		overview = CommandParser.removeFirstWord(overview);
-		
+
 		String optionalParams = overview;
 		String requiredParams = "";
-		
+
 		while (!optionalParams.startsWith("[") && !optionalParams.isEmpty()) {
 			requiredParams += CommandParser.getFirstWord(optionalParams) + " ";
 			optionalParams = CommandParser.removeFirstWord(optionalParams);
 		}
-		
+
 		Text commandWordText = buildText(commandWord, STYLE_INFOVIEW_COMMAND);
 		Text requiredParamsText = buildText(" " + requiredParams.trim(), STYLE_INFOVIEW_REQUIRED);
 		Text optionalParamsText = buildText(" " + optionalParams.trim(), STYLE_INFOVIEW_OPTIONAL);
@@ -86,10 +96,30 @@ public class InfoViewManager {
 		addTextsToList(texts, commandWordText, requiredParamsText, optionalParamsText);
 		addInfoRow(texts);
 	}
-	
+
 	private void setHelpDescription(String description) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		texts.add(buildText(description, STYLE_INFOVIEW_DESCRIPTION));
+		addInfoRow(texts);
+	}
+
+	private void setSearchHelpOverview(String overview) {
+		String commandWord = CommandParser.getFirstWord(overview);
+		overview = CommandParser.removeFirstWord(overview);
+
+		String optionalParams = overview;
+		String requiredParams = "";
+
+		while (!optionalParams.startsWith(",") && !optionalParams.isEmpty()) {
+			requiredParams += CommandParser.getFirstWord(optionalParams) + " ";
+			optionalParams = CommandParser.removeFirstWord(optionalParams);
+		}
+
+		Text commandWordText = buildText(commandWord, STYLE_INFOVIEW_COMMAND);
+		Text requiredParamsText = buildText(" " + requiredParams.trim(), STYLE_INFOVIEW_REQUIRED);
+		Text optionalParamsText = buildText(" " + optionalParams.trim(), STYLE_INFOVIEW_OPTIONAL);
+		ArrayList<Text> texts = new ArrayList<Text>();
+		addTextsToList(texts, commandWordText, requiredParamsText, optionalParamsText);
 		addInfoRow(texts);
 	}
 
@@ -112,6 +142,17 @@ public class InfoViewManager {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
 			Text startQuote = buildText("\"");
+			Text endQuote = buildText("\"");
+			Text content = buildText(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
+			addTextsToList(texts, startQuote, content, endQuote);
+			addInfoRow(texts);
+		}
+	}
+
+	private void setSearchText(Command cmd) {
+		ArrayList<Text> texts = new ArrayList<Text>();
+		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
+			Text startQuote = buildText("Search for \"");
 			Text endQuote = buildText("\"");
 			Text content = buildText(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
 			addTextsToList(texts, startQuote, content, endQuote);
