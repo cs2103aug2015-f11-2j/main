@@ -21,6 +21,10 @@
 	-fx-background-color: #314937;
 }
 
+.taskItem.completed .taskItemDate, .taskItem.completed .taskItemTime {
+	-fx-background-color: #9599a2;
+}
+
 /* Begin task items. */
 .taskItem {
 	-fx-background-color: #323A43;
