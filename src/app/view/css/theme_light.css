@@ -12,6 +12,10 @@
 	-fx-border-color: transparent transparent #606060 transparent;
 }
 
+.taskItem.completed {
+	-fx-background-color: #def5df;
+}
+
 /* Begin task items. */
 .taskItem {
 	-fx-background-color: #FCFCFC;

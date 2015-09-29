@@ -42,7 +42,7 @@
 								<Image url="@../images/priority_high_icon.png" />
 							</image>
 							<HBox.margin>
-								<Insets left="-12.0" top="10.0" />
+								<Insets left="-12.0" top="12.0" />
 							</HBox.margin>
 						</ImageView>
 					</children>
@@ -58,7 +58,7 @@
 							wrapText="true" />
 					</tooltip>
 					<padding>
-						<Insets left="10.0" />
+						<Insets left="10.0" right="10.0" />
 					</padding>
 				</Label>
 				<VBox fx:id="taskItemDateVbox" alignment="CENTER_RIGHT"
