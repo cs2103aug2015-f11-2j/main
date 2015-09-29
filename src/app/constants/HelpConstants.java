@@ -9,7 +9,7 @@ public class HelpConstants {
 	
 	//SEARCH
 	public static final String HELP_SEARCH_DESCRIPTION = "Search tasks using keyword(s)";
-	public static final String HELP_SEARCH_OVERVIEW = "search <keyword1> , [keyword2] , [keyword3]";
+	public static final String HELP_SEARCH_OVERVIEW = "search [all | comp | uncomp] for <keyword1> , [keyword2] , [keyword3]";
 	public static final String HELP_SEARCH_EXAMPLES = "search sandwiches\n"
 			+ "search sandwiches , hotdogs";
 	

@@ -554,12 +554,42 @@ public class CommandParser {
 	}
 
 	/**
+	 * Compare the command content with possible arguments and return the
+	 * intended argument for CommandSearch
+	 * 
+	 * @param content The content of the Command object
+	 * @return A String containing the intended argument
+	 */
+	public String getHelpCommandDisplayArg(String content) {
+		content = content.toLowerCase();
+		String arg = "";
+		if (content.contains("for")) {
+			content = content.substring(0, content.indexOf("for") - 1);
+			if (DISPLAY_COMPLETED.contains(content.toLowerCase().trim())) {
+				arg = "completed";
+			} else if (DISPLAY_PENDING.contains(content.toLowerCase().trim())) {
+				arg = "uncompleted";
+			} else if (DISPLAY_ALL.contains(content.toLowerCase().trim())) {
+				arg = "all";
+			} else {
+				arg = "invalid";
+			}
+		} else {
+			arg = "invalid";
+		}
+		return arg;
+	}
+
+	/**
 	 * Splits the command content into the keyword(s) intended for CommandSearch
 	 * 
 	 * @param content The content of the Command object
 	 * @return A String containing the search keyword
 	 */
 	public String[] getCommandSearch(String content) {
+		if (content.toLowerCase().contains("for") && content.toLowerCase().indexOf("for") + 3 != content.length()) {
+			content = content.substring(content.indexOf("for") + 4);
+		}
 		if (!content.contains(",")) {
 			String[] searchterms = { content };
 			return searchterms;

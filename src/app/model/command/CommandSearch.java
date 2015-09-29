@@ -26,15 +26,26 @@ public class CommandSearch extends Command {
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList resultsTaskList = new TaskList();
 		CommandParser parser = new CommandParser();
-
+		String arg = parser.getHelpCommandDisplayArg(this.getContent());
+		TaskList searchBoundList;
+		if (arg.equals("completed")) {
+			LogHelper.getLogger().info("Searching in completed list");
+			searchBoundList = master.getTaskListByCompletion(true);
+		} else if (arg.equals("uncompleted")) {
+			LogHelper.getLogger().info("Searching in uncompleted list");
+			searchBoundList = master.getTaskListByCompletion(false);
+		} else {
+			LogHelper.getLogger().info("Searching in masterlist");
+			searchBoundList = master;
+		}
 		String[] keywords = parser.getCommandSearch(this.getContent());
 		int resultsCount = 0;
 		// not very elegant nor ideal at the moment, to be improved
 		for (int i = 0; i < keywords.length; i++) {
-			for (int j = 0; j < master.getTaskList().size(); j++) {
-				if (master.getTaskList().get(j).getName().toLowerCase()
+			for (int j = 0; j < searchBoundList.getTaskList().size(); j++) {
+				if (searchBoundList.getTaskList().get(j).getName().toLowerCase()
 						.matches(".*\\b" + keywords[i].toLowerCase() + "\\b.*")) {
-					resultsTaskList.addTask(master.getTaskList().get(j));
+					resultsTaskList.addTask(searchBoundList.getTaskList().get(j));
 					resultsCount++;
 				}
 			}

@@ -110,7 +110,7 @@ public class InfoViewManager {
 		String optionalParams = overview;
 		String requiredParams = "";
 
-		while (!optionalParams.startsWith(",") && !optionalParams.isEmpty()) {
+		while (!optionalParams.startsWith("[") && !optionalParams.isEmpty()) {
 			requiredParams += CommandParser.getFirstWord(optionalParams) + " ";
 			optionalParams = CommandParser.removeFirstWord(optionalParams);
 		}
@@ -152,7 +152,7 @@ public class InfoViewManager {
 	private void setSearchText(Command cmd) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
-			Text startQuote = buildText("Search for \"");
+			Text startQuote = buildText("Search \"");
 			Text endQuote = buildText("\"");
 			Text content = buildText(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
 			addTextsToList(texts, startQuote, content, endQuote);
