@@ -42,6 +42,8 @@ public class ViewManager {
 	private InfoViewManager infoViewManager;
 
 	@FXML
+	private Label header;
+	@FXML
 	private Label statusBar;
 
 	/**
@@ -56,6 +58,7 @@ public class ViewManager {
 		this.rootLayout = rootLayout;
 		commandController = CommandController.getInstance();
 		commandController.setViewManager(this);
+		setDefaultHeader();
 		initializeViews();
 		showStage(primaryStage);
 	}
@@ -159,7 +162,31 @@ public class ViewManager {
 	 * @param text The text for the header to read
 	 */
 	public void setHeader(String text) {
-		taskListViewManager.setHeader(text);
+		header.setText(text);
+	}
+
+	/**
+	 * Sets the visibility of the header.
+	 * 
+	 * @param visible True to make header visible
+	 */
+	public void setHeaderVisible(boolean visible) {
+		if (visible) {
+			header.setPrefHeight(-1);
+			header.setMinHeight(-1);
+		} else {
+			header.setPrefHeight(0);
+		}
+	}
+
+	/**
+	 * This is called upon initialization of the root view. Sets the default
+	 * text the header should read.
+	 */
+	private void setDefaultHeader() {
+		// TODO: replace the magic string once WJ updates his code to get rid of
+		// magic strings.
+		setHeader(String.format(ViewConstants.HEADER_DISPLAY, "all"));
 	}
 
 	/**
@@ -246,7 +273,7 @@ public class ViewManager {
 	public void updateInfoView(Command cmd) {
 		infoViewManager.updateView(cmd);
 	}
-	
+
 	public void scrollTaskList(ScrollDirection direction) {
 		taskListViewManager.scrollTaskList(direction);
 	}

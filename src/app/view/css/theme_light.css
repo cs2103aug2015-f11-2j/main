@@ -8,7 +8,7 @@
 	-fx-background-color: #FCFCFC;
 }
 
-.taskListHeader {
+.header {
 	-fx-border-color: transparent transparent #606060 transparent;
 }
 

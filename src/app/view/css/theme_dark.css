@@ -11,7 +11,7 @@
 	-fx-text-fill: #FDFDFD; 
 }
 
-.taskListHeader {
+.header {
 	-fx-background-color: #292E39;
 	-fx-text-fill: #FDFDFD;
 	-fx-border-color: transparent transparent #151515 transparent;
