@@ -36,12 +36,8 @@ public class CommandController {
 		masterTaskList = new TaskList();
 		displayedTaskList = new TaskList();
 
-		// Updates the view whenever taskList is changed.
-		displayedTaskList.getTaskList().addListener(new ListChangeListener<Task>() {
-			public void onChanged(ListChangeListener.Change<? extends Task> c) {
-				viewManager.updateTaskList(displayedTaskList);
-			}
-		});
+		displayedTaskList.getTaskList()
+				.addListener((ListChangeListener<Task>) e -> viewManager.updateTaskList(displayedTaskList));
 	}
 
 	/**
@@ -83,7 +79,7 @@ public class CommandController {
 			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
 		}
 	}
-	
+
 	/**
 	 * Determines the CommandType of the specified command string
 	 * 
@@ -182,7 +178,7 @@ public class CommandController {
 			viewManager.showTextView();
 		}
 	}
-	
+
 	/**
 	 * Updates the header with the specified text
 	 * 
@@ -230,7 +226,7 @@ public class CommandController {
 	public TaskList copyDisplayedTaskList() {
 		return new TaskList(displayedTaskList);
 	}
-	
+
 	public void setDisplayedTaskList(TaskList taskList) {
 		taskList.sort();
 		displayedTaskList.setAll(taskList);

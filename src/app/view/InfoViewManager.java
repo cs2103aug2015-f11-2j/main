@@ -37,14 +37,9 @@ public class InfoViewManager {
 	public void initialize() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
 
-		// Modify the height of the window so that the info view appears to
-		// extend from the bottom
-		infoViewLayout.heightProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				double difference = newValue.doubleValue() - oldValue.doubleValue();
-				viewManager.getPrimaryStage().setHeight(viewManager.getPrimaryStage().getHeight() + difference);
-			}
+		infoViewLayout.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
+			double difference = newValue.doubleValue() - oldValue.doubleValue();
+			viewManager.getPrimaryStage().setHeight(viewManager.getPrimaryStage().getHeight() + difference);
 		});
 	}
 
@@ -66,19 +61,19 @@ public class InfoViewManager {
 		setHelpOverview(overview);
 		setHelpDescription(description);
 	}
-	
+
 	private void setHelpOverview(String overview) {
 		String commandWord = CommandParser.getFirstWord(overview);
 		overview = CommandParser.removeFirstWord(overview);
-		
+
 		String optionalParams = overview;
 		String requiredParams = "";
-		
+
 		while (!optionalParams.startsWith("[") && !optionalParams.isEmpty()) {
 			requiredParams += CommandParser.getFirstWord(optionalParams) + " ";
 			optionalParams = CommandParser.removeFirstWord(optionalParams);
 		}
-		
+
 		Text commandWordText = buildText(commandWord, STYLE_INFOVIEW_COMMAND);
 		Text requiredParamsText = buildText(" " + requiredParams.trim(), STYLE_INFOVIEW_REQUIRED);
 		Text optionalParamsText = buildText(" " + optionalParams.trim(), STYLE_INFOVIEW_OPTIONAL);
@@ -86,7 +81,7 @@ public class InfoViewManager {
 		addTextsToList(texts, commandWordText, requiredParamsText, optionalParamsText);
 		addInfoRow(texts);
 	}
-	
+
 	private void setHelpDescription(String description) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		texts.add(buildText(description, STYLE_INFOVIEW_DESCRIPTION));
