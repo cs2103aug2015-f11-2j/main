@@ -3,11 +3,13 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
 import app.constants.TaskConstants.Priority;
 import app.controller.CommandController;
+import app.helper.CommandParser;
 import app.model.command.Command;
 
 public class ParserTest {
@@ -372,6 +374,66 @@ public class ParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
+	}
+	
+	@Test
+	public void testGetIdArrayList() {
+		String input = "1, 5,7";
+		ArrayList<Integer> expected = new ArrayList<Integer>();
+		expected.add(1);
+		expected.add(5);
+		expected.add(7);
+		CommandParser parser = new CommandParser();
+		assertTrue(areArraysEqual(parser.getIdArrayList(input), expected));
+	}
+	
+	@Test
+	public void testGetCommandDisplayArg() {
+		CommandParser parser = new CommandParser();
+		String input = "c";
+		assertEquals(parser.getCommandDisplayArg(input), "completed");
+		input = "comp";
+		assertEquals(parser.getCommandDisplayArg(input), "completed");
+		input = "complete";
+		assertEquals(parser.getCommandDisplayArg(input), "completed");
+		input = "completed";
+		assertEquals(parser.getCommandDisplayArg(input), "completed");
+		input = "p";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "pend";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "pending";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "i";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "incomp";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "incomplete";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "u";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "uncomp";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "uncompleted";
+		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
+		input = "a";
+		assertEquals(parser.getCommandDisplayArg(input), "all");
+		input = "al";
+		assertEquals(parser.getCommandDisplayArg(input), "all");
+		input = "all";
+		assertEquals(parser.getCommandDisplayArg(input), "all");
+	}
+	
+	private boolean areArraysEqual(ArrayList<Integer> input, ArrayList<Integer> output) {
+		for (int i = 0; i < input.size(); i++) {
+			if (output.indexOf(input.get(i)) == i) {
+				continue;
+			}
+			else {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
