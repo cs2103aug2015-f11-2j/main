@@ -379,11 +379,12 @@ public class ParserTest {
 	
 	@Test
 	public void testGetIdArrayList() {
-		String inputValid = "1, 5,7";
+		String inputValid = "1, 5,7 9";
 		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
 		expectedValid.add(1);
 		expectedValid.add(5);
 		expectedValid.add(7);
+		expectedValid.add(9);
 		CommandParser parser = new CommandParser();
 		assertEquals(parser.getIdArrayList(inputValid), expectedValid);
 		

@@ -518,7 +518,7 @@ public class CommandParser {
 	public ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
 		try {
-			String[] arr = content.split(",");
+			String[] arr = content.replaceAll("^[,\\s]+", "").split("[,\\s]+");
 			for (int i = 0; i < arr.length; i++) {
 				idArray.add(Integer.valueOf(arr[i].trim()));
 			}
