@@ -60,6 +60,7 @@ public class CommandController {
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
+			currentViewState.getTaskList().sort();
 			return currentViewState;
 		}
 
