@@ -38,8 +38,10 @@ public class CommandAdd extends Command {
 			//CommandController.getInstance().scrollTaskListTo(task);
 			
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_ADD, task.getName()));
+			setExecuted(true);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
+			e.printStackTrace();
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_ADD, task.getName()));
 		}
 		

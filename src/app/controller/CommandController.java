@@ -26,21 +26,18 @@ public class CommandController {
 
 	private static CommandController commandController;
 
-	private ViewManager viewManager;
 	private TaskList masterTaskList;
 	private TaskList displayedTaskList;
 	private CommandParser parser;
-	private ViewType activeView;
 	
 	private ViewState currentViewState;
 
 	private CommandController() {
 		parser = new CommandParser();
 		masterTaskList = new TaskList();
-		displayedTaskList = new TaskList();
-
-		displayedTaskList.getTaskList()
-				.addListener((ListChangeListener<Task>) e -> viewManager.updateTaskList(displayedTaskList));
+		displayedTaskList = new TaskList(); // TODO remove
+		currentViewState = new ViewState();
+		currentViewState.setTaskList(new TaskList());
 	}
 
 	/**
@@ -62,25 +59,25 @@ public class CommandController {
 	 * 
 	 * @param commandString The full command string.
 	 */
-	public void executeCommand(String commandString) {
-		// placeholder example of showing the help. Implement as a CommandHelp
-		// object instead.
-		if (commandString.equalsIgnoreCase("help")) {
-			showHelp();
-			activeView = ViewType.TEXT_VIEW;
-			showActiveView();
-			return;
-		}
-
+	public ViewState executeCommand(String commandString) {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
 		ViewState newViewState = cmd.execute(currentViewState);
-		showActiveView();
+		
+		if (cmd.isExecuted()) {
+			currentViewState.mergeWith(newViewState);
+			return currentViewState;
+		}
+		
+		// Return null to indicate a no-change operation
+		return null;
+		
+		//showActiveView();
 
 		// Set new status bar message if feedback exists.
-		if (!cmd.getFeedback().isEmpty()) {
-			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
-		}
+//		if (!cmd.getFeedback().isEmpty()) {
+//			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
+//		}
 	}
 
 	/**
@@ -164,62 +161,6 @@ public class CommandController {
 		default:
 			break;
 		}
-	}
-
-	private void showHelp() {
-		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
-		viewManager.setStatus("Showing list of commands");
-	}
-
-	/**
-	 * Shows appropriate view to the user
-	 */
-	private void showActiveView() {
-		if (activeView == ViewType.TASK_LIST) {
-			viewManager.showTaskList();
-		} else if (activeView == ViewType.TEXT_VIEW) {
-			viewManager.showTextView();
-		}
-	}
-
-	/**
-	 * Updates the header with the specified text
-	 * 
-	 * @param text The text the header should read
-	 */
-	public void setHeader(String text) {
-		viewManager.setHeader(text);
-	}
-
-	/**
-	 * Updates the view with the specified theme.
-	 * 
-	 * @param themeCss The new theme to set.
-	 */
-	public void setTheme(String themeCss) {
-		viewManager.setTheme(themeCss);
-	}
-
-	/**
-	 * Sets the view that should be currently shown to the user.
-	 * 
-	 * @param activeView The view to show to the user
-	 */
-	public void setActiveView(ViewType activeView) {
-		this.activeView = activeView;
-	}
-
-	/**
-	 * Scrolls the task list shown to the user to the specified task.
-	 * 
-	 * @param task The task to scroll to
-	 */
-	public void scrollTaskListTo(Task task) {
-		viewManager.scrollTaskListTo(task);
-	}
-
-	public void setViewManager(ViewManager viewManager) {
-		this.viewManager = viewManager;
 	}
 
 	public TaskList getMasterTaskList() {

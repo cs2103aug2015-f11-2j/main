@@ -35,17 +35,20 @@ public class CommandDisplay extends Command {
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
+				setExecuted(true);
 				
 			} else if (arg.equals("completed")) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				setExecuted(true);
 				
 			} else if (arg.equals("all")) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				setExecuted(true);
 				
 			} else if (arg.equals("invalid")) {
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
@@ -54,7 +57,6 @@ public class CommandDisplay extends Command {
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY));
-			
 		}
 		
 		return viewState;

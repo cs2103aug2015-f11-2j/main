@@ -38,12 +38,13 @@ public class CommandMark extends Command {
 		}
 
 		try {
-			TaskList display = viewState.getTaskList();
+			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS,
 					String.format(ViewConstants.MESSAGE_MARK, getIdList(displayIdsToMarkList)));
+			setExecuted(true);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(String.format(ViewConstants.ERROR_MARK, getIdList(displayIdsToMarkList)));

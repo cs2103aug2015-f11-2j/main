@@ -11,6 +11,30 @@ public class ViewState {
 	private TaskList taskList;
 	private String textArea;
 	private String theme;
+	
+	public void mergeWith(ViewState newState) {
+		if (newState.getHeader() != null) {
+			header = newState.getHeader();
+		}
+		if (newState.getStatusMessage() != null) {
+			statusMessage = newState.getStatusMessage();
+		}
+		if (newState.getStatusType() != null) {
+			statusType = newState.getStatusType();
+		}
+		if (newState.getActiveView() != null) {
+			activeView = newState.getActiveView();
+		}
+		if (newState.getTaskList() != null) {
+			taskList = newState.getTaskList();
+		}
+		if (newState.getTextArea() != null) {
+			textArea = newState.getTextArea();
+		}
+		if (newState.getTheme() != null) {
+			theme = newState.getTheme();
+		}
+	}
 
 	public void setStatus(String message) {
 		statusMessage = message;
