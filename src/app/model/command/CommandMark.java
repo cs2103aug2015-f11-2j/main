@@ -41,6 +41,7 @@ public class CommandMark extends Command {
 			TaskList display = CommandController.getInstance().copyDisplayedTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
+			LogHelper.getLogger().info("Marked specified tasks.");
 			CommandController.getInstance().setDisplayedTaskList(display);
 			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.SUCCESS);

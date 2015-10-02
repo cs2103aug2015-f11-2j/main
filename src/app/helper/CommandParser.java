@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 
@@ -29,7 +30,7 @@ public class CommandParser {
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private static final List<String> DISPLAY_COMPLETED = getUnmodifiableList("c", "comp", "complete", "completed");
-	private static final List<String> DISPLAY_PENDING = getUnmodifiableList("p", "pend", "pending", "i", "incomp",
+	private static final List<String> DISPLAY_UNCOMPLETED = getUnmodifiableList("p", "pend", "pending", "i", "incomp",
 			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = getUnmodifiableList("a", "al", "all");
 
@@ -538,16 +539,37 @@ public class CommandParser {
 	 * @return A String containing the intended argument
 	 */
 	public String getCommandDisplayArg(String content) {
-		String arg = "";
-		if (DISPLAY_COMPLETED.contains(content.toLowerCase().trim())) {
-			arg = "completed";
-		} else if (DISPLAY_PENDING.contains(content.toLowerCase().trim())) {
-			arg = "uncompleted";
-		} else if (DISPLAY_ALL.contains(content.toLowerCase().trim())) {
-			arg = "all";
-		} else {
-			arg = "invalid";
+		DisplayType displayType = determineDisplayType(content);
+		String type = "";
+		switch (displayType) {
+			case COMPLETED :
+				type = DisplayType.COMPLETED.toString().toLowerCase();
+				break;
+			case UNCOMPLETED :
+				type = DisplayType.UNCOMPLETED.toString().toLowerCase();
+				break;
+			case ALL :
+				type = DisplayType.ALL.toString().toLowerCase();
+				break;
+			case INVALID :
+				type = DisplayType.INVALID.toString().toLowerCase();
+				break;
+			default :
+				type = DisplayType.INVALID.toString().toLowerCase();
+				break;
 		}
-		return arg;
+		return type;
+	}
+	
+	private DisplayType determineDisplayType(String arg) {
+		String type = arg.toLowerCase().trim();
+		if (DISPLAY_COMPLETED.contains(type)) {
+			return DisplayType.COMPLETED;
+		} else if (DISPLAY_UNCOMPLETED.contains(type)) {
+			return DisplayType.UNCOMPLETED;
+		} else if (DISPLAY_ALL.contains(type)) {
+			return DisplayType.ALL;
+		}
+		return DisplayType.INVALID;
 	}
 }

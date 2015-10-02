@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.controller.CommandController;
 import app.helper.CommandParser;
@@ -378,62 +379,42 @@ public class ParserTest {
 	
 	@Test
 	public void testGetIdArrayList() {
-		String input = "1, 5,7";
-		ArrayList<Integer> expected = new ArrayList<Integer>();
-		expected.add(1);
-		expected.add(5);
-		expected.add(7);
+		String inputValid = "1, 5,7";
+		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
+		expectedValid.add(1);
+		expectedValid.add(5);
+		expectedValid.add(7);
 		CommandParser parser = new CommandParser();
-		assertTrue(areArraysEqual(parser.getIdArrayList(input), expected));
+		assertEquals(parser.getIdArrayList(inputValid), expectedValid);
+		
+		String inputInvalid = "6, g7";
+		ArrayList<Integer> expectedInvalid = new ArrayList<Integer>();
+		expectedInvalid.add(-1);
+		assertEquals(parser.getIdArrayList(inputInvalid), expectedInvalid);
 	}
 	
 	@Test
 	public void testGetCommandDisplayArg() {
 		CommandParser parser = new CommandParser();
-		String input = "c";
-		assertEquals(parser.getCommandDisplayArg(input), "completed");
-		input = "comp";
-		assertEquals(parser.getCommandDisplayArg(input), "completed");
-		input = "complete";
-		assertEquals(parser.getCommandDisplayArg(input), "completed");
-		input = "completed";
-		assertEquals(parser.getCommandDisplayArg(input), "completed");
-		input = "p";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "pend";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "pending";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "i";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "incomp";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "incomplete";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "u";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "uncomp";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "uncompleted";
-		assertEquals(parser.getCommandDisplayArg(input), "uncompleted");
-		input = "a";
-		assertEquals(parser.getCommandDisplayArg(input), "all");
-		input = "al";
-		assertEquals(parser.getCommandDisplayArg(input), "all");
-		input = "all";
-		assertEquals(parser.getCommandDisplayArg(input), "all");
-	}
-	
-	private boolean areArraysEqual(ArrayList<Integer> input, ArrayList<Integer> output) {
-		for (int i = 0; i < input.size(); i++) {
-			if (output.indexOf(input.get(i)) == i) {
-				continue;
-			}
-			else {
-				return false;
-			}
+		String[] inputCompleted = {"c", "comp", "complete", "completed"};
+		for (int i = 0; i < inputCompleted.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputCompleted[i]), DisplayType.COMPLETED.toString().toLowerCase());
 		}
-		return true;
+		
+		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		for (int i = 0; i < inputUncompleted.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputUncompleted[i]), DisplayType.UNCOMPLETED.toString().toLowerCase());
+		}
+		
+		String[] inputAll = {"a", "al", "all"};
+		for (int i = 0; i < inputAll.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputAll[i]), DisplayType.ALL.toString().toLowerCase());
+		}
+		
+		String[] inputInvalid = {"every", "cmplt", "com", "error"};
+		for (int i = 0; i < inputInvalid.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputInvalid[i]), DisplayType.INVALID.toString().toLowerCase());
+		}
 	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {

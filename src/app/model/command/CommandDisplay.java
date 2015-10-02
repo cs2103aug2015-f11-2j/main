@@ -3,6 +3,7 @@ package app.model.command;
 import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.CommandConstants.DisplayType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.controller.CommandController;
@@ -26,25 +27,25 @@ public class CommandDisplay extends Command {
 
 		try {
 			String arg = parser.getCommandDisplayArg(this.getContent());
-			if (this.getContent().isEmpty() || arg.equals("uncompleted")) {
-				// default display argument is uncompleted
+			// default display argument is uncompleted
+			if (this.getContent().isEmpty() || arg.equals(DisplayType.UNCOMPLETED.toString().toLowerCase())) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				CommandController.getInstance().setDisplayedTaskList(retrievedTaskList);
-				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
-				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, "uncompleted"));
+				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
+				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
 				setStatusType(StatusType.SUCCESS);
-			} else if (arg.equals("completed")) {
+			} else if (arg.equals(DisplayType.COMPLETED.toString().toLowerCase())) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				CommandController.getInstance().setDisplayedTaskList(retrievedTaskList);
 				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
-			} else if (arg.equals("all")) {
+			} else if (arg.equals(DisplayType.ALL.toString().toLowerCase())) {
 				CommandController.getInstance().setDisplayedTaskList(master);
 				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setStatusType(StatusType.SUCCESS);
-			} else if (arg.equals("invalid")) {
+			} else if (arg.equals(DisplayType.INVALID.toString().toLowerCase())) {
 				setFeedback(String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
 				setStatusType(StatusType.ERROR);
 			}
