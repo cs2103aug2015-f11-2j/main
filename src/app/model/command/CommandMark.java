@@ -45,12 +45,15 @@ public class CommandMark extends Command {
 			CommandController.getInstance().setDisplayedTaskList(display);
 			setFeedback(String.format(ViewConstants.MESSAGE_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.SUCCESS);
+		} catch (IndexOutOfBoundsException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+			setFeedback(String.format(ViewConstants.ERROR_MARK_INVALID_ID));
+			setStatusType(StatusType.ERROR);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			setFeedback(String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.ERROR);
 		}
-		
 		CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
 	}
 
