@@ -6,6 +6,7 @@ import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
 import app.model.Task;
 import app.model.TaskList;
+import app.model.ViewState;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
 import app.model.command.CommandDisplay;
@@ -30,6 +31,8 @@ public class CommandController {
 	private TaskList displayedTaskList;
 	private CommandParser parser;
 	private ViewType activeView;
+	
+	private ViewState currentViewState;
 
 	private CommandController() {
 		parser = new CommandParser();
@@ -71,7 +74,7 @@ public class CommandController {
 
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
-		cmd.execute();
+		ViewState newViewState = cmd.execute(currentViewState);
 		showActiveView();
 
 		// Set new status bar message if feedback exists.

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.StatusType;
+import app.model.ViewState;
 
 
 public abstract class Command {
@@ -17,6 +18,7 @@ public abstract class Command {
 	private Priority priority;
 	private String feedback;
 	private StatusType statusType;
+	private boolean isExecuted;
 
 	public Command() {
 		commandString = "";
@@ -25,7 +27,7 @@ public abstract class Command {
 		priority = Priority.NONE;
 	}
 	
-	public abstract	void execute();
+	public abstract	ViewState execute(ViewState previousViewState);
 
 	public String getContent() {
 		return content;
@@ -91,4 +93,11 @@ public abstract class Command {
 		this.statusType = statusType;
 	}
 
+	public boolean isExecuted() {
+		return isExecuted;
+	}
+
+	public void setExecuted(boolean isExecuted) {
+		this.isExecuted = isExecuted;
+	}
 }
