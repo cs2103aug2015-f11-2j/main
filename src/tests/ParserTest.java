@@ -388,9 +388,7 @@ public class ParserTest {
 		assertEquals(parser.getIdArrayList(inputValid), expectedValid);
 		
 		String inputInvalid = "6, g7";
-		ArrayList<Integer> expectedInvalid = new ArrayList<Integer>();
-		expectedInvalid.add(-1);
-		assertEquals(parser.getIdArrayList(inputInvalid), expectedInvalid);
+		assertEquals(parser.getIdArrayList(inputInvalid), null);
 	}
 	
 	@Test

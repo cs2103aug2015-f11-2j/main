@@ -513,7 +513,7 @@ public class CommandParser {
 	 * id(s)
 	 * 
 	 * @param content The content of the Command object
-	 * @return An ArrayList of the content(id) separated by comma
+	 * @return An integer ArrayList of the content(id) separated by comma
 	 */
 	public ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
@@ -524,10 +524,7 @@ public class CommandParser {
 			}
 			return idArray;
 		} catch (Exception e) {
-			idArray.clear();
-			Integer invalidTaskId = -1;
-			idArray.add(invalidTaskId);
-			return idArray;
+			return null;
 		}
 	}
 
@@ -561,6 +558,12 @@ public class CommandParser {
 		return type;
 	}
 	
+	/**
+	 * Determine the display argument from the entered string
+	 * 
+	 * @param arg The specified display option
+	 * @return The specified DisplayType parsed from arg
+	 */
 	private DisplayType determineDisplayType(String arg) {
 		String type = arg.toLowerCase().trim();
 		if (DISPLAY_COMPLETED.contains(type)) {
@@ -572,4 +575,33 @@ public class CommandParser {
 		}
 		return DisplayType.INVALID;
 	}
+	
+	/**
+	 * Pluralize a string if given count is more than 1
+	 * 
+	 * @param singular The singular form of the string
+	 * @return The plural form of the string by adding a "s" behind if given count is more than 1
+	 */
+	public String pluralize(int count, String singular) {
+		return this.pluralize(count, singular, null);
+	}
+	
+	/**
+	 * Pluralize a string if given count is more than 1
+	 * 
+	 * @param singular The singular form of the string
+	 * @param plural The plural form of the string
+	 * @return The plural form of the string if given count is more than 1
+	 */
+	public String pluralize(int count, String singular, String plural) {
+		if (count == 1) {
+			return singular;
+		} else if (count > 1 && plural != null) {
+			return plural;
+		} else if (count > 1 && plural == null) {
+			return singular + "s";
+		}
+		return singular;
+	}
+	
 }

@@ -31,7 +31,7 @@ public class CommandMark extends Command {
 		
 		CommandParser parser = new CommandParser();
 		ArrayList<Integer> displayIdsToMarkList = parser.getIdArrayList(this.getContent());
-		if (displayIdsToMarkList.get(0) == -1) {
+		if (displayIdsToMarkList == null) {
 			setFeedback(ViewConstants.ERROR_MARK_INVALID_ID);
 			setStatusType(StatusType.ERROR);
 			return;
@@ -41,13 +41,13 @@ public class CommandMark extends Command {
 			TaskList display = CommandController.getInstance().copyDisplayedTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
-			LogHelper.getLogger().info("Marked specified tasks.");
+			LogHelper.getLogger().info("Marked specified task.");
 			CommandController.getInstance().setDisplayedTaskList(display);
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK, getIdList(displayIdsToMarkList)));
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.SUCCESS);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK, getIdList(displayIdsToMarkList)));
+			setFeedback(String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
 			setStatusType(StatusType.ERROR);
 		}
 		
