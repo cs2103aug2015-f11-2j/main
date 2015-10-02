@@ -62,10 +62,12 @@ public class CommandController {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
 			return currentViewState;
+		} else {
+			// If not executed, simply update status bar.
+			currentViewState.mergeStatus(newViewState);
 		}
 
-		// Return null to indicate a no-change operation
-		return null;
+		return currentViewState;
 	}
 
 	/**

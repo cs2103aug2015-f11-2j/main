@@ -24,12 +24,6 @@ public class ViewState {
 		if (newState.getHeader() != null) {
 			header = newState.getHeader();
 		}
-		if (newState.getStatusMessage() != null) {
-			statusMessage = newState.getStatusMessage();
-		}
-		if (newState.getStatusType() != null) {
-			statusType = newState.getStatusType();
-		}
 		if (newState.getActiveView() != null) {
 			activeView = newState.getActiveView();
 		}
@@ -42,9 +36,19 @@ public class ViewState {
 		if (newState.getTheme() != null) {
 			theme = newState.getTheme();
 		}
+		mergeStatus(newState);
 		// Always replace actions, even if empty. Essentially this acts as a
 		// reset if no new actions are specified.
 		actions = newState.getActions();
+	}
+	
+	public void mergeStatus(ViewState newState) {
+		if (newState.getStatusMessage() != null) {
+			statusMessage = newState.getStatusMessage();
+		}
+		if (newState.getStatusType() != null) {
+			statusType = newState.getStatusType();
+		}
 	}
 
 	public void setStatus(String message) {
