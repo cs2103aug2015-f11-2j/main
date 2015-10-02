@@ -43,7 +43,9 @@ public class CommandMark extends Command {
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			LogHelper.getLogger().info("Marked specified task.");
 			CommandController.getInstance().setDisplayedTaskList(display);
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
+			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
+			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
+			setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, parser);
 			setStatusType(StatusType.SUCCESS);
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getLogger().severe(e.getMessage());
@@ -51,10 +53,22 @@ public class CommandMark extends Command {
 			setStatusType(StatusType.ERROR);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdList(displayIdsToMarkList)));
+			setFeedback(String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
 			setStatusType(StatusType.ERROR);
 		}
 		CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
+	}
+
+	// Set appropriate feedback based on marked tasks' completion
+	private void setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted, ArrayList<Integer> markedUncompleted, CommandParser parser) {
+		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedCompleted.size(), "task"),
+					getIdListString(markedCompleted), parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK_COMPLETED, parser.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted)));
+		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
+			setFeedback(String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+		}
 	}
 
 	// Locate the specific tasks based on displayed id and mark them
@@ -66,8 +80,19 @@ public class CommandMark extends Command {
 		}
 	}
 	
+	// Filter the ArrayList of task Ids to get an ArrayList of only completed or uncompleted tasks Ids
+	private ArrayList<Integer> getIdListByCompletion(ArrayList<Integer> arr, TaskList taskList, boolean isCompleted) {
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		for (int i = 0; i < arr.size(); i++) {
+			if (taskList.isTaskCompleted(arr.get(i) - 1) == isCompleted) {
+				idList.add(arr.get(i));
+			}
+		}
+		return idList;
+	}
+	
 	// converts the ArrayList of id into a String, with each id separated by comma
-	private String getIdList(ArrayList<Integer> arr) {
+	private String getIdListString(ArrayList<Integer> arr) {
 		String idList = "";
 		for (int i = 0; i < arr.size(); i++) {
 			idList += String.valueOf(arr.get(i)) + ", ";
