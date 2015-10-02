@@ -1,6 +1,7 @@
 package app.view;
 
 import java.io.IOException;
+import java.util.List;
 
 import app.Main;
 import app.constants.ViewConstants;
@@ -9,6 +10,7 @@ import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
+import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
@@ -160,10 +162,11 @@ public class ViewManager {
 		if (viewState != null) {
 			setHeader(viewState.getHeader());
 			setStatus(viewState.getStatusMessage(), viewState.getStatusType());
-			updateTaskList(viewState.getTaskList()); //TODO: rename?
+			updateTaskList(viewState.getTaskList()); //TODO: rename method?
 			updateTextView(viewState.getTextArea());
 			setTheme(viewState.getTheme());
 			showView(viewState.getActiveView());
+			executeActions(viewState.getActions());
 		}
 	}
 	
@@ -172,6 +175,17 @@ public class ViewManager {
 			showTaskList();
 		} else if (viewType == ViewType.TEXT_VIEW) {
 			showTextView();
+		}
+	}
+	
+	private void executeActions(List<Action> actions) {
+		for (Action action : actions) {
+			switch (action.getActionType()) {
+			case SCROLL_TASK_LIST_TO:
+				scrollTaskListTo(action.getActionObject());
+			default:
+				break;
+			}
 		}
 	}
 
@@ -215,8 +229,10 @@ public class ViewManager {
 	 * 
 	 * @param task The task to scroll to
 	 */
-	public void scrollTaskListTo(Task task) {
-		taskListViewManager.scrollTo(task);
+	public void scrollTaskListTo(Object object) {
+		if (object instanceof Task) {
+			taskListViewManager.scrollTo((Task) object);
+		}
 	}
 
 	/**
@@ -251,15 +267,6 @@ public class ViewManager {
 	 */
 	public void showTextView() {
 		rootLayout.setCenter(textViewLayout);
-	}
-
-	/**
-	 * Sets the status bar text with StatusType.INFO (Black).
-	 * 
-	 * @param text The status bar text to set.
-	 */
-	public void setStatus(String text) {
-		setStatus(text, StatusType.INFO);
 	}
 
 	/**

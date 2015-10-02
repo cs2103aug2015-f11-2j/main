@@ -2,10 +2,12 @@ package app.model.command;
 
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
+import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.controller.CommandController;
 import app.helper.LogHelper;
+import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
@@ -35,7 +37,7 @@ public class CommandAdd extends Command {
 			master.addTask(task);
 			displayed.addTask(task);
 			viewState.setTaskList(displayed);
-			//CommandController.getInstance().scrollTaskListTo(task);
+			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, task));
 			
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_ADD, task.getName()));
 			setExecuted(true);

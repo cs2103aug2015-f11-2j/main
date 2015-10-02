@@ -1,5 +1,8 @@
 package app.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 
@@ -11,7 +14,12 @@ public class ViewState {
 	private TaskList taskList;
 	private String textArea;
 	private String theme;
-	
+	private List<Action> actions;
+
+	public ViewState() {
+		actions = new ArrayList<Action>();
+	}
+
 	public void mergeWith(ViewState newState) {
 		if (newState.getHeader() != null) {
 			header = newState.getHeader();
@@ -34,6 +42,9 @@ public class ViewState {
 		if (newState.getTheme() != null) {
 			theme = newState.getTheme();
 		}
+		// Always replace actions, even if empty. Essentially this acts as a
+		// reset if no new actions are specified.
+		actions = newState.getActions();
 	}
 
 	public void setStatus(String message) {
@@ -96,4 +107,15 @@ public class ViewState {
 		this.theme = theme;
 	}
 
+	public List<Action> getActions() {
+		return actions;
+	}
+
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
+	}
+
+	public void addAction(Action action) {
+		actions.add(action);
+	}
 }
