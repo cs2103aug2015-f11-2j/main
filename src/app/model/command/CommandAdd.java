@@ -41,7 +41,6 @@ public class CommandAdd extends Command {
 			setExecuted(true);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			e.printStackTrace();
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_ADD, task.getName()));
 		}
 		

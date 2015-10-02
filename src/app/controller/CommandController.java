@@ -2,9 +2,7 @@ package app.controller;
 
 import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
-import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
-import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.model.command.Command;
@@ -14,8 +12,6 @@ import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandMark;
 import app.model.command.CommandTheme;
-import app.view.ViewManager;
-import javafx.collections.ListChangeListener;
 
 /**
  * This class provides the layer of logic between the ViewManager and the rest
@@ -27,15 +23,13 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
-	private TaskList displayedTaskList;
 	private CommandParser parser;
-	
+
 	private ViewState currentViewState;
 
 	private CommandController() {
 		parser = new CommandParser();
 		masterTaskList = new TaskList();
-		displayedTaskList = new TaskList(); // TODO remove
 		currentViewState = new ViewState();
 		currentViewState.setTaskList(new TaskList());
 	}
@@ -63,21 +57,14 @@ public class CommandController {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
 		ViewState newViewState = cmd.execute(currentViewState);
-		
+
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			return currentViewState;
 		}
-		
+
 		// Return null to indicate a no-change operation
 		return null;
-		
-		//showActiveView();
-
-		// Set new status bar message if feedback exists.
-//		if (!cmd.getFeedback().isEmpty()) {
-//			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
-//		}
 	}
 
 	/**
@@ -165,14 +152,5 @@ public class CommandController {
 
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
-	}
-
-	public TaskList copyDisplayedTaskList() {
-		return new TaskList(displayedTaskList);
-	}
-
-	public void setDisplayedTaskList(TaskList taskList) {
-		taskList.sort();
-		displayedTaskList.setAll(taskList);
 	}
 }

@@ -37,7 +37,6 @@ public class ViewManager {
 	private VBox infoViewLayout;
 	private VBox taskListViewLayout;
 
-	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
 	private TextViewManager textViewManager;
@@ -58,7 +57,7 @@ public class ViewManager {
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
 		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
-		commandController = CommandController.getInstance();
+		CommandController.getInstance();
 		setDefaultHeader();
 		initializeViews();
 		showStage(primaryStage);

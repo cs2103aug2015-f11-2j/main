@@ -9,7 +9,6 @@ import app.constants.TaskConstants.Priority;
 import app.helper.CommandParser;
 import app.model.command.Command;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Separator;
