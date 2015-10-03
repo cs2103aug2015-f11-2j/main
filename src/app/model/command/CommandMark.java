@@ -60,6 +60,7 @@ public class CommandMark extends Command {
 
 	// Set appropriate feedback based on marked tasks' completion
 	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted, ArrayList<Integer> markedUncompleted, CommandParser parser, ViewState viewState) {
+		assert(markedCompleted.size()> 0 || markedUncompleted.size() > 0);
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedCompleted.size(), "task"),
 					getIdListString(markedCompleted), parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));

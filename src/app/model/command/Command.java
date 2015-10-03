@@ -16,14 +16,10 @@ public abstract class Command {
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private Priority priority;
-	private String feedback;
-	private StatusType statusType;
 	private boolean isExecuted;
 
 	public Command() {
 		commandString = "";
-		feedback = "";
-		statusType = StatusType.INFO;
 		priority = Priority.NONE;
 	}
 	
@@ -75,22 +71,6 @@ public abstract class Command {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
-	}
-
-	public String getFeedback() {
-		return feedback;
-	}
-
-	public void setFeedback(String feedback) {
-		this.feedback = feedback;
-	}
-	
-	public StatusType getStatusType() {
-		return statusType;
-	}
-
-	public void setStatusType(StatusType statusType) {
-		this.statusType = statusType;
 	}
 
 	public boolean isExecuted() {

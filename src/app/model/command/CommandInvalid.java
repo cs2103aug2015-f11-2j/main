@@ -15,13 +15,12 @@ public class CommandInvalid extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		setStatusType(StatusType.ERROR);
 		ViewState viewState = new ViewState();
 		if (getCommandString().isEmpty()) {
 			return viewState;
 		}
 		String word = CommandParser.getFirstWord(getCommandString());
-		viewState.setStatus(String.format(ViewConstants.ERROR_INVALID_CMD, word));
+		viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_INVALID_CMD, word));
 		
 		return viewState;
 	}
