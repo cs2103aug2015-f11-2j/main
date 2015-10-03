@@ -14,10 +14,11 @@ public class CommandConstants {
 	public static final List<String> ALIASES_EXIT = getUnmodifiableList("exit", "quit");
 	public static final List<String> ALIASES_MARK = getUnmodifiableList("mark", "m");
 	public static final List<String> ALIASES_DISPLAY = getUnmodifiableList("display", "show", "view");
+	public static final List<String> ALIASES_EDIT = getUnmodifiableList("edit", "modify", "change", "update", "ed");
 
 	// Enum values for the different types of commands
 	public enum CommandType {
-		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY;
+		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY, EDIT;
 	}
 	
 	// Enum value for different types of display arguments

@@ -8,6 +8,7 @@ import app.model.ViewState;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
 import app.model.command.CommandDisplay;
+import app.model.command.CommandEdit;
 import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandMark;
@@ -90,6 +91,8 @@ public class CommandController {
 			return CommandType.MARK;
 		} else if (CommandConstants.ALIASES_DISPLAY.contains(word)) {
 			return CommandType.DISPLAY;
+		} else if (CommandConstants.ALIASES_EDIT.contains(word)) {
+			return CommandType.EDIT;
 		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -123,6 +126,9 @@ public class CommandController {
 		case DISPLAY:
 			cmd = new CommandDisplay();
 			break;
+		case EDIT:
+			cmd = new CommandEdit();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -146,6 +152,9 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
+			parser.parseDatesAndPriority(cmd);
+			break;
+		case EDIT:
 			parser.parseDatesAndPriority(cmd);
 			break;
 		default:
