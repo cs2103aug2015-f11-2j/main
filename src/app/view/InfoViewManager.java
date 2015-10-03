@@ -6,8 +6,8 @@ import java.util.List;
 
 import app.constants.HelpConstants;
 import app.constants.TaskConstants.Priority;
-import app.helper.CommandParser;
-import app.model.command.Command;
+import app.logic.command.Command;
+import app.util.Common;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -62,15 +62,15 @@ public class InfoViewManager {
 	}
 
 	private void setHelpOverview(String overview) {
-		String commandWord = CommandParser.getFirstWord(overview);
-		overview = CommandParser.removeFirstWord(overview);
+		String commandWord = Common.getFirstWord(overview);
+		overview = Common.removeFirstWord(overview);
 
 		String optionalParams = overview;
 		String requiredParams = "";
 
 		while (!optionalParams.startsWith("[") && !optionalParams.isEmpty()) {
-			requiredParams += CommandParser.getFirstWord(optionalParams) + " ";
-			optionalParams = CommandParser.removeFirstWord(optionalParams);
+			requiredParams += Common.getFirstWord(optionalParams) + " ";
+			optionalParams = Common.removeFirstWord(optionalParams);
 		}
 
 		Text commandWordText = buildText(commandWord, STYLE_INFOVIEW_COMMAND);

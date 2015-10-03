@@ -1,17 +1,18 @@
-package app.controller;
+package app.logic;
 
 import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
-import app.helper.CommandParser;
+import app.logic.command.Command;
+import app.logic.command.CommandAdd;
+import app.logic.command.CommandDisplay;
+import app.logic.command.CommandExit;
+import app.logic.command.CommandInvalid;
+import app.logic.command.CommandMark;
+import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
-import app.model.command.Command;
-import app.model.command.CommandAdd;
-import app.model.command.CommandDisplay;
-import app.model.command.CommandExit;
-import app.model.command.CommandInvalid;
-import app.model.command.CommandMark;
-import app.model.command.CommandTheme;
+import app.parser.CommandParser;
+import app.util.Common;
 
 /**
  * This class provides the layer of logic between the ViewManager and the rest
@@ -23,12 +24,10 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
-	private CommandParser parser;
 
 	private ViewState currentViewState;
 
 	private CommandController() {
-		parser = new CommandParser();
 		masterTaskList = new TaskList();
 		currentViewState = new ViewState();
 		currentViewState.setTaskList(new TaskList());
@@ -61,7 +60,6 @@ public class CommandController {
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
-			return currentViewState;
 		} else {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);
@@ -77,7 +75,7 @@ public class CommandController {
 	 * @return The determined CommandType object
 	 */
 	private CommandType determineCommandType(String commandString) {
-		String word = CommandParser.getFirstWord(commandString).toLowerCase();
+		String word = Common.getFirstWord(commandString).toLowerCase();
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
 		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
@@ -132,7 +130,7 @@ public class CommandController {
 		}
 
 		cmd.setCommandString(commandString);
-		cmd.setContent(CommandParser.removeFirstWord(cmd.getCommandString()));
+		cmd.setContent(Common.removeFirstWord(cmd.getCommandString()));
 		parseCommand(cmd);
 		return cmd;
 	}
@@ -146,7 +144,7 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
-			parser.parseDatesAndPriority(cmd);
+			CommandParser.parseDatesAndPriority(cmd);
 			break;
 		default:
 			break;

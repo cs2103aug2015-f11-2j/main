@@ -9,9 +9,10 @@ import org.junit.Test;
 
 import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
-import app.controller.CommandController;
-import app.helper.CommandParser;
-import app.model.command.Command;
+import app.logic.CommandController;
+import app.logic.command.Command;
+import app.parser.CommandParser;
+import app.util.Common;
 
 public class ParserTest {
 
@@ -385,34 +386,32 @@ public class ParserTest {
 		expectedValid.add(5);
 		expectedValid.add(7);
 		expectedValid.add(9);
-		CommandParser parser = new CommandParser();
-		assertEquals(parser.getIdArrayList(inputValid), expectedValid);
+		assertEquals(Common.getIdArrayList(inputValid), expectedValid);
 		
 		String inputInvalid = "6, g7";
-		assertEquals(parser.getIdArrayList(inputInvalid), null);
+		assertEquals(Common.getIdArrayList(inputInvalid), null);
 	}
 	
 	@Test
 	public void testGetCommandDisplayArg() {
-		CommandParser parser = new CommandParser();
 		String[] inputCompleted = {"c", "comp", "complete", "completed"};
 		for (int i = 0; i < inputCompleted.length; i++) {
-			assertEquals(parser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
+			assertEquals(CommandParser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
 		}
 		
 		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
-			assertEquals(parser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
+			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 		
 		String[] inputAll = {"a", "al", "all"};
 		for (int i = 0; i < inputAll.length; i++) {
-			assertEquals(parser.determineDisplayType(inputAll[i]), DisplayType.ALL);
+			assertEquals(CommandParser.determineDisplayType(inputAll[i]), DisplayType.ALL);
 		}
 		
 		String[] inputInvalid = {"every", "cmplt", "com", "error"};
 		for (int i = 0; i < inputInvalid.length; i++) {
-			assertEquals(parser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
+			assertEquals(CommandParser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
 		}
 	}
 

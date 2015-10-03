@@ -1,10 +1,10 @@
-package app.model.command;
+package app.logic.command;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
-import app.helper.CommandParser;
 import app.model.ViewState;
+import app.util.Common;
 
 public class CommandInvalid extends Command {
 
@@ -19,7 +19,7 @@ public class CommandInvalid extends Command {
 		if (getCommandString().isEmpty()) {
 			return viewState;
 		}
-		String word = CommandParser.getFirstWord(getCommandString());
+		String word = Common.getFirstWord(getCommandString());
 		viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_INVALID_CMD, word));
 		
 		return viewState;
