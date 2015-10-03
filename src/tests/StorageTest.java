@@ -14,17 +14,34 @@ public class StorageTest {
 
 	@Test
 	public void testReadAndWriteTasks() {
-		TaskList inputList = new TaskList();
+		/* empty tasklist */
+		// writing
+		TaskList writeList = new TaskList();
+		TaskStorage.getInstance().writeTasks(writeList);
+
+		// reading
+		TaskList readList = TaskStorage.getInstance().readTasks();
+		assertTrue(readList.getTaskList().isEmpty());
+
+		/* populated tasklist */
+		// writing
 		String input = "add buy milk due 15/11/15 0959";
 		Command cmd = CommandController.getInstance().createCommand(input);
 		Task task = new Task(cmd);
-		
-		inputList.addTask(task);
-		
-		TaskStorage.getInstance().writeTasks(inputList);
-		
-		TaskList outputList = TaskStorage.getInstance().readTasks();
-		assertEquals("buy milk", outputList.getTaskList().get(0).getName());
+		writeList.addTask(task);
+
+		input = "add priority high from 3pm to 5pm";
+		cmd = CommandController.getInstance().createCommand(input);
+		task = new Task(cmd);
+		writeList.addTask(task);
+
+		TaskStorage.getInstance().writeTasks(writeList);
+
+		// reading
+		readList = TaskStorage.getInstance().readTasks();
+		assertEquals(2, readList.getTaskList().size());
+		assertEquals("buy milk", readList.getTaskList().get(0).getName());
+		assertEquals("", readList.getTaskList().get(1).getName());
 	}
 
 }

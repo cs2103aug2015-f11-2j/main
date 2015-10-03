@@ -15,17 +15,15 @@ import com.google.gson.reflect.TypeToken;
 
 import app.model.Task;
 import app.model.TaskList;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;;
 
 public class TaskStorage {
 	private static TaskStorage taskStorage;
-	
+
 	private File file;
 	private Gson gson;
 
-    private TaskStorage() {
-    	gson = new GsonBuilder().setPrettyPrinting().create();
+	private TaskStorage() {
+		gson = new GsonBuilder().setPrettyPrinting().create();
 		file = new File("next.txt");
 
 		try {
@@ -37,37 +35,43 @@ public class TaskStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
-    public static TaskStorage getInstance() {
-        if (taskStorage == null) {
-            taskStorage = new TaskStorage();
-        }
-        
-        return taskStorage;
-    }
+	public static TaskStorage getInstance() {
+		if (taskStorage == null) {
+			taskStorage = new TaskStorage();
+		}
 
-    public void writeTasks(TaskList taskList) {
-    	try {
-    		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-    		gson.toJson(taskList.getTaskList(), bufferedWriter);
-    		bufferedWriter.close();
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-    }
-    
-    public TaskList readTasks() {
-    	try {
+		return taskStorage;
+	}
+
+	public void writeTasks(TaskList taskList) {
+		try {
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+
+			gson.toJson(taskList.getTaskList(), bufferedWriter);
+
+			bufferedWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public TaskList readTasks() {
+		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+
 			Type type = new TypeToken<ArrayList<Task>>(){}.getType();
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
 			TaskList taskList = new TaskList(arrayList);
-			
+
+			bufferedReader.close();
+
 			return taskList;
 		} catch (IOException e) {
-    		e.printStackTrace();
-    		return null;
-    	}
-    }
+			e.printStackTrace();
+			
+			return null;
+		}
+	}
 }
