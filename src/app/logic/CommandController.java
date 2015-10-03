@@ -5,6 +5,7 @@ import app.constants.CommandConstants.CommandType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
 import app.logic.command.CommandDisplay;
+import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
@@ -88,6 +89,8 @@ public class CommandController {
 			return CommandType.MARK;
 		} else if (CommandConstants.ALIASES_DISPLAY.contains(word)) {
 			return CommandType.DISPLAY;
+		} else if (CommandConstants.ALIASES_EDIT.contains(word)) {
+			return CommandType.EDIT;
 		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -121,6 +124,9 @@ public class CommandController {
 		case DISPLAY:
 			cmd = new CommandDisplay();
 			break;
+		case EDIT:
+			cmd = new CommandEdit();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -144,6 +150,9 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
+			CommandParser.parseDatesAndPriority(cmd);
+			break;
+		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd);
 			break;
 		default:
