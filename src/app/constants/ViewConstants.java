@@ -67,6 +67,10 @@ public class ViewConstants {
 		UP, DOWN;
 	}
 	
+	public enum ActionType {
+		SCROLL_TASK_LIST_TO;
+	}
+	
 	public static Queue<String> getItemColorsQueue() {
 		Queue<String> queue = new LinkedList<String>();
 		queue.add(ITEM_PURPLE);

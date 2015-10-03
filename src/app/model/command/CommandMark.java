@@ -12,6 +12,7 @@ import app.controller.CommandController;
 import app.helper.CommandParser;
 import app.helper.LogHelper;
 import app.model.TaskList;
+import app.model.ViewState;
 
 public class CommandMark extends Command {
 
@@ -21,54 +22,56 @@ public class CommandMark extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getLogger().info("Executing CommandMark object.");
+		ViewState viewState = new ViewState();
 		if (this.getContent().isEmpty()) {
-			setFeedback(ViewConstants.ERROR_MARK_NO_TASK);
-			setStatusType(StatusType.ERROR);
-			return;
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_NO_TASK);
+			return viewState;
 		}
-		
+
 		CommandParser parser = new CommandParser();
 		ArrayList<Integer> displayIdsToMarkList = parser.getIdArrayList(this.getContent());
+		
 		if (displayIdsToMarkList == null) {
-			setFeedback(ViewConstants.ERROR_MARK_INVALID_ID);
-			setStatusType(StatusType.ERROR);
-			return;
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
+			return viewState;
 		}
 
 		try {
-			TaskList display = CommandController.getInstance().copyDisplayedTaskList();
+			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			LogHelper.getLogger().info("Marked specified task.");
-			CommandController.getInstance().setDisplayedTaskList(display);
+			viewState.setTaskList(display);
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
-			setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, parser);
-			setStatusType(StatusType.SUCCESS);
+			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, parser, viewState);
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK_INVALID_ID));
-			setStatusType(StatusType.ERROR);
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
-			setStatusType(StatusType.ERROR);
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
 		}
-		CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
+		viewState.setActiveView(ViewType.TASK_LIST);
+		return viewState;
 	}
 
 	// Set appropriate feedback based on marked tasks' completion
-	private void setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted, ArrayList<Integer> markedUncompleted, CommandParser parser) {
+	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted, ArrayList<Integer> markedUncompleted, CommandParser parser, ViewState viewState) {
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedCompleted.size(), "task"),
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedCompleted.size(), "task"),
 					getIdListString(markedCompleted), parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			setExecuted(true);
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK_COMPLETED, parser.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted)));
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED, parser.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted)));
+			setExecuted(true);
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
-			setFeedback(String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			setExecuted(true);
 		}
+		return viewState;
 	}
 
 	// Locate the specific tasks based on displayed id and mark them
