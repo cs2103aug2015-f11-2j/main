@@ -9,7 +9,7 @@ import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
-import app.helper.CommandParser;
+import app.parser.CommandParser;
 import app.util.LogHelper;
 import app.model.Action;
 import app.model.Task;
