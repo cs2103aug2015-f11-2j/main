@@ -33,6 +33,7 @@ public class CommandDisplay extends Command {
 			
 			// default display argument is uncompleted
 			if (this.getContent().isEmpty() || type == DisplayType.UNCOMPLETED) {
+				arg = DisplayType.UNCOMPLETED.toString().toLowerCase();
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(
