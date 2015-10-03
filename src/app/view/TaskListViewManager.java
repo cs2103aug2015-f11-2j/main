@@ -112,7 +112,7 @@ public class TaskListViewManager {
 	}
 
 	public void scrollTaskList(ScrollDirection direction) {
-		double step = 0.2;
+		double step = 5.0 / taskListViewLayout.getItems().size();
 		Node node = taskListViewLayout.lookup(".scroll-bar");
 		if (node instanceof ScrollBar) {
 			ScrollBar scrollBar = (ScrollBar) node;
