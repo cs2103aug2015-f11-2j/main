@@ -5,12 +5,12 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
-import app.helper.LogHelper;
 import app.logic.CommandController;
 import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.util.LogHelper;
 
 public class CommandAdd extends Command {
 	
