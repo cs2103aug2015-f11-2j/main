@@ -23,34 +23,42 @@ public class CommandDisplay extends Command {
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getLogger().info("Executing CommandDisplay object.");
 		ViewState viewState = new ViewState();
-		
+
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList retrievedTaskList = new TaskList();
 		CommandParser parser = new CommandParser();
 
 		try {
-			String arg = parser.getCommandDisplayArg(this.getContent());
+			DisplayType type = parser.determineDisplayType(this.getContent());
+			String arg = type.toString().toLowerCase();
+			
 			// default display argument is uncompleted
-			if (this.getContent().isEmpty() || arg.equals(DisplayType.UNCOMPLETED.toString().toLowerCase())) {
+			if (this.getContent().isEmpty() || type == DisplayType.UNCOMPLETED) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				viewState.setTaskList(retrievedTaskList);
-				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
-				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
+				viewState.setHeader(
+						String.format(ViewConstants.HEADER_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS,
+						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
-			} else if (arg.equals(DisplayType.COMPLETED.toString().toLowerCase())) {
+				
+			} else if (type == DisplayType.COMPLETED) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
-			} else if (arg.equals(DisplayType.ALL.toString().toLowerCase())) {
+				
+			} else if (type == DisplayType.ALL) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
-			} else if (arg.equals(DisplayType.INVALID.toString().toLowerCase())) {
+				
+			} else if (type == DisplayType.INVALID) {
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
 			}
+			
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());

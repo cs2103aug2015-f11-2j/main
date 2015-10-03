@@ -397,22 +397,22 @@ public class ParserTest {
 		CommandParser parser = new CommandParser();
 		String[] inputCompleted = {"c", "comp", "complete", "completed"};
 		for (int i = 0; i < inputCompleted.length; i++) {
-			assertEquals(parser.getCommandDisplayArg(inputCompleted[i]), DisplayType.COMPLETED.toString().toLowerCase());
+			assertEquals(parser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
 		}
 		
 		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
-			assertEquals(parser.getCommandDisplayArg(inputUncompleted[i]), DisplayType.UNCOMPLETED.toString().toLowerCase());
+			assertEquals(parser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 		
 		String[] inputAll = {"a", "al", "all"};
 		for (int i = 0; i < inputAll.length; i++) {
-			assertEquals(parser.getCommandDisplayArg(inputAll[i]), DisplayType.ALL.toString().toLowerCase());
+			assertEquals(parser.determineDisplayType(inputAll[i]), DisplayType.ALL);
 		}
 		
 		String[] inputInvalid = {"every", "cmplt", "com", "error"};
 		for (int i = 0; i < inputInvalid.length; i++) {
-			assertEquals(parser.getCommandDisplayArg(inputInvalid[i]), DisplayType.INVALID.toString().toLowerCase());
+			assertEquals(parser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
 		}
 	}
 

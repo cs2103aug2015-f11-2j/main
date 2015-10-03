@@ -529,42 +529,12 @@ public class CommandParser {
 	}
 
 	/**
-	 * Compare the command content with possible arguments and return the
-	 * intended argument for CommandDisplay
-	 * 
-	 * @param content The content of the Command object
-	 * @return A String containing the intended argument
-	 */
-	public String getCommandDisplayArg(String content) {
-		DisplayType displayType = determineDisplayType(content);
-		String type = "";
-		switch (displayType) {
-			case COMPLETED :
-				type = DisplayType.COMPLETED.toString().toLowerCase();
-				break;
-			case UNCOMPLETED :
-				type = DisplayType.UNCOMPLETED.toString().toLowerCase();
-				break;
-			case ALL :
-				type = DisplayType.ALL.toString().toLowerCase();
-				break;
-			case INVALID :
-				type = DisplayType.INVALID.toString().toLowerCase();
-				break;
-			default :
-				type = DisplayType.INVALID.toString().toLowerCase();
-				break;
-		}
-		return type;
-	}
-	
-	/**
 	 * Determine the display argument from the entered string
 	 * 
 	 * @param arg The specified display option
 	 * @return The specified DisplayType parsed from arg
 	 */
-	private DisplayType determineDisplayType(String arg) {
+	public DisplayType determineDisplayType(String arg) {
 		String type = arg.toLowerCase().trim();
 		if (DISPLAY_COMPLETED.contains(type)) {
 			return DisplayType.COMPLETED;
