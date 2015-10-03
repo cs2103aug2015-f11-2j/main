@@ -2,10 +2,9 @@ package app.controller;
 
 import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
-import app.constants.ViewConstants.ViewType;
 import app.helper.CommandParser;
-import app.model.Task;
 import app.model.TaskList;
+import app.model.ViewState;
 import app.model.command.Command;
 import app.model.command.CommandAdd;
 import app.model.command.CommandDisplay;
@@ -13,8 +12,6 @@ import app.model.command.CommandExit;
 import app.model.command.CommandInvalid;
 import app.model.command.CommandMark;
 import app.model.command.CommandTheme;
-import app.view.ViewManager;
-import javafx.collections.ListChangeListener;
 
 /**
  * This class provides the layer of logic between the ViewManager and the rest
@@ -25,19 +22,16 @@ public class CommandController {
 
 	private static CommandController commandController;
 
-	private ViewManager viewManager;
 	private TaskList masterTaskList;
-	private TaskList displayedTaskList;
 	private CommandParser parser;
-	private ViewType activeView;
+
+	private ViewState currentViewState;
 
 	private CommandController() {
 		parser = new CommandParser();
 		masterTaskList = new TaskList();
-		displayedTaskList = new TaskList();
-
-		displayedTaskList.getTaskList()
-				.addListener((ListChangeListener<Task>) e -> viewManager.updateTaskList(displayedTaskList));
+		currentViewState = new ViewState();
+		currentViewState.setTaskList(new TaskList());
 	}
 
 	/**
@@ -59,25 +53,21 @@ public class CommandController {
 	 * 
 	 * @param commandString The full command string.
 	 */
-	public void executeCommand(String commandString) {
-		// placeholder example of showing the help. Implement as a CommandHelp
-		// object instead.
-		if (commandString.equalsIgnoreCase("help")) {
-			showHelp();
-			activeView = ViewType.TEXT_VIEW;
-			showActiveView();
-			return;
-		}
-
+	public ViewState executeCommand(String commandString) {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
-		cmd.execute();
-		showActiveView();
+		ViewState newViewState = cmd.execute(currentViewState);
 
-		// Set new status bar message if feedback exists.
-		if (!cmd.getFeedback().isEmpty()) {
-			viewManager.setStatus(cmd.getFeedback(), cmd.getStatusType());
+		if (cmd.isExecuted()) {
+			currentViewState.mergeWith(newViewState);
+			currentViewState.getTaskList().sort();
+			return currentViewState;
+		} else {
+			// If not executed, simply update status bar.
+			currentViewState.mergeStatus(newViewState);
 		}
+
+		return currentViewState;
 	}
 
 	/**
@@ -163,72 +153,7 @@ public class CommandController {
 		}
 	}
 
-	private void showHelp() {
-		viewManager.updateTextView("PLACEHOLDER: help string of available commands here");
-		viewManager.setStatus("Showing list of commands");
-	}
-
-	/**
-	 * Shows appropriate view to the user
-	 */
-	private void showActiveView() {
-		if (activeView == ViewType.TASK_LIST) {
-			viewManager.showTaskList();
-		} else if (activeView == ViewType.TEXT_VIEW) {
-			viewManager.showTextView();
-		}
-	}
-
-	/**
-	 * Updates the header with the specified text
-	 * 
-	 * @param text The text the header should read
-	 */
-	public void setHeader(String text) {
-		viewManager.setHeader(text);
-	}
-
-	/**
-	 * Updates the view with the specified theme.
-	 * 
-	 * @param themeCss The new theme to set.
-	 */
-	public void setTheme(String themeCss) {
-		viewManager.setTheme(themeCss);
-	}
-
-	/**
-	 * Sets the view that should be currently shown to the user.
-	 * 
-	 * @param activeView The view to show to the user
-	 */
-	public void setActiveView(ViewType activeView) {
-		this.activeView = activeView;
-	}
-
-	/**
-	 * Scrolls the task list shown to the user to the specified task.
-	 * 
-	 * @param task The task to scroll to
-	 */
-	public void scrollTaskListTo(Task task) {
-		viewManager.scrollTaskListTo(task);
-	}
-
-	public void setViewManager(ViewManager viewManager) {
-		this.viewManager = viewManager;
-	}
-
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
-	}
-
-	public TaskList copyDisplayedTaskList() {
-		return new TaskList(displayedTaskList);
-	}
-
-	public void setDisplayedTaskList(TaskList taskList) {
-		taskList.sort();
-		displayedTaskList.setAll(taskList);
 	}
 }

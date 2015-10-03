@@ -9,6 +9,7 @@ import app.controller.CommandController;
 import app.helper.CommandParser;
 import app.helper.LogHelper;
 import app.model.TaskList;
+import app.model.ViewState;
 
 public class CommandDisplay extends Command {
 
@@ -18,8 +19,10 @@ public class CommandDisplay extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getLogger().info("Executing CommandDisplay object.");
+		ViewState viewState = new ViewState();
+		
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList retrievedTaskList = new TaskList();
 		CommandParser parser = new CommandParser();
@@ -29,30 +32,33 @@ public class CommandDisplay extends Command {
 			if (this.getContent().isEmpty() || arg.equals("uncompleted")) {
 				// default display argument is uncompleted
 				retrievedTaskList = master.getTaskListByCompletion(false);
-				CommandController.getInstance().setDisplayedTaskList(retrievedTaskList);
-				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
-				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, "uncompleted"));
-				setStatusType(StatusType.SUCCESS);
+				viewState.setTaskList(retrievedTaskList);
+				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
+				setExecuted(true);
+				
 			} else if (arg.equals("completed")) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
-				CommandController.getInstance().setDisplayedTaskList(retrievedTaskList);
-				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
-				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
-				setStatusType(StatusType.SUCCESS);
+				viewState.setTaskList(retrievedTaskList);
+				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				setExecuted(true);
+				
 			} else if (arg.equals("all")) {
-				CommandController.getInstance().setDisplayedTaskList(master);
-				CommandController.getInstance().setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
-				setFeedback(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
-				setStatusType(StatusType.SUCCESS);
+				viewState.setTaskList(master);
+				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				setExecuted(true);
+				
 			} else if (arg.equals("invalid")) {
-				setFeedback(String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
-				setStatusType(StatusType.ERROR);
+				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
 			}
-			CommandController.getInstance().setActiveView(ViewType.TASK_LIST);
+			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			setFeedback(String.format(ViewConstants.ERROR_DISPLAY));
-			setStatusType(StatusType.ERROR);
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY));
 		}
+		
+		return viewState;
 	}
 }
