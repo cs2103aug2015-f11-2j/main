@@ -1,17 +1,17 @@
-package app.controller;
+package app.logic;
 
 import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
 import app.helper.CommandParser;
+import app.logic.command.Command;
+import app.logic.command.CommandAdd;
+import app.logic.command.CommandDisplay;
+import app.logic.command.CommandExit;
+import app.logic.command.CommandInvalid;
+import app.logic.command.CommandMark;
+import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
-import app.model.command.Command;
-import app.model.command.CommandAdd;
-import app.model.command.CommandDisplay;
-import app.model.command.CommandExit;
-import app.model.command.CommandInvalid;
-import app.model.command.CommandMark;
-import app.model.command.CommandTheme;
 
 /**
  * This class provides the layer of logic between the ViewManager and the rest
@@ -61,7 +61,6 @@ public class CommandController {
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
-			return currentViewState;
 		} else {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);

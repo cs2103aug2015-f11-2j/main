@@ -1,4 +1,4 @@
-package app.model.command;
+package app.logic.command;
 
 import java.time.LocalDateTime;
 

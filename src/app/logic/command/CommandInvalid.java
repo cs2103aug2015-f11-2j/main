@@ -1,4 +1,4 @@
-package app.model.command;
+package app.logic.command;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants;

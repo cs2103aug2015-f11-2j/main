@@ -1,4 +1,4 @@
-package app.model.command;
+package app.logic.command;
 
 import app.constants.ViewConstants;
 
@@ -6,9 +6,9 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.CommandConstants.DisplayType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
-import app.controller.CommandController;
 import app.helper.CommandParser;
 import app.helper.LogHelper;
+import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
 

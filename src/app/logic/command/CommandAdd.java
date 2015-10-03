@@ -1,12 +1,12 @@
-package app.model.command;
+package app.logic.command;
 
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
-import app.controller.CommandController;
 import app.helper.LogHelper;
+import app.logic.CommandController;
 import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;

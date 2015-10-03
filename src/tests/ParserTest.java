@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
-import app.controller.CommandController;
 import app.helper.CommandParser;
-import app.model.command.Command;
+import app.logic.CommandController;
+import app.logic.command.Command;
 
 public class ParserTest {
 

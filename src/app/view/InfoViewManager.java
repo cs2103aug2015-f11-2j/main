@@ -7,7 +7,7 @@ import java.util.List;
 import app.constants.HelpConstants;
 import app.constants.TaskConstants.Priority;
 import app.helper.CommandParser;
-import app.model.command.Command;
+import app.logic.command.Command;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;

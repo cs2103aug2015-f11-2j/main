@@ -1,10 +1,10 @@
 package app.view;
 
 import app.constants.ViewConstants.ScrollDirection;
-import app.controller.CommandController;
 import app.helper.LogHelper;
+import app.logic.CommandController;
+import app.logic.command.Command;
 import app.model.ViewState;
-import app.model.command.Command;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;

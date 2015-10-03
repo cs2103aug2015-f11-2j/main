@@ -13,7 +13,7 @@ import java.util.List;
 
 import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
-import app.model.command.Command;
+import app.logic.command.Command;
 
 public class CommandParser {
 
