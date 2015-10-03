@@ -32,7 +32,7 @@ public class CommandEdit extends Command {
 		try {
 			int taskId = CommandParser.getTaskDisplayedIdFromContent(this.getContent());
 			int taskIndex = taskId - 1;
-			task.setName(CommandParser.getTaskDescFromContent(taskId, this.getContent()));
+			task.setName(CommandParser.getTaskDescFromContent(this.getContent()));
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			TaskList display = previousViewState.getTaskList();
 			if (taskId > display.getTaskList().size() || taskId <= 0) {

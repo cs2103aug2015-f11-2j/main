@@ -439,14 +439,12 @@ public class ParserTest {
 	@Test
 	public void testGetTaskDescFromContent() {
 		String input = "4  do cs2103 ";
-		int id = 4;
 		String expected = "do cs2103";
-		assertEquals(CommandParser.getTaskDescFromContent(id, input), expected);
+		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 		
 		input = "7";
-		id = 7;
-		expected = null;
-		assertEquals(CommandParser.getTaskDescFromContent(id, input), expected);
+		expected = "";
+		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 	}
 	
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
