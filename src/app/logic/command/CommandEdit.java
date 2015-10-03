@@ -47,7 +47,7 @@ public class CommandEdit extends Command {
 				LogHelper.getLogger().info("Edited specified task.");
 				viewState.setTaskList(display);
 				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));
-				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_EDIT, task.getName()));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
 			} else {
 				LogHelper.getLogger().info("No changes specified for editing task.");
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));
