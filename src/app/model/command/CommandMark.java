@@ -47,6 +47,7 @@ public class CommandMark extends Command {
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
 			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, parser, viewState);
+			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
@@ -54,7 +55,6 @@ public class CommandMark extends Command {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
 		}
-		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
 	}
 
