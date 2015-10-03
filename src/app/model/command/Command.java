@@ -71,7 +71,7 @@ public abstract class Command {
 	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
-	
+
 	public boolean isExecuted() {
 		return isExecuted;
 	}
