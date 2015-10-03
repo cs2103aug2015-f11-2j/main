@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.model.command.Command;
 
@@ -29,7 +30,7 @@ public class CommandParser {
 	private static final List<String> PRIORITY_LEVELS = getUnmodifiableList("high", "medium", "low");
 
 	private static final List<String> DISPLAY_COMPLETED = getUnmodifiableList("c", "comp", "complete", "completed");
-	private static final List<String> DISPLAY_PENDING = getUnmodifiableList("p", "pend", "pending", "i", "incomp",
+	private static final List<String> DISPLAY_UNCOMPLETED = getUnmodifiableList("p", "pend", "pending", "i", "incomp",
 			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = getUnmodifiableList("a", "al", "all");
 
@@ -512,21 +513,18 @@ public class CommandParser {
 	 * id(s)
 	 * 
 	 * @param content The content of the Command object
-	 * @return An ArrayList of the content(id) separated by comma
+	 * @return An integer ArrayList of the content(id) separated by comma
 	 */
 	public ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
 		try {
-			String[] arr = content.split(",");
+			String[] arr = content.replaceAll("^[,\\s]+", "").split("[,\\s]+");
 			for (int i = 0; i < arr.length; i++) {
 				idArray.add(Integer.valueOf(arr[i].trim()));
 			}
 			return idArray;
 		} catch (Exception e) {
-			idArray.clear();
-			Integer invalidTaskId = -1;
-			idArray.add(invalidTaskId);
-			return idArray;
+			return null;
 		}
 	}
 
@@ -538,16 +536,72 @@ public class CommandParser {
 	 * @return A String containing the intended argument
 	 */
 	public String getCommandDisplayArg(String content) {
-		String arg = "";
-		if (DISPLAY_COMPLETED.contains(content.toLowerCase().trim())) {
-			arg = "completed";
-		} else if (DISPLAY_PENDING.contains(content.toLowerCase().trim())) {
-			arg = "uncompleted";
-		} else if (DISPLAY_ALL.contains(content.toLowerCase().trim())) {
-			arg = "all";
-		} else {
-			arg = "invalid";
+		DisplayType displayType = determineDisplayType(content);
+		String type = "";
+		switch (displayType) {
+			case COMPLETED :
+				type = DisplayType.COMPLETED.toString().toLowerCase();
+				break;
+			case UNCOMPLETED :
+				type = DisplayType.UNCOMPLETED.toString().toLowerCase();
+				break;
+			case ALL :
+				type = DisplayType.ALL.toString().toLowerCase();
+				break;
+			case INVALID :
+				type = DisplayType.INVALID.toString().toLowerCase();
+				break;
+			default :
+				type = DisplayType.INVALID.toString().toLowerCase();
+				break;
 		}
-		return arg;
+		return type;
 	}
+	
+	/**
+	 * Determine the display argument from the entered string
+	 * 
+	 * @param arg The specified display option
+	 * @return The specified DisplayType parsed from arg
+	 */
+	private DisplayType determineDisplayType(String arg) {
+		String type = arg.toLowerCase().trim();
+		if (DISPLAY_COMPLETED.contains(type)) {
+			return DisplayType.COMPLETED;
+		} else if (DISPLAY_UNCOMPLETED.contains(type)) {
+			return DisplayType.UNCOMPLETED;
+		} else if (DISPLAY_ALL.contains(type)) {
+			return DisplayType.ALL;
+		}
+		return DisplayType.INVALID;
+	}
+	
+	/**
+	 * Pluralize a string if given count is more than 1
+	 * 
+	 * @param singular The singular form of the string
+	 * @return The plural form of the string by adding a "s" behind if given count is more than 1
+	 */
+	public String pluralize(int count, String singular) {
+		return this.pluralize(count, singular, null);
+	}
+	
+	/**
+	 * Pluralize a string if given count is more than 1
+	 * 
+	 * @param singular The singular form of the string
+	 * @param plural The plural form of the string
+	 * @return The plural form of the string if given count is more than 1
+	 */
+	public String pluralize(int count, String singular, String plural) {
+		if (count == 1) {
+			return singular;
+		} else if (count > 1 && plural != null) {
+			return plural;
+		} else if (count > 1 && plural == null) {
+			return singular + "s";
+		}
+		return singular;
+	}
+	
 }

@@ -19,6 +19,11 @@ public class CommandConstants {
 	public enum CommandType {
 		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY;
 	}
+	
+	// Enum value for different types of display arguments
+	public enum DisplayType {
+		COMPLETED, UNCOMPLETED, ALL, INVALID;
+	}
 
 	/**
 	 * Builds a read-only list from the given arguments.

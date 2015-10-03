@@ -3,11 +3,14 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
+import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.controller.CommandController;
+import app.helper.CommandParser;
 import app.model.command.Command;
 
 public class ParserTest {
@@ -372,6 +375,45 @@ public class ParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
+	}
+	
+	@Test
+	public void testGetIdArrayList() {
+		String inputValid = "1, 5,7 9";
+		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
+		expectedValid.add(1);
+		expectedValid.add(5);
+		expectedValid.add(7);
+		expectedValid.add(9);
+		CommandParser parser = new CommandParser();
+		assertEquals(parser.getIdArrayList(inputValid), expectedValid);
+		
+		String inputInvalid = "6, g7";
+		assertEquals(parser.getIdArrayList(inputInvalid), null);
+	}
+	
+	@Test
+	public void testGetCommandDisplayArg() {
+		CommandParser parser = new CommandParser();
+		String[] inputCompleted = {"c", "comp", "complete", "completed"};
+		for (int i = 0; i < inputCompleted.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputCompleted[i]), DisplayType.COMPLETED.toString().toLowerCase());
+		}
+		
+		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		for (int i = 0; i < inputUncompleted.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputUncompleted[i]), DisplayType.UNCOMPLETED.toString().toLowerCase());
+		}
+		
+		String[] inputAll = {"a", "al", "all"};
+		for (int i = 0; i < inputAll.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputAll[i]), DisplayType.ALL.toString().toLowerCase());
+		}
+		
+		String[] inputInvalid = {"every", "cmplt", "com", "error"};
+		for (int i = 0; i < inputInvalid.length; i++) {
+			assertEquals(parser.getCommandDisplayArg(inputInvalid[i]), DisplayType.INVALID.toString().toLowerCase());
+		}
 	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {

@@ -3,6 +3,7 @@ package app.model.command;
 import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.CommandConstants.DisplayType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.controller.CommandController;
@@ -29,28 +30,25 @@ public class CommandDisplay extends Command {
 
 		try {
 			String arg = parser.getCommandDisplayArg(this.getContent());
-			if (this.getContent().isEmpty() || arg.equals("uncompleted")) {
-				// default display argument is uncompleted
+			// default display argument is uncompleted
+			if (this.getContent().isEmpty() || arg.equals(DisplayType.UNCOMPLETED.toString().toLowerCase())) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				viewState.setTaskList(retrievedTaskList);
-				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
-				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.HEADER_DISPLAY, "uncompleted"));
+				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, DisplayType.UNCOMPLETED.toString().toLowerCase()));
 				setExecuted(true);
-				
-			} else if (arg.equals("completed")) {
+			} else if (arg.equals(DisplayType.COMPLETED.toString().toLowerCase())) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
-				
-			} else if (arg.equals("all")) {
+			} else if (arg.equals(DisplayType.ALL.toString().toLowerCase())) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
-				
-			} else if (arg.equals("invalid")) {
+			} else if (arg.equals(DisplayType.INVALID.toString().toLowerCase())) {
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT));
 			}
 			viewState.setActiveView(ViewType.TASK_LIST);
@@ -58,7 +56,6 @@ public class CommandDisplay extends Command {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY));
 		}
-		
 		return viewState;
 	}
 }

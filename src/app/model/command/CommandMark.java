@@ -32,7 +32,8 @@ public class CommandMark extends Command {
 
 		CommandParser parser = new CommandParser();
 		ArrayList<Integer> displayIdsToMarkList = parser.getIdArrayList(this.getContent());
-		if (displayIdsToMarkList.get(0) == -1) {
+		
+		if (displayIdsToMarkList == null) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 			return viewState;
 		}
@@ -41,16 +42,36 @@ public class CommandMark extends Command {
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
+			LogHelper.getLogger().info("Marked specified task.");
 			viewState.setTaskList(display);
-			viewState.setStatus(StatusType.SUCCESS,
-					String.format(ViewConstants.MESSAGE_MARK, getIdList(displayIdsToMarkList)));
-			setExecuted(true);
+			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
+			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
+			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, parser, viewState);
+			viewState.setActiveView(ViewType.TASK_LIST);
+		} catch (IndexOutOfBoundsException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			viewState.setStatus(String.format(ViewConstants.ERROR_MARK, getIdList(displayIdsToMarkList)));
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK, parser.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
 		}
+		return viewState;
+	}
 
-		viewState.setActiveView(ViewType.TASK_LIST);
+	// Set appropriate feedback based on marked tasks' completion
+	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted, ArrayList<Integer> markedUncompleted, CommandParser parser, ViewState viewState) {
+		assert(markedCompleted.size()> 0 || markedUncompleted.size() > 0);
+		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedCompleted.size(), "task"),
+					getIdListString(markedCompleted), parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			setExecuted(true);
+		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED, parser.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted)));
+			setExecuted(true);
+		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED, parser.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			setExecuted(true);
+		}
 		return viewState;
 	}
 
@@ -62,10 +83,20 @@ public class CommandMark extends Command {
 			master.markTaskByIndex(masterIdsList.get(i));
 		}
 	}
-
-	// converts the ArrayList of id into a String, with each id separated by
-	// comma
-	private String getIdList(ArrayList<Integer> arr) {
+	
+	// Filter the ArrayList of task Ids to get an ArrayList of only completed or uncompleted tasks Ids
+	private ArrayList<Integer> getIdListByCompletion(ArrayList<Integer> arr, TaskList taskList, boolean isCompleted) {
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		for (int i = 0; i < arr.size(); i++) {
+			if (taskList.isTaskCompleted(arr.get(i) - 1) == isCompleted) {
+				idList.add(arr.get(i));
+			}
+		}
+		return idList;
+	}
+	
+	// converts the ArrayList of id into a String, with each id separated by comma
+	private String getIdListString(ArrayList<Integer> arr) {
 		String idList = "";
 		for (int i = 0; i < arr.size(); i++) {
 			idList += String.valueOf(arr.get(i)) + ", ";
