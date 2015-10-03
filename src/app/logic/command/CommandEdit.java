@@ -27,13 +27,12 @@ public class CommandEdit extends Command {
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getLogger().info("Executing CommandEdit object.");
 		ViewState viewState = new ViewState();
-		CommandParser parser = new CommandParser();
 		Task task = new Task(this);
 		
 		try {
-			int taskId = parser.getTaskDisplayedIdFromContent(this.getContent());
+			int taskId = CommandParser.getTaskDisplayedIdFromContent(this.getContent());
 			int taskIndex = taskId - 1;
-			task.setName(parser.getTaskDescFromContent(taskId, this.getContent()));
+			task.setName(CommandParser.getTaskDescFromContent(taskId, this.getContent()));
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			TaskList display = previousViewState.getTaskList();
 			if (taskId > display.getTaskList().size() || taskId <= 0) {

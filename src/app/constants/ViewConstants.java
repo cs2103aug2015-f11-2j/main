@@ -51,7 +51,7 @@ public class ViewConstants {
 	public static String MESSAGE_EDIT = "Edited task: %1$s";
 	public static String ERROR_EDIT = "Error editing task";
 	public static String ERROR_EDIT_NO_TASK = "No task specified to edit";
-	public static String ERROR_EDIT_NO_TASK_ID = "Task ID not found";
+	public static String ERROR_EDIT_NO_TASK_ID = "Error, invalid task ID";
 	public static String ERROR_EDIT_NO_CHANGES = "No changes specified for editing task %1$s";
 	
 	// INVALID command

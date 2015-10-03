@@ -393,7 +393,7 @@ public class ParserTest {
 	}
 	
 	@Test
-	public void testGetCommandDisplayArg() {
+	public void testDetermineDisplayType() {
 		String[] inputCompleted = {"c", "comp", "complete", "completed"};
 		for (int i = 0; i < inputCompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
@@ -415,6 +415,40 @@ public class ParserTest {
 		}
 	}
 
+	@Test
+	public void testGetTaskDisplayedIdFromContent() {
+		String input = "1 this is the task";
+		int expected = 1;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		input = "5";
+		expected = 5;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		input = "10 ";
+		expected = 10;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testGetTaskDisplayedIdFromContentThrowException() {
+		String input = "this is the task";
+		CommandParser.getTaskDisplayedIdFromContent(input);
+	}
+	
+	@Test
+	public void testGetTaskDescFromContent() {
+		String input = "4  do cs2103 ";
+		int id = 4;
+		String expected = "do cs2103";
+		assertEquals(CommandParser.getTaskDescFromContent(id, input), expected);
+		
+		input = "7";
+		id = 7;
+		expected = null;
+		assertEquals(CommandParser.getTaskDescFromContent(id, input), expected);
+	}
+	
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);
 		return (difference < 1000 || difference > -1000);

@@ -219,7 +219,7 @@ public class CommandParser {
 	 * @param content The content or name of a task
 	 * @return The displayed Id of the task
 	 */
-	public int getTaskDisplayedIdFromContent(String content) throws NumberFormatException {
+	public static int getTaskDisplayedIdFromContent(String content) throws NumberFormatException {
 		int displayedId;
 		if (content.contains(" ")) {
 			displayedId = Integer.parseInt(content.substring(0, content.indexOf(" ")));
@@ -236,7 +236,7 @@ public class CommandParser {
 	 * @param content The description or name of the task
 	 * @return The correct description or name of the task if it exist
 	 */
-	public String getTaskDescFromContent(int id, String content) {
+	public static String getTaskDescFromContent(int id, String content) {
 		String desc = "";
 		if (content.contains(" ")) {
 			desc = content.substring(content.indexOf(" "));
