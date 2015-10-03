@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
-import app.constants.ViewConstants.StatusType;
 import app.model.ViewState;
 
 
