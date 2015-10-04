@@ -59,9 +59,9 @@ public class ViewManager {
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
 		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
-		CommandController.getInstance();
 		setDefaultHeader();
 		initializeViews();
+		updateView(CommandController.getInstance().getCurrentViewState());
 		showStage(primaryStage);
 	}
 
@@ -278,10 +278,12 @@ public class ViewManager {
 	 * @param type The StatusType of the text.
 	 */
 	public void setStatus(String text, StatusType type) {
-		statusBar.setText(text);
-		statusBar.getStyleClass().removeAll(ViewConstants.STATUS_STYLE_SUCCESS, ViewConstants.STATUS_STYLE_ERROR,
-				ViewConstants.STATUS_STYLE_INFO);
-		statusBar.getStyleClass().add(determineStatusStyleClass(type));
+		if (text != null && type != null) {
+			statusBar.setText(text);
+			statusBar.getStyleClass().removeAll(ViewConstants.STATUS_STYLE_SUCCESS, ViewConstants.STATUS_STYLE_ERROR,
+					ViewConstants.STATUS_STYLE_INFO);
+			statusBar.getStyleClass().add(determineStatusStyleClass(type));
+		}
 	}
 
 	/**

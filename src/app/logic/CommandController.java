@@ -158,4 +158,8 @@ public class CommandController {
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
 	}
+
+	public ViewState getCurrentViewState() {
+		return currentViewState;
+	}
 }
