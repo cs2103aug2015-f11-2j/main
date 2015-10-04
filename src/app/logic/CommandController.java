@@ -4,6 +4,7 @@ import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
+import app.logic.command.CommandDelete;
 import app.logic.command.CommandDisplay;
 import app.logic.command.CommandExit;
 import app.logic.command.CommandInvalid;
@@ -117,6 +118,9 @@ public class CommandController {
 			break;
 		case MARK:
 			cmd = new CommandMark();
+			break;
+		case REMOVE:
+			cmd = new CommandDelete();
 			break;
 		case DISPLAY:
 			cmd = new CommandDisplay();

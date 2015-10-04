@@ -35,6 +35,11 @@ public class ViewConstants {
 	public static String ERROR_ADD = "Error adding task: %1$s";
 	public static String ERROR_ADD_NO_TASK = "No task specified";
 	
+	// DELETE command
+	public static String MESSAGE_DELETE = "Deleted task: %1$s";
+	public static String ERROR_DELETE = "Error deleteing task: %1$s";
+	public static String ERROR_DELETE_NO_TASK = "No task specified";
+	
 	// MARK command
 	public static String MESSAGE_MARK_COMPLETED = "Marked %s completed: %s";
 	public static String MESSAGE_MARK_UNCOMPLETED = "Marked %s uncompleted: %s";
