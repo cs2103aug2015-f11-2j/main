@@ -1,9 +1,10 @@
 package app.view;
 
 import app.constants.ViewConstants.ScrollDirection;
-import app.controller.CommandController;
-import app.helper.LogHelper;
-import app.model.command.Command;
+import app.logic.CommandController;
+import app.logic.command.Command;
+import app.model.ViewState;
+import app.util.LogHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -60,7 +61,8 @@ public class InputViewManager {
 	public void onKeypressEnter() {
 		String commandString = commandInput.getText();
 		LogHelper.getLogger().info("User pressed enter key with input: " + commandString);
-		CommandController.getInstance().executeCommand(commandString);
+		ViewState newViewState = CommandController.getInstance().executeCommand(commandString);
+		viewManager.updateView(newViewState);
 		commandInput.clear();
 	}
 

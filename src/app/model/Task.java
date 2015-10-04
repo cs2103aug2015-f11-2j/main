@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import app.constants.TaskConstants.Priority;
-import app.model.command.Command;
+import app.logic.command.Command;
 
 public class Task implements Comparable<Task> {
 	private UUID id;

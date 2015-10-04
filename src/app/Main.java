@@ -2,7 +2,7 @@ package app;
 
 import java.io.IOException;
 
-import app.helper.LogHelper;
+import app.util.LogHelper;
 import app.view.ViewManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

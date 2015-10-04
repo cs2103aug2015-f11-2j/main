@@ -3,12 +3,16 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
+import app.constants.CommandConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
-import app.controller.CommandController;
-import app.model.command.Command;
+import app.logic.CommandController;
+import app.logic.command.Command;
+import app.parser.CommandParser;
+import app.util.Common;
 
 public class ParserTest {
 
@@ -372,6 +376,43 @@ public class ParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
+	}
+	
+	@Test
+	public void testGetIdArrayList() {
+		String inputValid = "1, 5,7 9";
+		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
+		expectedValid.add(1);
+		expectedValid.add(5);
+		expectedValid.add(7);
+		expectedValid.add(9);
+		assertEquals(Common.getIdArrayList(inputValid), expectedValid);
+		
+		String inputInvalid = "6, g7";
+		assertEquals(Common.getIdArrayList(inputInvalid), null);
+	}
+	
+	@Test
+	public void testGetCommandDisplayArg() {
+		String[] inputCompleted = {"c", "comp", "complete", "completed"};
+		for (int i = 0; i < inputCompleted.length; i++) {
+			assertEquals(CommandParser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
+		}
+		
+		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		for (int i = 0; i < inputUncompleted.length; i++) {
+			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
+		}
+		
+		String[] inputAll = {"a", "al", "all"};
+		for (int i = 0; i < inputAll.length; i++) {
+			assertEquals(CommandParser.determineDisplayType(inputAll[i]), DisplayType.ALL);
+		}
+		
+		String[] inputInvalid = {"every", "cmplt", "com", "error"};
+		for (int i = 0; i < inputInvalid.length; i++) {
+			assertEquals(CommandParser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
+		}
 	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {

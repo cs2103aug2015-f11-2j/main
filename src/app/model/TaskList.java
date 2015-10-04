@@ -81,4 +81,9 @@ public class TaskList {
 		}
 		return idList;
 	}
+
+	// Takes in the index of a specific task and return its isCompleted value
+	public boolean isTaskCompleted(int i) {
+		return taskList.get(i).isCompleted();
+	}
 }

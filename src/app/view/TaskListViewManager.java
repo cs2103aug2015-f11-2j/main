@@ -8,10 +8,13 @@ import java.util.UUID;
 import app.Main;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.ScrollDirection;
-import app.helper.LogHelper;
 import app.model.Task;
 import app.model.TaskCell;
 import app.model.TaskList;
+import app.util.LogHelper;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +24,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 public class TaskListViewManager {
 	private ViewManager viewManager;
@@ -112,15 +116,25 @@ public class TaskListViewManager {
 	}
 
 	public void scrollTaskList(ScrollDirection direction) {
-		double step = 0.2;
+		double step = 5.0 / taskListViewLayout.getItems().size();
 		Node node = taskListViewLayout.lookup(".scroll-bar");
 		if (node instanceof ScrollBar) {
 			ScrollBar scrollBar = (ScrollBar) node;
+			double newValue = scrollBar.getValue();
 			if (direction == ScrollDirection.UP && scrollBar.getValue() != 0) {
-				scrollBar.setValue(scrollBar.getValue() - step);
+				newValue = scrollBar.getValue() - step;
 			} else if (direction == ScrollDirection.DOWN && scrollBar.getValue() != scrollBar.getMax()) {
-				scrollBar.setValue(scrollBar.getValue() + step);
+				newValue = scrollBar.getValue() + step;
 			}
+
+			// TODO: if this animation is used elsewhere, refactor to Common or
+			// something.
+			// Animate scroll to provide smooth scrolling
+			Timeline timeline = new Timeline();
+			KeyValue kv = new KeyValue(scrollBar.valueProperty(), newValue);
+			KeyFrame kf = new KeyFrame(Duration.millis(200), kv);
+			timeline.getKeyFrames().add(kf);
+			timeline.play();
 		}
 	}
 

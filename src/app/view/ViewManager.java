@@ -1,16 +1,20 @@
 package app.view;
 
 import java.io.IOException;
+import java.util.List;
 
 import app.Main;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.ScrollDirection;
 import app.constants.ViewConstants.StatusType;
-import app.controller.CommandController;
-import app.helper.LogHelper;
+import app.constants.ViewConstants.ViewType;
+import app.logic.CommandController;
+import app.logic.command.Command;
+import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;
-import app.model.command.Command;
+import app.model.ViewState;
+import app.util.LogHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,7 +39,6 @@ public class ViewManager {
 	private VBox infoViewLayout;
 	private VBox taskListViewLayout;
 
-	private CommandController commandController;
 	private InputViewManager inputViewManager;
 	private TaskListViewManager taskListViewManager;
 	private TextViewManager textViewManager;
@@ -56,8 +59,7 @@ public class ViewManager {
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
 		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
-		commandController = CommandController.getInstance();
-		commandController.setViewManager(this);
+		CommandController.getInstance();
 		setDefaultHeader();
 		initializeViews();
 		showStage(primaryStage);
@@ -155,6 +157,37 @@ public class ViewManager {
 			LogHelper.getLogger().severe(e.getMessage());
 		}
 	}
+	
+	public void updateView(ViewState viewState) {
+		if (viewState != null) {
+			setHeader(viewState.getHeader());
+			setStatus(viewState.getStatusMessage(), viewState.getStatusType());
+			updateTaskList(viewState.getTaskList()); //TODO: rename method?
+			updateTextView(viewState.getTextArea());
+			setTheme(viewState.getTheme());
+			showView(viewState.getActiveView());
+			executeActions(viewState.getActions());
+		}
+	}
+	
+	private void showView(ViewType viewType) {
+		if (viewType == ViewType.TASK_LIST) {
+			showTaskList();
+		} else if (viewType == ViewType.TEXT_VIEW) {
+			showTextView();
+		}
+	}
+	
+	private void executeActions(List<Action> actions) {
+		for (Action action : actions) {
+			switch (action.getActionType()) {
+			case SCROLL_TASK_LIST_TO:
+				scrollTaskListTo(action.getActionObject());
+			default:
+				break;
+			}
+		}
+	}
 
 	/**
 	 * Updates text of the task list header
@@ -162,7 +195,9 @@ public class ViewManager {
 	 * @param text The text for the header to read
 	 */
 	public void setHeader(String text) {
-		header.setText(text);
+		if (text != null) {
+			header.setText(text);
+		}
 	}
 
 	/**
@@ -194,8 +229,10 @@ public class ViewManager {
 	 * 
 	 * @param task The task to scroll to
 	 */
-	public void scrollTaskListTo(Task task) {
-		taskListViewManager.scrollTo(task);
+	public void scrollTaskListTo(Object object) {
+		if (object instanceof Task) {
+			taskListViewManager.scrollTo((Task) object);
+		}
 	}
 
 	/**
@@ -220,7 +257,9 @@ public class ViewManager {
 	 * @param text The text to populate the text view with.
 	 */
 	public void updateTextView(String text) {
-		textViewManager.setText(text);
+		if (text != null) {
+			textViewManager.setText(text);
+		}
 	}
 
 	/**
@@ -228,15 +267,6 @@ public class ViewManager {
 	 */
 	public void showTextView() {
 		rootLayout.setCenter(textViewLayout);
-	}
-
-	/**
-	 * Sets the status bar text with StatusType.INFO (Black).
-	 * 
-	 * @param text The status bar text to set.
-	 */
-	public void setStatus(String text) {
-		setStatus(text, StatusType.INFO);
 	}
 
 	/**
@@ -260,8 +290,10 @@ public class ViewManager {
 	 *            ViewConstants.THEME_LIGHT_CSS or ViewConstants.THEME_DARK_CSS.
 	 */
 	public void setTheme(String themeCss) {
-		rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
-		rootLayout.getStylesheets().add(themeCss);
+		if (themeCss != null) {
+			rootLayout.getStylesheets().removeAll(ViewConstants.THEME_LIGHT_CSS, ViewConstants.THEME_DARK_CSS);
+			rootLayout.getStylesheets().add(themeCss);
+		}
 	}
 
 	/**

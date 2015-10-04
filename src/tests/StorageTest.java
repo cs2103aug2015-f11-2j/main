@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import app.controller.CommandController;
+import app.logic.CommandController;
 import app.model.Task;
 import app.model.TaskList;
-import app.model.command.Command;
+import app.logic.command.Command;
 import app.storage.TaskStorage;
 
 public class StorageTest {

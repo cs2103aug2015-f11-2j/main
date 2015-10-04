@@ -1,10 +1,10 @@
-package app.model.command;
+package app.logic.command;
 
 import java.time.LocalDateTime;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
-import app.constants.ViewConstants.StatusType;
+import app.model.ViewState;
 
 
 public abstract class Command {
@@ -15,17 +15,14 @@ public abstract class Command {
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private Priority priority;
-	private String feedback;
-	private StatusType statusType;
+	private boolean isExecuted;
 
 	public Command() {
 		commandString = "";
-		feedback = "";
-		statusType = StatusType.INFO;
 		priority = Priority.NONE;
 	}
 	
-	public abstract	void execute();
+	public abstract	ViewState execute(ViewState previousViewState);
 
 	public String getContent() {
 		return content;
@@ -75,20 +72,11 @@ public abstract class Command {
 		this.priority = priority;
 	}
 
-	public String getFeedback() {
-		return feedback;
+	public boolean isExecuted() {
+		return isExecuted;
 	}
 
-	public void setFeedback(String feedback) {
-		this.feedback = feedback;
+	public void setExecuted(boolean isExecuted) {
+		this.isExecuted = isExecuted;
 	}
-	
-	public StatusType getStatusType() {
-		return statusType;
-	}
-
-	public void setStatusType(StatusType statusType) {
-		this.statusType = statusType;
-	}
-
 }

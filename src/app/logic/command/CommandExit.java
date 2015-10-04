@@ -1,6 +1,7 @@
-package app.model.command;
+package app.logic.command;
 
 import app.constants.CommandConstants.CommandType;
+import app.model.ViewState;
 
 public class CommandExit extends Command {
 
@@ -10,8 +11,10 @@ public class CommandExit extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public ViewState execute(ViewState previousViewState) {
 		System.exit(0);
+		// Will never return
+		return new ViewState();
 	}
 
 }
