@@ -29,6 +29,8 @@ public class TaskStorage {
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
+				
+				writeTasks(new TaskList());
 			} else {
 				readTasks();
 			}

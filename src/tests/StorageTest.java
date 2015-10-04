@@ -5,22 +5,26 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import app.logic.CommandController;
+import app.logic.command.Command;
 import app.model.Task;
 import app.model.TaskList;
-import app.logic.command.Command;
 import app.storage.TaskStorage;
 
 public class StorageTest {
 
 	@Test
 	public void testReadAndWriteTasks() {
+		/* reading when storage file does not exist */
+		TaskList readList = TaskStorage.getInstance().readTasks();
+		assertTrue(readList.getTaskList().isEmpty());
+		
 		/* empty tasklist */
 		// writing
 		TaskList writeList = new TaskList();
 		TaskStorage.getInstance().writeTasks(writeList);
 
 		// reading
-		TaskList readList = TaskStorage.getInstance().readTasks();
+		readList = TaskStorage.getInstance().readTasks();
 		assertTrue(readList.getTaskList().isEmpty());
 
 		/* populated tasklist */
