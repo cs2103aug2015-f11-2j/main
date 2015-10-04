@@ -9,6 +9,35 @@ import app.constants.TaskConstants.Priority;
 import app.logic.command.Command;
 import app.util.Common;
 
+class Token {
+	int start = -1;
+	int end = -1;
+
+	public boolean isEmpty() {
+		return (start == -1 || end == -1);
+	}
+
+	public void clear() {
+		start = end = -1;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+}
+
 public class CommandParser {
 
 	private static final List<String> PRIORITY_KEYWORDS = Common.getUnmodifiableList("priority");
@@ -21,14 +50,213 @@ public class CommandParser {
 	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("p", "pend", "pending", "i",
 			"incomp", "incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = Common.getUnmodifiableList("a", "al", "all");
+	private static final List<String> DISPLAY_TYPE_KEYWORDS = Common.getUnmodifiableList("type");
+
+	private static final List<String> SEARCH_START_DATE_KEYWORDS = Common.getUnmodifiableList("after", "since");
+	private static final List<String> SEARCH_END_DATE_KEYWORDS = Common.getUnmodifiableList("before");
+	private static final List<String> SEARCH_START_DATERANGE_KEYWORDS = Common.getUnmodifiableList("between");
+	private static final List<String> SEARCH_END_DATERANGE_KEYWORDS = Common.getUnmodifiableList("and");
 
 	private static List<String> allKeywords;
+	private static List<String> allSearchKeywords;
+	private static List<String> displayTypeKeywords;
 
 	static {
 		allKeywords = new ArrayList<String>();
 		allKeywords.addAll(START_DATE_KEYWORDS);
 		allKeywords.addAll(END_DATE_KEYWORDS);
 		allKeywords.addAll(PRIORITY_KEYWORDS);
+
+		allSearchKeywords = new ArrayList<String>();
+		allSearchKeywords.addAll(SEARCH_START_DATE_KEYWORDS);
+		allSearchKeywords.addAll(SEARCH_END_DATE_KEYWORDS);
+		allSearchKeywords.addAll(SEARCH_START_DATERANGE_KEYWORDS);
+		allSearchKeywords.addAll(PRIORITY_KEYWORDS);
+		allSearchKeywords.addAll(DISPLAY_TYPE_KEYWORDS);
+
+		displayTypeKeywords = new ArrayList<String>();
+		displayTypeKeywords.addAll(DISPLAY_COMPLETED);
+		displayTypeKeywords.addAll(DISPLAY_UNCOMPLETED);
+		displayTypeKeywords.addAll(DISPLAY_ALL);
+	}
+
+	public static Token searchStartToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (SEARCH_START_DATE_KEYWORDS.contains(arr[i])) {
+				token.setStart(i);
+				int j = i + 1;
+				while (j < arr.length && !allSearchKeywords.contains(arr[j])) {
+					token.setEnd(j);
+					i = j++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static Token startToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (START_DATE_KEYWORDS.contains(arr[i])) {
+				token.setStart(i);
+				int j = i + 1;
+				while (j < arr.length && !allKeywords.contains(arr[j])) {
+					token.setEnd(j);
+					i = j++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static Token endToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (END_DATE_KEYWORDS.contains(arr[i])) {
+				token.setStart(i);
+				int j = i + 1;
+				while (j < arr.length && !allKeywords.contains(arr[j])) {
+					token.setEnd(j);
+					i = j++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static Token searchEndToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (SEARCH_END_DATE_KEYWORDS.contains(arr[i])) {
+				token.setStart(i);
+				int j = i + 1;
+				while (j < arr.length && !allSearchKeywords.contains(arr[j])) {
+					token.setEnd(j);
+					i = j++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static Token priorityToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (PRIORITY_KEYWORDS.contains(arr[i])) {
+				if (i + 1 < arr.length && PRIORITY_LEVELS.contains(arr[i + 1])) {
+					token.setStart(i);
+					token.setEnd(i + 1);
+					i++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static Token displayTypeToken(String[] arr) {
+		Token token = new Token();
+		for (int i = 0; i < arr.length; i++) {
+			if (DISPLAY_TYPE_KEYWORDS.contains(arr[i])) {
+				if (i + 1 < arr.length && displayTypeKeywords.contains(arr[i + 1])) {
+					token.setStart(i);
+					token.setEnd(i + 1);
+					i++;
+				}
+			}
+		}
+		return token;
+	}
+
+	public static void parseSearch(Command cmd) {
+		String[] arr = cmd.getContent().split(" ");
+		Token contentToken = new Token();
+		contentToken.setStart(0);
+
+		Token startToken = searchStartToken(arr);
+		Token endToken = searchEndToken(arr);
+		Token priorityToken = priorityToken(arr);
+		Token displayToken = displayTypeToken(arr);
+
+		// only keep the last start or end token
+		if (endToken.getStart() > startToken.getEnd()) {
+			startToken.clear();
+		} else if (startToken.getStart() > endToken.getStart()) {
+			endToken.clear();
+		}
+
+		// Try to parse the dates detected.
+		String startDateString = Common.getStringFromArrayIndexRange(startToken.getStart() + 1, startToken.getEnd(),
+				arr);
+		String endDateString = Common.getStringFromArrayIndexRange(endToken.getStart() + 1, endToken.getEnd(), arr);
+		LocalDateTime parsedStart = DateParser.determineStartDate(startDateString);
+		LocalDateTime parsedEnd = DateParser.determineEndDate(endDateString, parsedStart);
+
+		/*
+		 * if start/end date is detected but cannot be parsed, we treat it as
+		 * part of the content instead.
+		 */
+		if (!startToken.isEmpty() && parsedStart == null) {
+			startToken.clear();
+		}
+		if (!endToken.isEmpty() && parsedEnd == null) {
+			endToken.clear();
+		}
+
+		/*
+		 * If start date is after end date, the date range is invalid and is
+		 * removed.
+		 */
+		if (parsedStart != null && parsedEnd != null && !parsedStart.isBefore(parsedEnd)) {
+			startToken.clear();
+			endToken.clear();
+			parsedStart = parsedEnd = null;
+		}
+
+		/*
+		 * Merge disjointed content tokens. For example:
+		 */
+		for (int i = 1; i < arr.length; i++) {
+			if (!Common.betweenInclusive(i, priorityToken.getStart(), priorityToken.getEnd())
+					&& !Common.betweenInclusive(i, displayToken.getStart(), displayToken.getEnd())
+					&& !Common.betweenInclusive(i, startToken.getStart(), startToken.getEnd())
+					&& !Common.betweenInclusive(i, endToken.getStart(), endToken.getEnd())) {
+				contentToken.setEnd(i);
+			}
+		}
+
+		// Remove any tokens we merged over.
+		if (startToken.getEnd() < contentToken.getEnd()) {
+			startToken.clear();
+			parsedStart = null;
+		}
+		if (endToken.getEnd() < contentToken.getEnd()) {
+			endToken.clear();
+			parsedEnd = null;
+		}
+		if (priorityToken.getEnd() < contentToken.getEnd()) {
+			priorityToken.clear();
+		}
+		if (displayToken.getEnd() < contentToken.getEnd()) {
+			displayToken.clear();
+		}
+
+		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
+		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart(), priorityToken.getEnd(),
+				arr);
+		String typeString = Common.getStringFromArrayIndexRange(displayToken.getStart(), displayToken.getEnd(), arr);
+		Priority priority = getPriority(priorityString);
+
+		// Sets the parsed parameters
+		cmd.setContent(content);
+		cmd.setPriority(priority);
+
+		System.out.println("----");
+		System.out.println(parsedStart);
+		System.out.println(parsedEnd);
+		System.out.println(content);
+		System.out.println(priority);
+		System.out.println(typeString);
 	}
 
 	/**
@@ -43,84 +271,44 @@ public class CommandParser {
 	 * @param cmd The Command object to set parameters for
 	 */
 	public static void parseDatesAndPriority(Command cmd) {
-		String[] arr = cmd.getCommandString().split(" ");
+		String[] arr = cmd.getContent().split(" ");
+		Token contentToken = new Token();
+		contentToken.setStart(0);
 
-		int startDateStart = -1;
-		int startDateEnd = -1;
-		int endDateStart = -1;
-		int endDateEnd = -1;
-
-		int priorityStart = -1;
-		int priorityEnd = -1;
-
-		int contentStart = 1; // 2nd word
-		int contentEnd = -1;
-
-		/*
-		 * Tokenize the input string into the following tokens:
-		 * 
-		 * PRIORITY, START_DATE ("from <date>"), END_DATE ("due <date")
-		 * 
-		 * For "from <date> to <date>" ranges, START_DATE and END_DATE tokens
-		 * will always be touching.
-		 * 
-		 * Example result:
-		 * 
-		 * Input: ---------- add buy milk from store from 3pm to 5pm
-		 * 
-		 * Tokenized output: [add] [buy milk from store] [from 3pm] [to 5pm]
-		 */
-		for (int i = 0; i < arr.length; i++) {
-			if (START_DATE_KEYWORDS.contains(arr[i])) {
-				boolean endFound = false;
-				startDateStart = i;
-				int j = i + 1;
-				while (j < arr.length && !START_DATE_KEYWORDS.contains(arr[j]) && !PRIORITY_KEYWORDS.contains(arr[j])) {
-					if (END_DATE_KEYWORDS.contains(arr[j])) {
-						if (endFound) {
-							break; // break if we hit a 2nd occurrence
-						}
-						startDateEnd = j - 1;
-						endDateStart = j;
-						endFound = true;
-						i = j++;
-						continue;
-					}
-					endDateEnd = j;
-					i = j++;
-				}
-			} else if (END_DATE_KEYWORDS.contains(arr[i])) {
-				startDateStart = startDateEnd = -1; // reset
-				endDateStart = i;
-				int j = i + 1;
-				while (j < arr.length && !allKeywords.contains(arr[j])) {
-					endDateEnd = j;
-					i = j++;
-				}
-			} else if (PRIORITY_KEYWORDS.contains(arr[i])) {
-				if (i + 1 < arr.length && PRIORITY_LEVELS.contains(arr[i + 1])) {
-					priorityStart = i;
-					priorityEnd = i + 1;
-					i++;
-				}
-			}
-		}
+		Token startToken = startToken(arr);
+		Token endToken = endToken(arr);
+		Token priorityToken = priorityToken(arr);
 
 		// Try to parse the dates detected.
-		String startDateString = Common.getStringFromArrayIndexRange(startDateStart + 1, startDateEnd, arr);
-		String endDateString = Common.getStringFromArrayIndexRange(endDateStart + 1, endDateEnd, arr);
+		String startDateString = Common.getStringFromArrayIndexRange(startToken.getStart() + 1, startToken.getEnd(),
+				arr);
+		String endDateString = Common.getStringFromArrayIndexRange(endToken.getStart() + 1, endToken.getEnd(), arr);
 		LocalDateTime parsedStart = DateParser.determineStartDate(startDateString);
 		LocalDateTime parsedEnd = DateParser.determineEndDate(endDateString, parsedStart);
+
+		/*
+		 * if only start date exists, clear it
+		 */
+		if (!startToken.isEmpty() && endToken.isEmpty()) {
+			startToken.clear();
+		}
+
+		/*
+		 * if start and end date exists, they MUST be together (from <date> to <date>)
+		 */
+		if (!startToken.isEmpty() && !endToken.isEmpty() && startToken.getEnd() + 1 != endToken.getStart()) {
+			startToken.clear();
+		}
 
 		/*
 		 * if start/end date is detected but cannot be parsed, we treat it as
 		 * part of the content instead.
 		 */
-		if (!startDateString.isEmpty() && parsedStart == null) {
-			startDateStart = startDateEnd = -1;
+		if (!startToken.isEmpty() && parsedStart == null) {
+			startToken.clear();
 		}
-		if (!endDateString.isEmpty() && parsedEnd == null) {
-			endDateStart = endDateEnd = -1;
+		if (!endToken.isEmpty() && parsedEnd == null) {
+			endToken.clear();
 		}
 
 		/*
@@ -128,7 +316,8 @@ public class CommandParser {
 		 * removed.
 		 */
 		if (parsedStart != null && parsedEnd != null && !parsedStart.isBefore(parsedEnd)) {
-			startDateStart = startDateEnd = endDateStart = endDateEnd = -1;
+			startToken.clear();
+			endToken.clear();
 			parsedStart = parsedEnd = null;
 		}
 
@@ -142,31 +331,35 @@ public class CommandParser {
 		 * [ADD] [--------- CONTENT ----------] [DEADLINE]
 		 * 
 		 */
+		/*
+		 * Merge disjointed content tokens. For example:
+		 */
 		for (int i = 1; i < arr.length; i++) {
-			if (!Common.betweenInclusive(i, priorityStart, priorityEnd)
-					&& !Common.betweenInclusive(i, startDateStart, startDateEnd)
-					&& !Common.betweenInclusive(i, endDateStart, endDateEnd)) {
-				contentEnd = i;
+			if (!Common.betweenInclusive(i, priorityToken.getStart(), priorityToken.getEnd())
+					&& !Common.betweenInclusive(i, startToken.getStart(), startToken.getEnd())
+					&& !Common.betweenInclusive(i, endToken.getStart(), endToken.getEnd())) {
+				contentToken.setEnd(i);
 			}
 		}
 
 		// Remove any tokens we merged over.
-		if (priorityEnd < contentEnd) {
-			priorityStart = priorityEnd = -1;
-		}
-		if (startDateEnd < contentEnd) {
-			startDateStart = startDateEnd = -1;
+		if (startToken.getEnd() < contentToken.getEnd()) {
+			startToken.clear();
 			parsedStart = null;
 		}
-		if (endDateEnd < contentEnd) {
-			endDateStart = endDateEnd = -1;
+		if (endToken.getEnd() < contentToken.getEnd()) {
+			endToken.clear();
 			parsedEnd = null;
+		}
+		if (priorityToken.getEnd() < contentToken.getEnd()) {
+			priorityToken.clear();
 		}
 
 		// Builds the content from the token indexes
 		// Parses the priority level if exists
-		String content = Common.getStringFromArrayIndexRange(contentStart, contentEnd, arr);
-		String priorityString = Common.getStringFromArrayIndexRange(priorityStart, priorityEnd, arr);
+		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
+		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart(), priorityToken.getEnd(),
+				arr);
 		Priority priority = getPriority(priorityString);
 
 		// Sets the parsed parameters

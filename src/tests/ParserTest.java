@@ -414,6 +414,15 @@ public class ParserTest {
 			assertEquals(CommandParser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
 		}
 	}
+	
+//	@Test
+//	public void testParseSearch() {
+//		// TODO: rewrite whole thing. this is test code
+////		String input = "display hello world before 5pm after 3pm priority high type completed";
+//		String input = "display hello world after 2pm priority high";
+//		Command cmd = CommandController.getInstance().createCommand(input);
+//		CommandParser.parseSearch(cmd);
+//	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);
