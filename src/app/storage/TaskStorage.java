@@ -29,7 +29,7 @@ public class TaskStorage {
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
-				
+
 				writeTasks(new TaskList());
 			} else {
 				readTasks();
@@ -48,32 +48,24 @@ public class TaskStorage {
 	}
 
 	public void writeTasks(TaskList taskList) {
-		try {
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
-
-			bufferedWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public TaskList readTasks() {
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		TaskList taskList = null;
 
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
 			Type type = new TypeToken<ArrayList<Task>>(){}.getType();
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
-			TaskList taskList = new TaskList(arrayList);
-
-			bufferedReader.close();
-
-			return taskList;
+			taskList = new TaskList(arrayList);
 		} catch (IOException e) {
 			e.printStackTrace();
-			
-			return null;
 		}
+
+		return taskList;
 	}
 }

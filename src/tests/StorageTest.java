@@ -8,16 +8,17 @@ import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.Task;
 import app.model.TaskList;
+import app.storage.AppStorage;
 import app.storage.TaskStorage;
 
 public class StorageTest {
 
 	@Test
-	public void testReadAndWriteTasks() {
-		/* reading when storage file does not exist */
+	public void testReadandWriteTasks() {
+		/* reading when storage file does not exist (initialization) */
 		TaskList readList = TaskStorage.getInstance().readTasks();
 		assertTrue(readList.getTaskList().isEmpty());
-		
+
 		/* empty tasklist */
 		// writing
 		TaskList writeList = new TaskList();
@@ -48,4 +49,21 @@ public class StorageTest {
 		assertEquals("", readList.getTaskList().get(1).getName());
 	}
 
+	@Test
+	public void testGetAndSetProperties() {
+		// set default properties when config file does not exist (initialization)
+		assertEquals("", AppStorage.getInstance().getSaveLocation());
+		assertEquals("", AppStorage.getInstance().getLogFileLocation());
+		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
+
+		// set properties
+		AppStorage.getInstance().setSaveLocation("testSave");
+		AppStorage.getInstance().setLogFileLocation("testLogFile");
+		AppStorage.getInstance().setSelectedTheme("dark");
+
+		// get properties
+		assertEquals("testSave", AppStorage.getInstance().getSaveLocation());
+		assertEquals("testLogFile", AppStorage.getInstance().getLogFileLocation());
+		assertEquals("dark", AppStorage.getInstance().getSelectedTheme());
+	}
 }
