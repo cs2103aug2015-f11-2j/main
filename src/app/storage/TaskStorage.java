@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import app.model.Task;
 import app.model.TaskList;
+import app.util.LogHelper;
 
 public class TaskStorage {
 	private static TaskStorage taskStorage;
@@ -29,11 +30,9 @@ public class TaskStorage {
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
-			} else {
-				readTasks();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().info("IOException while initializing TaskStorage");
 		}
 	}
 
@@ -48,12 +47,12 @@ public class TaskStorage {
 	public void writeTasks(TaskList taskList) {
 		try {
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-
+			
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
 
 			bufferedWriter.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().info("IOException while writing tasks to file");
 		}
 	}
 
@@ -69,9 +68,8 @@ public class TaskStorage {
 
 			return taskList;
 		} catch (IOException e) {
-			e.printStackTrace();
-			
-			return null;
+			LogHelper.getLogger().info("IOException while reading tasks from file");
+			return new TaskList();
 		}
 	}
 }

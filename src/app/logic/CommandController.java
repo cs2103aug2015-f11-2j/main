@@ -4,6 +4,7 @@ import app.constants.CommandConstants;
 import app.constants.CommandConstants.CommandType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
+import app.logic.command.CommandDelete;
 import app.logic.command.CommandDisplay;
 import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
@@ -121,6 +122,9 @@ public class CommandController {
 		case MARK:
 			cmd = new CommandMark();
 			break;
+		case REMOVE:
+			cmd = new CommandDelete();
+			break;
 		case DISPLAY:
 			cmd = new CommandDisplay();
 			break;
@@ -162,5 +166,9 @@ public class CommandController {
 
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
+	}
+
+	public ViewState getCurrentViewState() {
+		return currentViewState;
 	}
 }
