@@ -211,6 +211,7 @@ public class ViewManager {
 			header.setMinHeight(-1);
 		} else {
 			header.setPrefHeight(0);
+			header.setMinHeight(0);
 		}
 	}
 
