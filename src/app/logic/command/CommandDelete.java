@@ -52,7 +52,7 @@ public class CommandDelete extends Command {
 			
 			
 			// remove task from master list
-			for( Integer i : masterIdsList){
+			for( int i : masterIdsList){
 				master.getTaskList().remove(i);
 			}
 			
