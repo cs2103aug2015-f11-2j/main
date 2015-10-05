@@ -31,6 +31,7 @@ public class CommandMark extends Command {
 		}
 
 		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+		displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 
 		if (displayIdsToMarkList == null) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
