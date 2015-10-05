@@ -19,7 +19,7 @@ public class CommandParser {
 
 	private static final List<String> DISPLAY_COMPLETED = Common.getUnmodifiableList("c", "comp", "complete",
 			"completed");
-	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("p", "pend", "pending", "i",
+	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("pend", "pending", "i",
 			"incomp", "incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = Common.getUnmodifiableList("a", "al", "all");
 	private static final List<String> DISPLAY_TYPE_KEYWORDS = Common.getUnmodifiableList("type");
@@ -52,7 +52,7 @@ public class CommandParser {
 		displayTypeKeywords.addAll(DISPLAY_ALL);
 	}
 
-	public static ParserToken searchStartToken(String[] arr) {
+	private static ParserToken searchStartToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (SEARCH_START_DATE_KEYWORDS.contains(arr[i])) {
@@ -67,7 +67,7 @@ public class CommandParser {
 		return token;
 	}
 
-	public static ParserToken startToken(String[] arr) {
+	private static ParserToken startToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (START_DATE_KEYWORDS.contains(arr[i])) {
@@ -82,7 +82,7 @@ public class CommandParser {
 		return token;
 	}
 
-	public static ParserToken endToken(String[] arr) {
+	private static ParserToken endToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (END_DATE_KEYWORDS.contains(arr[i])) {
@@ -97,7 +97,7 @@ public class CommandParser {
 		return token;
 	}
 
-	public static ParserToken searchEndToken(String[] arr) {
+	private static ParserToken searchEndToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (SEARCH_END_DATE_KEYWORDS.contains(arr[i])) {
@@ -112,7 +112,7 @@ public class CommandParser {
 		return token;
 	}
 
-	public static ParserToken priorityToken(String[] arr) {
+	private static ParserToken priorityToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (PRIORITY_KEYWORDS.contains(arr[i])) {
@@ -126,7 +126,7 @@ public class CommandParser {
 		return token;
 	}
 
-	public static ParserToken displayTypeToken(String[] arr) {
+	private static ParserToken displayTypeToken(String[] arr) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
 			if (DISPLAY_TYPE_KEYWORDS.contains(arr[i])) {
@@ -164,53 +164,24 @@ public class CommandParser {
 		LocalDateTime parsedStart = DateParser.determineStartDate(startDateString);
 		LocalDateTime parsedEnd = DateParser.determineEndDate(endDateString, parsedStart);
 
-		/*
-		 * if start/end date is detected but cannot be parsed, we treat it as
-		 * part of the content instead.
-		 */
-		if (!startToken.isEmpty() && parsedStart == null) {
-			startToken.clear();
-		}
-		if (!endToken.isEmpty() && parsedEnd == null) {
-			endToken.clear();
-		}
+		// if start/end date is detected but cannot be parsed, we treat it as
+		// part of the content instead.
+		clearIfCannotParse(startToken, parsedStart);
+		clearIfCannotParse(endToken, parsedEnd);
 
-		/*
-		 * If start date is after end date, the date range is invalid and is
-		 * removed.
-		 */
-		if (parsedStart != null && parsedEnd != null && !parsedStart.isBefore(parsedEnd)) {
-			startToken.clear();
-			endToken.clear();
-			parsedStart = parsedEnd = null;
-		}
+		// If start date > end date, the date range is invalid and is removed
+		clearIfStartBeforeEnd(startToken, endToken, parsedStart, parsedEnd);
 
-		/*
-		 * Merge disjointed content tokens. For example:
-		 */
-		for (int i = 1; i < arr.length; i++) {
-			if (!Common.betweenInclusive(i, priorityToken.getStart(), priorityToken.getEnd())
-					&& !Common.betweenInclusive(i, displayToken.getStart(), displayToken.getEnd())
-					&& !Common.betweenInclusive(i, startToken.getStart(), startToken.getEnd())
-					&& !Common.betweenInclusive(i, endToken.getStart(), endToken.getEnd())) {
-				contentToken.setEnd(i);
-			}
-		}
+		// Merge disjointed content tokens.
+		updateContentEnd(contentToken, arr, priorityToken, displayToken, startToken, endToken);
 
 		// Remove any tokens we merged over.
-		if (startToken.getEnd() < contentToken.getEnd()) {
-			startToken.clear();
+		clearTokensBeforeContent(contentToken, startToken, endToken, priorityToken, displayToken);
+		if (startToken.isEmpty()) {
 			parsedStart = null;
 		}
-		if (endToken.getEnd() < contentToken.getEnd()) {
-			endToken.clear();
+		if (endToken.isEmpty()) {
 			parsedEnd = null;
-		}
-		if (priorityToken.getEnd() < contentToken.getEnd()) {
-			priorityToken.clear();
-		}
-		if (displayToken.getEnd() < contentToken.getEnd()) {
-			displayToken.clear();
 		}
 
 		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
@@ -254,40 +225,23 @@ public class CommandParser {
 		LocalDateTime parsedStart = DateParser.determineStartDate(startDateString);
 		LocalDateTime parsedEnd = DateParser.determineEndDate(endDateString, parsedStart);
 
-		/*
-		 * if only start date exists, clear it
-		 */
+		// if only start date exists, clear it
 		if (!startToken.isEmpty() && endToken.isEmpty()) {
 			startToken.clear();
 		}
 
-		/*
-		 * if start and end date exists, they MUST be together (from <date> to <date>)
-		 */
+		// if exists, start & end date MUST be joined (from <date> to <date>)
 		if (!startToken.isEmpty() && !endToken.isEmpty() && startToken.getEnd() + 1 != endToken.getStart()) {
 			startToken.clear();
 		}
 
-		/*
-		 * if start/end date is detected but cannot be parsed, we treat it as
-		 * part of the content instead.
-		 */
-		if (!startToken.isEmpty() && parsedStart == null) {
-			startToken.clear();
-		}
-		if (!endToken.isEmpty() && parsedEnd == null) {
-			endToken.clear();
-		}
+		// if start/end date is detected but cannot be parsed, we treat it as
+		// part of the content instead.
+		clearIfCannotParse(startToken, parsedStart);
+		clearIfCannotParse(endToken, parsedEnd);
 
-		/*
-		 * If start date is after end date, the date range is invalid and is
-		 * removed.
-		 */
-		if (parsedStart != null && parsedEnd != null && !parsedStart.isBefore(parsedEnd)) {
-			startToken.clear();
-			endToken.clear();
-			parsedStart = parsedEnd = null;
-		}
+		// If start date > end date, the date range is invalid and is removed
+		clearIfStartBeforeEnd(startToken, endToken, parsedStart, parsedEnd);
 
 		/*
 		 * Merge disjointed content tokens. For example:
@@ -302,25 +256,15 @@ public class CommandParser {
 		/*
 		 * Merge disjointed content tokens. For example:
 		 */
-		for (int i = 1; i < arr.length; i++) {
-			if (!Common.betweenInclusive(i, priorityToken.getStart(), priorityToken.getEnd())
-					&& !Common.betweenInclusive(i, startToken.getStart(), startToken.getEnd())
-					&& !Common.betweenInclusive(i, endToken.getStart(), endToken.getEnd())) {
-				contentToken.setEnd(i);
-			}
-		}
+		updateContentEnd(contentToken, arr, priorityToken, startToken, endToken);
 
 		// Remove any tokens we merged over.
-		if (startToken.getEnd() < contentToken.getEnd()) {
-			startToken.clear();
+		clearTokensBeforeContent(contentToken, startToken, endToken, priorityToken);
+		if (startToken.isEmpty()) {
 			parsedStart = null;
 		}
-		if (endToken.getEnd() < contentToken.getEnd()) {
-			endToken.clear();
+		if (endToken.isEmpty()) {
 			parsedEnd = null;
-		}
-		if (priorityToken.getEnd() < contentToken.getEnd()) {
-			priorityToken.clear();
 		}
 
 		// Builds the content from the token indexes
@@ -335,6 +279,45 @@ public class CommandParser {
 		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
+	}
+
+	private static void clearIfStartBeforeEnd(ParserToken startToken, ParserToken endToken, LocalDateTime startDate,
+			LocalDateTime endDate) {
+		if (startDate != null && endDate != null && !startDate.isBefore(endDate)) {
+			startToken.clear();
+			endToken.clear();
+			startDate = endDate = null;
+		}
+	}
+
+	private static void clearIfCannotParse(ParserToken token, LocalDateTime parsedDate) {
+		if (!token.isEmpty() && parsedDate == null) {
+			token.clear();
+		}
+	}
+
+	private static void clearTokensBeforeContent(ParserToken content, ParserToken... tokens) {
+		for (ParserToken token : tokens) {
+			if (token.getEnd() < content.getEnd()) {
+				token.clear();
+			}
+		}
+	}
+
+	private static void updateContentEnd(ParserToken content, String[] arr, ParserToken... tokens) {
+		for (int i = arr.length - 1; i >= 0; i--) {
+			boolean isBetween = false;
+			for (ParserToken token : tokens) {
+				if (Common.betweenInclusive(i, token.getStart(), token.getEnd())) {
+					isBetween = true;
+					break;
+				}
+			}
+			if (!isBetween) {
+				content.setEnd(i);
+				return;
+			}
+		}
 	}
 
 	/**

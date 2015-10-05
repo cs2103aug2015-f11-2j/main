@@ -399,7 +399,7 @@ public class ParserTest {
 			assertEquals(CommandParser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
 		}
 		
-		String[] inputUncompleted = {"p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
