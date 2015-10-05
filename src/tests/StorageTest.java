@@ -51,9 +51,8 @@ public class StorageTest {
 
 	@Test
 	public void testGetAndSetProperties() {
-		// set default properties when config file does not exist (initialization)
-		assertEquals("", AppStorage.getInstance().getSaveLocation());
-		assertEquals("", AppStorage.getInstance().getLogFileLocation());
+		// default properties when config file does not exist (initialization)
+		AppStorage.getInstance().setDefaultProperties();
 		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
 
 		// set properties

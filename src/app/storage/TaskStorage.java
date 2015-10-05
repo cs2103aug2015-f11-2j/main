@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import app.constants.StorageConstants;
 import app.model.Task;
 import app.model.TaskList;
 
@@ -24,15 +25,21 @@ public class TaskStorage {
 
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
-		file = new File("next.txt");
+
+		File directory = new File(AppStorage.getInstance().getSaveLocation());
+
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		file = new File(AppStorage.getInstance().getSaveLocation() + File.separator
+						+ StorageConstants.FILE_SAVE);
 
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
 
 				writeTasks(new TaskList());
-			} else {
-				readTasks();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

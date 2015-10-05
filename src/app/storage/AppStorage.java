@@ -46,8 +46,8 @@ public class AppStorage {
 		return properties.getProperty(StorageConstants.PROPERTIES_SAVE_LOCATION);
 	}
 
-	public void setSaveLocation(String saveLocation) {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, saveLocation);
+	public void setSaveLocation(String directoryPath) {
+		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, directoryPath);
 
 		writeProperties();
 	}
@@ -56,8 +56,8 @@ public class AppStorage {
 		return properties.getProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION);
 	}
 
-	public void setLogFileLocation(String logFileLocation) {
-		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, logFileLocation);
+	public void setLogFileLocation(String directoryPath) {
+		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, directoryPath);
 
 		writeProperties();
 	}
@@ -66,23 +66,36 @@ public class AppStorage {
 		return properties.getProperty(StorageConstants.PROPERTIES_SELECTED_THEME);
 	}
 
-	public void setSelectedTheme(String selectedTheme) {
-		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, selectedTheme);
+	public void setSelectedTheme(String theme) {
+		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, theme);
 
 		writeProperties();
 	}
 
 	public void setDefaultProperties() {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, "");
-		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, "");
-		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, ViewConstants.THEME_LIGHT);
+		String currentWorkingDirectoryPath = "";
 
-		writeProperties();
+		try {
+			File currentWorkingDirectory = new File(".");
+
+			// replace backslash so that escape characters are not needed in the file
+			currentWorkingDirectoryPath = currentWorkingDirectory.getCanonicalPath().replace("\\", "/");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		setSaveLocation(currentWorkingDirectoryPath);
+		setLogFileLocation(currentWorkingDirectoryPath);
+		setSelectedTheme(ViewConstants.THEME_LIGHT);
 	}
 
 	private void writeProperties() {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
-			properties.store(bufferedWriter, null);
+			bufferedWriter.write(StorageConstants.PROPERTIES_SAVE_LOCATION + "=" + getSaveLocation());
+			bufferedWriter.newLine();
+			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION + "=" + getLogFileLocation());
+			bufferedWriter.newLine();
+			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME + "=" + getSelectedTheme());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
