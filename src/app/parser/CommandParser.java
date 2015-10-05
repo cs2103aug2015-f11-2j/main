@@ -220,30 +220,17 @@ public class CommandParser {
 	 * @return The displayed Id of the task
 	 */
 	public static int getTaskDisplayedIdFromContent(String content) throws NumberFormatException {
-		int displayedId;
-		if (content.contains(" ")) {
-			displayedId = Integer.parseInt(content.substring(0, content.indexOf(" ")));
-		} else {
-			displayedId = Integer.parseInt(content);
-		}
-		return displayedId;
+		return Integer.parseInt(Common.getFirstWord(content));
 	}
 	
 	/**
 	 * Parses the content of a task from the Edit command to filter out the task id
 	 * 
-	 * @param id The displayed Id of the task
 	 * @param content The description or name of the task
 	 * @return The correct description or name of the task if it exist
 	 */
-	public static String getTaskDescFromContent(int id, String content) {
-		String desc = "";
-		if (content.contains(" ")) {
-			desc = content.substring(content.indexOf(" "));
-		} else {
-			return null;
-		}
-		return desc.trim();
+	public static String getTaskDescFromContent(String content) {
+		return Common.removeFirstWord(content);
 	}
 
 }

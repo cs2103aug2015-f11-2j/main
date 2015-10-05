@@ -105,22 +105,22 @@ public class TaskList {
 	
 	// Takes in a task to compare with the old task at specified index,
 	// and updates the old task with respect to the new one
-	public boolean updateTask(Task task, int masterListIndex) {
+	public boolean updateTask(Task task, int index) {
 		boolean isEdited = false;
-		if (task.getName() != "" && task.getName() != null){
-			taskList.get(masterListIndex).setName(task.getName());
+		if (!task.getName().equals("") && task.getName() != null){
+			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
 		if (task.getEndDate() != null) {
-			taskList.get(masterListIndex).setEndDate(task.getEndDate());
+			taskList.get(index).setEndDate(task.getEndDate());
 			isEdited = true;
 		}
 		if (task.getStartDate() != null) {
-			taskList.get(masterListIndex).setStartDate(task.getStartDate());
+			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
 		}
 		if (task.getPriority() != Priority.NONE) {
-			taskList.get(masterListIndex).setPriority(task.getPriority());
+			taskList.get(index).setPriority(task.getPriority());
 			isEdited = true;
 		}
 		return isEdited;
