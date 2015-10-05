@@ -419,9 +419,11 @@ public class ParserTest {
 //	public void testParseSearch() {
 //		// TODO: rewrite whole thing. this is test code
 ////		String input = "display hello world before 5pm after 3pm priority high type completed";
-//		String input = "display hello world after 2pm priority high";
+//		String input = "display hello world type completed between 1pm and 3pm";
 //		Command cmd = CommandController.getInstance().createCommand(input);
 //		CommandParser.parseSearch(cmd);
+//		System.out.println(cmd.getStartDate());
+//		System.out.println(cmd.getEndDate());
 //	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {

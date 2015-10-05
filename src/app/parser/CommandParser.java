@@ -19,8 +19,8 @@ public class CommandParser {
 
 	private static final List<String> DISPLAY_COMPLETED = Common.getUnmodifiableList("c", "comp", "complete",
 			"completed");
-	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("pend", "pending", "i",
-			"incomp", "incomplete", "u", "uncomp", "uncompleted");
+	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("pend", "pending", "i", "incomp",
+			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = Common.getUnmodifiableList("a", "al", "all");
 	private static final List<String> DISPLAY_TYPE_KEYWORDS = Common.getUnmodifiableList("type");
 
@@ -52,109 +52,64 @@ public class CommandParser {
 		displayTypeKeywords.addAll(DISPLAY_ALL);
 	}
 
-	private static ParserToken searchStartToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (SEARCH_START_DATE_KEYWORDS.contains(arr[i])) {
-				token.setStart(i);
-				int j = i + 1;
-				while (j < arr.length && !allSearchKeywords.contains(arr[j])) {
-					token.setEnd(j);
-					i = j++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken startToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (START_DATE_KEYWORDS.contains(arr[i])) {
-				token.setStart(i);
-				int j = i + 1;
-				while (j < arr.length && !allKeywords.contains(arr[j])) {
-					token.setEnd(j);
-					i = j++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken endToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (END_DATE_KEYWORDS.contains(arr[i])) {
-				token.setStart(i);
-				int j = i + 1;
-				while (j < arr.length && !allKeywords.contains(arr[j])) {
-					token.setEnd(j);
-					i = j++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken searchEndToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (SEARCH_END_DATE_KEYWORDS.contains(arr[i])) {
-				token.setStart(i);
-				int j = i + 1;
-				while (j < arr.length && !allSearchKeywords.contains(arr[j])) {
-					token.setEnd(j);
-					i = j++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken priorityToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (PRIORITY_KEYWORDS.contains(arr[i])) {
-				if (i + 1 < arr.length && PRIORITY_LEVELS.contains(arr[i + 1])) {
-					token.setStart(i);
-					token.setEnd(i + 1);
-					i++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken displayTypeToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (DISPLAY_TYPE_KEYWORDS.contains(arr[i])) {
-				if (i + 1 < arr.length && displayTypeKeywords.contains(arr[i + 1])) {
-					token.setStart(i);
-					token.setEnd(i + 1);
-					i++;
-				}
-			}
-		}
-		return token;
-	}
-
+	/**
+	 * TODO: update javadoc 
+	 * 
+	 * Parses and sets search-related parameters for the
+	 * Command object specified.
+	 * 
+	 * The following parameters are set:
+	 * 
+	 * - Content, and if exists, startDate, endDate, priority.
+	 * 
+	 * @param cmd The Command object to set parameters for
+	 */
 	public static void parseSearch(Command cmd) {
 		String[] arr = cmd.getContent().split(" ");
 		ParserToken contentToken = new ParserToken();
 		contentToken.setStart(0);
 
-		ParserToken startToken = searchStartToken(arr);
-		ParserToken endToken = searchEndToken(arr);
+		ParserToken startToken = dateToken(arr, SEARCH_START_DATE_KEYWORDS, allSearchKeywords);
+		ParserToken endToken = dateToken(arr, SEARCH_END_DATE_KEYWORDS, allSearchKeywords);
 		ParserToken priorityToken = priorityToken(arr);
 		ParserToken displayToken = displayTypeToken(arr);
+
+		// Daterange keywords for search: BETWEEN <date> AND <date>
+		List<String> inclusiveEndKeywords = new ArrayList<String>(allSearchKeywords);
+		inclusiveEndKeywords.addAll(SEARCH_END_DATERANGE_KEYWORDS);
+		ParserToken rangeStartToken = dateToken(arr, SEARCH_START_DATERANGE_KEYWORDS, inclusiveEndKeywords);
+		ParserToken rangeEndToken = dateToken(arr, SEARCH_END_DATERANGE_KEYWORDS, allSearchKeywords);
+
+		// Try to parse daterange keywords
+		String rangeStartDateString = Common.getStringFromArrayIndexRange(rangeStartToken.getStart() + 1,
+				rangeStartToken.getEnd(), arr);
+		String rangeEndDateString = Common.getStringFromArrayIndexRange(rangeEndToken.getStart() + 1,
+				rangeEndToken.getEnd(), arr);
+		LocalDateTime parsedRangeStart = DateParser.determineStartDate(rangeStartDateString);
+		LocalDateTime parsedRangeEnd = DateParser.determineEndDate(rangeEndDateString, parsedRangeStart);
+
+		// if exists, start & end date MUST be joined (between <date> and
+		// <date>)
+		if (!rangeStartToken.isEmpty() && !rangeEndToken.isEmpty() && rangeStartToken.getEnd() + 1 != rangeEndToken.getStart()) {
+			rangeStartToken.clear();
+			rangeEndToken.clear();
+		}
+		
+		// validate daterange
+		clearIfCannotParse(rangeStartToken, parsedRangeStart);
+		clearIfCannotParse(rangeEndToken, parsedRangeEnd);
+		clearIfStartBeforeEnd(rangeStartToken, rangeEndToken, parsedRangeStart, parsedRangeEnd);
 
 		// only keep the last start or end token
 		if (endToken.getStart() > startToken.getEnd()) {
 			startToken.clear();
-		} else if (startToken.getStart() > endToken.getStart()) {
+		} else if (startToken.getStart() > endToken.getEnd()) {
 			endToken.clear();
+		}
+		// replace start and end tokens if a valid range is detected
+		if (rangeStartToken.getStart() > startToken.getEnd() && rangeStartToken.getStart() > endToken.getEnd()) {
+			startToken = rangeStartToken;
+			endToken = rangeEndToken;
 		}
 
 		// Try to parse the dates detected.
@@ -214,8 +169,8 @@ public class CommandParser {
 		ParserToken contentToken = new ParserToken();
 		contentToken.setStart(0);
 
-		ParserToken startToken = startToken(arr);
-		ParserToken endToken = endToken(arr);
+		ParserToken startToken = dateToken(arr, START_DATE_KEYWORDS, allKeywords);
+		ParserToken endToken = dateToken(arr, END_DATE_KEYWORDS, allKeywords);
 		ParserToken priorityToken = priorityToken(arr);
 
 		// Try to parse the dates detected.
@@ -279,6 +234,49 @@ public class CommandParser {
 		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
+	}
+
+	private static ParserToken dateToken(String[] arr, List<String> keywords, List<String> breakpoints) {
+		ParserToken token = new ParserToken();
+		for (int i = 0; i < arr.length; i++) {
+			if (keywords.contains(arr[i])) {
+				token.setStart(i);
+				int j = i + 1;
+				while (j < arr.length && !breakpoints.contains(arr[j])) {
+					token.setEnd(j);
+					i = j++;
+				}
+			}
+		}
+		return token;
+	}
+
+	private static ParserToken priorityToken(String[] arr) {
+		ParserToken token = new ParserToken();
+		for (int i = 0; i < arr.length; i++) {
+			if (PRIORITY_KEYWORDS.contains(arr[i])) {
+				if (i + 1 < arr.length && PRIORITY_LEVELS.contains(arr[i + 1])) {
+					token.setStart(i);
+					token.setEnd(i + 1);
+					i++;
+				}
+			}
+		}
+		return token;
+	}
+
+	private static ParserToken displayTypeToken(String[] arr) {
+		ParserToken token = new ParserToken();
+		for (int i = 0; i < arr.length; i++) {
+			if (DISPLAY_TYPE_KEYWORDS.contains(arr[i])) {
+				if (i + 1 < arr.length && displayTypeKeywords.contains(arr[i + 1])) {
+					token.setStart(i);
+					token.setEnd(i + 1);
+					i++;
+				}
+			}
+		}
+		return token;
 	}
 
 	private static void clearIfStartBeforeEnd(ParserToken startToken, ParserToken endToken, LocalDateTime startDate,
