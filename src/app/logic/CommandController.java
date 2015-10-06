@@ -13,6 +13,7 @@ import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
+import app.storage.TaskStorage;
 import app.util.Common;
 
 /**
@@ -29,9 +30,9 @@ public class CommandController {
 	private ViewState currentViewState;
 
 	private CommandController() {
-		masterTaskList = new TaskList();
+		masterTaskList = TaskStorage.getInstance().readTasks();
 		currentViewState = new ViewState();
-		currentViewState.setTaskList(new TaskList());
+		currentViewState.setTaskList(masterTaskList);
 	}
 
 	/**

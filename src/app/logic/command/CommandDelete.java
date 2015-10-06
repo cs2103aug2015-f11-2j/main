@@ -9,6 +9,7 @@ import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.storage.TaskStorage;
 import app.util.Common;
 import app.util.LogHelper;
 
@@ -56,6 +57,7 @@ public class CommandDelete extends Command {
 				master.getTaskList().remove(i);
 			}
 			
+			TaskStorage.getInstance().writeTasks(master);
 			
 			// store message
 			String message = display.getTaskList().get(Integer.parseInt(this.getContent())-1).getName();
