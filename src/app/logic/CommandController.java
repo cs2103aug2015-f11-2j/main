@@ -176,8 +176,10 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
-		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd);
+			break;
+		case EDIT:
+			CommandParser.parseDatesAndPriority(cmd, true);
 			break;
 		case SEARCH:
 			CommandParser.parseSearch(cmd);
