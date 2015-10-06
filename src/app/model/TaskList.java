@@ -118,6 +118,9 @@ public class TaskList {
 		if (task.getStartDate() != null) {
 			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
+		} else if (task.getStartDate() == null && task.getEndDate() != null){
+			taskList.get(index).setStartDate(null);
+			isEdited = true;
 		}
 		if (task.getPriority() != Priority.NONE) {
 			taskList.get(index).setPriority(task.getPriority());
