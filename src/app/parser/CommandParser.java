@@ -31,7 +31,7 @@ public class CommandParser {
 
 	private static List<String> allKeywords;
 	private static List<String> allSearchKeywords;
-	private static List<String> displayTypeKeywords;
+	private static List<String> displayTypes;
 
 	static {
 		allKeywords = new ArrayList<String>();
@@ -46,10 +46,10 @@ public class CommandParser {
 		allSearchKeywords.addAll(PRIORITY_KEYWORDS);
 		allSearchKeywords.addAll(DISPLAY_TYPE_KEYWORDS);
 
-		displayTypeKeywords = new ArrayList<String>();
-		displayTypeKeywords.addAll(DISPLAY_COMPLETED);
-		displayTypeKeywords.addAll(DISPLAY_UNCOMPLETED);
-		displayTypeKeywords.addAll(DISPLAY_ALL);
+		displayTypes = new ArrayList<String>();
+		displayTypes.addAll(DISPLAY_COMPLETED);
+		displayTypes.addAll(DISPLAY_UNCOMPLETED);
+		displayTypes.addAll(DISPLAY_ALL);
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class CommandParser {
 
 		ParserToken startToken = dateToken(arr, SEARCH_START_DATE_KEYWORDS, allSearchKeywords);
 		ParserToken endToken = dateToken(arr, SEARCH_END_DATE_KEYWORDS, allSearchKeywords);
-		ParserToken priorityToken = priorityToken(arr);
-		ParserToken displayToken = displayTypeToken(arr);
+		ParserToken priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
+		ParserToken displayToken = singleArgToken(arr, DISPLAY_TYPE_KEYWORDS, displayTypes);
 
 		// Daterange keywords for search: BETWEEN <date> AND <date>
 		List<String> inclusiveEndKeywords = new ArrayList<String>(allSearchKeywords);
@@ -172,7 +172,7 @@ public class CommandParser {
 
 		ParserToken startToken = dateToken(arr, START_DATE_KEYWORDS, allKeywords);
 		ParserToken endToken = dateToken(arr, END_DATE_KEYWORDS, allKeywords);
-		ParserToken priorityToken = priorityToken(arr);
+		ParserToken priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
 
 		// Try to parse the dates detected.
 		String startDateString = Common.getStringFromArrayIndexRange(startToken.getStart() + 1, startToken.getEnd(),
@@ -208,9 +208,6 @@ public class CommandParser {
 		 * 
 		 * [ADD] [--------- CONTENT ----------] [DEADLINE]
 		 * 
-		 */
-		/*
-		 * Merge disjointed content tokens. For example:
 		 */
 		updateContentEnd(contentToken, arr, priorityToken, startToken, endToken);
 
@@ -252,25 +249,11 @@ public class CommandParser {
 		return token;
 	}
 
-	private static ParserToken priorityToken(String[] arr) {
+	private static ParserToken singleArgToken(String[] arr, List<String> keywords, List<String> args) {
 		ParserToken token = new ParserToken();
 		for (int i = 0; i < arr.length; i++) {
-			if (PRIORITY_KEYWORDS.contains(arr[i])) {
-				if (i + 1 < arr.length && PRIORITY_LEVELS.contains(arr[i + 1])) {
-					token.setStart(i);
-					token.setEnd(i + 1);
-					i++;
-				}
-			}
-		}
-		return token;
-	}
-
-	private static ParserToken displayTypeToken(String[] arr) {
-		ParserToken token = new ParserToken();
-		for (int i = 0; i < arr.length; i++) {
-			if (DISPLAY_TYPE_KEYWORDS.contains(arr[i])) {
-				if (i + 1 < arr.length && displayTypeKeywords.contains(arr[i + 1])) {
+			if (keywords.contains(arr[i])) {
+				if (i + 1 < arr.length && args.contains(arr[i + 1])) {
 					token.setStart(i);
 					token.setEnd(i + 1);
 					i++;
