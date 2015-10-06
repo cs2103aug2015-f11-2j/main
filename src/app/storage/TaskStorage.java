@@ -43,7 +43,7 @@ public class TaskStorage {
 				writeTasks(new TaskList());
 			}
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class TaskStorage {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_WRITE_TASKS);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class TaskStorage {
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
 			taskList = new TaskList(arrayList);
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_READ_TASKS);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_TASKS);
 			taskList = new TaskList();
 		}
 

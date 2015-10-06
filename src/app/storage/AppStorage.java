@@ -31,7 +31,7 @@ public class AppStorage {
 				readProperties();
 			}
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_INITIALIZE_APPSTORAGE);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_APPSTORAGE);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class AppStorage {
 		try {
 			currentWorkingDirectoryPath = replaceBackslash(currentWorkingDirectory.getCanonicalPath());
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_GET_WORKING_DIRECTORY);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_GET_WORKING_DIRECTORY);
 		}
 
 		setSaveLocation(currentWorkingDirectoryPath);
@@ -96,7 +96,7 @@ public class AppStorage {
 			bufferedWriter.newLine();
 			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME + "=" + getSelectedTheme());
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_WRITE_PROPERTIES);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class AppStorage {
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
 			properties.load(bufferedReader);
 		} catch (IOException e) {
-			LogHelper.getLogger().info(StorageConstants.ERROR_READ_PROPERTIES);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
 		}
 	}
 
