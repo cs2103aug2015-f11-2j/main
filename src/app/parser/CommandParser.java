@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.logic.command.Command;
 import app.model.ParserToken;
@@ -140,17 +140,18 @@ public class CommandParser {
 		}
 
 		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
-		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart(), priorityToken.getEnd(),
+		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart() + 1, priorityToken.getEnd(),
 				arr);
-		String typeString = Common.getStringFromArrayIndexRange(displayToken.getStart(), displayToken.getEnd(), arr);
-		Priority priority = getPriority(priorityString);
+		String typeString = Common.getStringFromArrayIndexRange(displayToken.getStart() + 1, displayToken.getEnd(), arr);
+		Priority priority = determinePriority(priorityString);
+		DisplayType type = determineDisplayType(typeString);
 
 		// Sets the parsed parameters
 		cmd.setContent(content);
 		cmd.setPriority(priority);
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
-		// TODO: set typeString
+		cmd.setDisplayType(type);
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class CommandParser {
 		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
 		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart(), priorityToken.getEnd(),
 				arr);
-		Priority priority = getPriority(priorityString);
+		Priority priority = determinePriority(priorityString);
 
 		// Sets the parsed parameters
 		cmd.setContent(content);
@@ -324,14 +325,12 @@ public class CommandParser {
 	 * @param priorityString The priority level as a string
 	 * @return The corresponding priority level
 	 */
-	private static Priority getPriority(String priorityString) {
-		assert priorityString.length() == 2;
-		String priorityLevel = Common.removeFirstWord(priorityString);
-		if (priorityLevel.contains("high")) {
+	private static Priority determinePriority(String priorityString) {
+		if (priorityString.contains("high")) {
 			return Priority.HIGH;
-		} else if (priorityLevel.contains("medium")) {
+		} else if (priorityString.contains("medium")) {
 			return Priority.MEDIUM;
-		} else if (priorityLevel.contains("low")) {
+		} else if (priorityString.contains("low")) {
 			return Priority.LOW;
 		}
 		return Priority.NONE;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.logic.CommandController;
 import app.logic.command.Command;

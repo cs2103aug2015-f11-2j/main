@@ -3,7 +3,7 @@ package app.logic;
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
 import app.logic.command.CommandDelete;
@@ -175,10 +175,11 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
-			CommandParser.parseDatesAndPriority(cmd);
-			break;
 		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd);
+			break;
+		case SEARCH:
+			CommandParser.parseSearch(cmd);
 			break;
 		default:
 			break;
