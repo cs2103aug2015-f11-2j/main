@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.junit.Test;
 
@@ -153,12 +154,12 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 
 		// medium priority
-		input = "add buy milk priority medium";
+		input = "add buy milk pri medium";
 		cmd = CommandController.getInstance().createCommand(input);
 		assertEquals(Priority.MEDIUM, cmd.getPriority());
 
 		// low priority
-		input = "add buy milk priority low";
+		input = "add buy milk p low";
 		cmd = CommandController.getInstance().createCommand(input);
 		assertEquals(Priority.LOW, cmd.getPriority());
 	}
@@ -274,17 +275,6 @@ public class CommandParserTest {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.INVALID);
 		}
 	}
-	
-//	@Test
-//	public void testParseSearch() {
-//		// TODO: rewrite whole thing. this is test code
-////		String input = "display hello world before 5pm after 3pm priority high type completed";
-//		String input = "display hello world type completed between 1pm and 3pm";
-//		Command cmd = CommandController.getInstance().createCommand(input);
-//		CommandParser.parseSearch(cmd);
-//		System.out.println(cmd.getStartDate());
-//		System.out.println(cmd.getEndDate());
-//	}
 
 	@Test
 	public void testGetTaskDisplayedIdFromContent() {
