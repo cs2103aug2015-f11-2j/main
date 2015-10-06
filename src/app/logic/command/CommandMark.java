@@ -11,6 +11,7 @@ import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.storage.TaskStorage;
 import app.util.Common;
 import app.util.LogHelper;
 
@@ -89,6 +90,8 @@ public class CommandMark extends Command {
 		for (int i = 0; i < masterIdsList.size(); i++) {
 			master.markTaskByIndex(masterIdsList.get(i));
 		}
+
+		TaskStorage.getInstance().writeTasks(master);
 	}
 
 	// Filter the ArrayList of task Ids to get an ArrayList of only completed or

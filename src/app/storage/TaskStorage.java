@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import app.constants.StorageConstants;
 import app.model.Task;
 import app.model.TaskList;
 import app.util.LogHelper;
@@ -25,14 +26,24 @@ public class TaskStorage {
 
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
-		file = new File("next.txt");
+
+		File directory = new File(AppStorage.getInstance().getSaveLocation());
+
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		file = new File(AppStorage.getInstance().getSaveLocation() + File.separator
+						+ StorageConstants.FILE_SAVE);
 
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
+
+				writeTasks(new TaskList());
 			}
 		} catch (IOException e) {
-			LogHelper.getLogger().info("IOException while initializing TaskStorage");
+			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
 		}
 	}
 
@@ -45,31 +56,25 @@ public class TaskStorage {
 	}
 
 	public void writeTasks(TaskList taskList) {
-		try {
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-			
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
-
-			bufferedWriter.close();
 		} catch (IOException e) {
-			LogHelper.getLogger().info("IOException while writing tasks to file");
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
 		}
 	}
 
 	public TaskList readTasks() {
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		TaskList taskList = null;
 
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
 			Type type = new TypeToken<ArrayList<Task>>(){}.getType();
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
-			TaskList taskList = new TaskList(arrayList);
-
-			bufferedReader.close();
-
-			return taskList;
+			taskList = new TaskList(arrayList);
 		} catch (IOException e) {
-			LogHelper.getLogger().info("IOException while reading tasks from file");
-			return new TaskList();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_TASKS);
+			taskList = new TaskList();
 		}
+
+		return taskList;
 	}
 }

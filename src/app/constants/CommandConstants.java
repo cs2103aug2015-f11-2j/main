@@ -18,7 +18,7 @@ public class CommandConstants {
 
 	// Enum values for the different types of commands
 	public enum CommandType {
-		ADD, REMOVE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY, EDIT;
+		ADD, DELETE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY, EDIT;
 	}
 	
 	// Enum value for different types of display arguments
