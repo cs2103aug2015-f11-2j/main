@@ -111,11 +111,8 @@ public class TaskList {
 			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
-		if (task.getEndDate() != null) {
+		if (task.getEndDate() != null || task.getStartDate() != null) {
 			taskList.get(index).setEndDate(task.getEndDate());
-			isEdited = true;
-		}
-		if (task.getStartDate() != null) {
 			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
 		}
