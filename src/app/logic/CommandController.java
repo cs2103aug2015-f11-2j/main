@@ -1,7 +1,9 @@
 package app.logic;
 
 import app.constants.CommandConstants;
+import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
+import app.constants.CommandConstants.DisplayType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
 import app.logic.command.CommandDelete;
@@ -13,6 +15,7 @@ import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
+import app.storage.AppStorage;
 import app.storage.TaskStorage;
 import app.util.Common;
 
@@ -31,8 +34,25 @@ public class CommandController {
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		initializeViewState();
+	}
+
+	private void initializeViewState() {
 		currentViewState = new ViewState();
-		currentViewState.setTaskList(masterTaskList);
+		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
+		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
+				DisplayType.UNCOMPLETED.toString().toLowerCase()));
+		
+		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
+			currentViewState.setTheme(ViewConstants.THEME_DARK_CSS);
+		} else {
+			// invalid selected theme, set theme to light
+			if (!AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
+				AppStorage.getInstance().setSelectedTheme(ViewConstants.THEME_LIGHT);
+			}
+			
+			currentViewState.setTheme(ViewConstants.THEME_LIGHT_CSS);
+		}
 	}
 
 	/**
