@@ -3,6 +3,7 @@ package app.model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import app.constants.TaskConstants.Priority;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -63,7 +64,7 @@ public class TaskList {
 	public ArrayList<UUID> getTasksUuidList(ArrayList<Integer> displayedTaskIdList) {
 		ArrayList<UUID> uuidList = new ArrayList<UUID>();
 		for (Integer i : displayedTaskIdList) {
-			uuidList.add(taskList.get(i - 1).getId());
+			uuidList.add(getTaskUuidByIndex(i - 1));
 		}
 		return uuidList;
 	}
@@ -74,7 +75,7 @@ public class TaskList {
 		ArrayList<Integer> idList = new ArrayList<Integer>();
 		for (int j = 0; j < tasksUuidList.size(); j++) {
 			for (int i = 0; i < taskList.size(); i++) {
-				if (taskList.get(i).getId().equals(tasksUuidList.get(j))) {
+				if (getTaskUuidByIndex(i).equals(tasksUuidList.get(j))) {
 					idList.add(i);
 				}
 			}
@@ -85,5 +86,47 @@ public class TaskList {
 	// Takes in the index of a specific task and return its isCompleted value
 	public boolean isTaskCompleted(int i) {
 		return taskList.get(i).isCompleted();
+	}
+
+	// Takes in the index of a task and returns its uuid
+	public UUID getTaskUuidByIndex(int index) {
+		return taskList.get(index).getId();
+	}
+	
+	// Takes in the uuid of a task and returns its index in the taskList
+	public Integer getTaskIndexByUuid(UUID uuid) {
+		for (int i = 0; i < taskList.size(); i++) {
+			if (uuid.equals(getTaskUuidByIndex(i))) {
+				return i;
+			}
+		}
+		return null;
+	}
+	
+	// Takes in a task to compare with the old task at specified index,
+	// and updates the old task with respect to the new one
+	public boolean updateTask(Task task, int index) {
+		boolean isEdited = false;
+		if (!task.getName().equals("") && task.getName() != null){
+			taskList.get(index).setName(task.getName());
+			isEdited = true;
+		}
+		if (task.getEndDate() != null) {
+			taskList.get(index).setEndDate(task.getEndDate());
+			isEdited = true;
+		}
+		if (task.getStartDate() != null) {
+			taskList.get(index).setStartDate(task.getStartDate());
+			isEdited = true;
+		}
+		if (task.getPriority() != Priority.NONE) {
+			taskList.get(index).setPriority(task.getPriority());
+			isEdited = true;
+		}
+		return isEdited;
+	}
+
+	public Task getTaskByIndex(int index) {
+		return taskList.get(index);
 	}
 }

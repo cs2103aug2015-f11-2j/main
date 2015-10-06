@@ -354,5 +354,25 @@ public class CommandParser {
 		}
 		return DisplayType.INVALID;
 	}
+	
+	/**
+	 * Parses the content of a task from the Edit command to filter out the task id
+	 * 
+	 * @param content The content or name of a task
+	 * @return The displayed Id of the task
+	 */
+	public static int getTaskDisplayedIdFromContent(String content) throws NumberFormatException {
+		return Integer.parseInt(Common.getFirstWord(content));
+	}
+	
+	/**
+	 * Parses the content of a task from the Edit command to filter out the task id
+	 * 
+	 * @param content The description or name of the task
+	 * @return The correct description or name of the task if it exist
+	 */
+	public static String getTaskDescFromContent(String content) {
+		return Common.removeFirstWord(content);
+	}
 
 }

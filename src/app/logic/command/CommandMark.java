@@ -11,6 +11,7 @@ import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.storage.TaskStorage;
 import app.util.Common;
 import app.util.LogHelper;
 
@@ -31,13 +32,9 @@ public class CommandMark extends Command {
 		}
 
 		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
-
-		if (displayIdsToMarkList == null) {
-			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
-			return viewState;
-		}
-
+		
 		try {
+			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
@@ -50,10 +47,12 @@ public class CommandMark extends Command {
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
+		} catch (NullPointerException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK,
-					Common.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK));
 		}
 		return viewState;
 	}
@@ -88,6 +87,8 @@ public class CommandMark extends Command {
 		for (int i = 0; i < masterIdsList.size(); i++) {
 			master.markTaskByIndex(masterIdsList.get(i));
 		}
+
+		TaskStorage.getInstance().writeTasks(master);
 	}
 
 	// Filter the ArrayList of task Ids to get an ArrayList of only completed or

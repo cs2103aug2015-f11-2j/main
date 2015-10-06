@@ -3,7 +3,9 @@ package app.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Common {
 	/**
@@ -112,6 +114,18 @@ public class Common {
 	 * @return The resultant string without the first word
 	 */
 	public static String removeFirstWord(String commandString) {
-		return commandString.replace(getFirstWord(commandString), "").trim();
+		return commandString.replaceFirst(getFirstWord(commandString), "").trim();
+	}
+	
+	/**
+	 * Removes the duplicated elements in the ArrayList
+	 * 
+	 * @param <T> 
+	 * @param listWithDuplicates The ArrayList with duplicated elements
+	 * @return An ArrayList with no duplicate elements
+	 */
+	public static <T> ArrayList<T> removeDuplicatesFromArrayList(ArrayList<T> listWithDuplicates) {
+		Set<T> noDuplicates = new LinkedHashSet<T>(listWithDuplicates);
+		return new ArrayList<T>(noDuplicates);
 	}
 }

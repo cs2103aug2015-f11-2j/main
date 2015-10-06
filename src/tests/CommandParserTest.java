@@ -14,8 +14,10 @@ import app.logic.command.Command;
 import app.parser.CommandParser;
 import app.util.Common;
 
-public class ParserTest {
+public class CommandParserTest {
 
+	// TODO: rewrite tests to use CommandParser.parseDatesAndPriority instead of
+	// .createCommand()
 	@Test
 	public void testParseDueDate() {
 		String input = "add buy milk due 15/11/15 0959";
@@ -47,17 +49,6 @@ public class ParserTest {
 		assertTrue(areDatesSame(cmd.getStartDate(), expectedStartDate));
 		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
 		assertEquals("buy milk", cmd.getContent());
-	}
-
-	@Test
-	public void testParseDefaultTimes() {
-		// Default start time = 0000, end time = 2359
-		String input = "add buy milk from 15/12/2015 to 16/12/2015";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = buildDate(2015, 12, 15, 0, 0);
-		LocalDateTime expectedEndDate = buildDate(2015, 12, 15, 23, 59);
-		assertTrue(areDatesSame(cmd.getStartDate(), expectedStartDate));
-		assertTrue(areDatesSame(cmd.getEndDate(), expectedEndDate));
 	}
 
 	@Test
@@ -116,17 +107,6 @@ public class ParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from", cmd.getContent());
-	}
-
-	@Test
-	public void testParseImpossibleDate() {
-		// 15/15/15 is impossible, hence up to this word is considered content
-		String input = "add buy milk from store from 15/15/15 to 5pm";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedEndDate = buildDate(0, 17, 0);
-		assertNull(cmd.getStartDate());
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-		assertEquals("buy milk from store from 15/15/15", cmd.getContent());
 	}
 
 	@Test
@@ -239,133 +219,12 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testParseDayWithTime() {
-		String input = "add buy milk due sat 3pm";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedEndDate = buildDateWithNextDay(6, 15, 0);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
 	public void testParseRangeOfDaysWithTime() {
 		String input = "add buy milk from monday 5:30pm to 14/5/2050";
 		Command cmd = CommandController.getInstance().createCommand(input);
 		LocalDateTime expectedStartDate = buildDateWithNextDay(1, 17, 30);
 		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
 		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseSupportedTimeFormats() {
-		String input = "add buy milk due 3pm";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedEndDate = buildDate(0, 15, 0);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 03pm";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 15, 0);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 3:30pm";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 15, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 03:30pm";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 15, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 1530";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 15, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 0930";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 9, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 930";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 9, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 0930hrs";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 9, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-
-		input = "add buy milk due 930hrs";
-		cmd = CommandController.getInstance().createCommand(input);
-		expectedEndDate = buildDate(0, 9, 30);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseDateIsNow() {
-		// Generates a date equal to now. Assert the difference is within 1000
-		// milliseconds due to a possible time difference.
-		String input = "add buy milk from now to 14/5/2050";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = LocalDateTime.now();
-		int difference = expectedStartDate.compareTo(cmd.getStartDate());
-		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
-		assertTrue(difference < 1000 || difference > -1000);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseDateIsToday() {
-		// "today" generates a date equals to now.
-		String input = "add buy milk from today to 14/5/2050";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = LocalDateTime.now();
-		int difference = expectedStartDate.compareTo(cmd.getStartDate());
-		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
-		assertTrue(difference < 1000 || difference > -1000);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseDateIsTomorrow() {
-		// "tomorrow" generates a date equal to tomorrow
-		String input = "add buy milk from tomorrow to 14/5/2050";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = LocalDateTime.now().plusDays(1);
-		int difference = expectedStartDate.compareTo(cmd.getStartDate());
-		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
-		assertTrue(difference < 1000 || difference > -1000);
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseDateIsTodayWithTime() {
-		String input = "add buy milk from today 5:30pm to 14/5/2050";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = buildDate(0, 17, 30);
-		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
-		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseDateIsTomorrowWithTime() {
-		String input = "add buy milk from tomorrow 5:30pm to 14/5/2050";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedStartDate = buildDate(1, 17, 30);
-		LocalDateTime expectedEndDate = buildDate(2050, 5, 14, 0, 0);
-		assertTrue(areDatesSame(expectedStartDate, cmd.getStartDate()));
-		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
-	}
-
-	@Test
-	public void testParseUppercaseDate() {
-		String input = "add buy milk by TomorroW 5pm";
-		Command cmd = CommandController.getInstance().createCommand(input);
-		LocalDateTime expectedEndDate = buildDate(1, 17, 0);
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
 
@@ -377,7 +236,8 @@ public class ParserTest {
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
 	}
-	
+
+	// TODO: this should belong in CommonTest
 	@Test
 	public void testGetIdArrayList() {
 		String inputValid = "1, 5,7 9";
@@ -387,31 +247,31 @@ public class ParserTest {
 		expectedValid.add(7);
 		expectedValid.add(9);
 		assertEquals(Common.getIdArrayList(inputValid), expectedValid);
-		
+
 		String inputInvalid = "6, g7";
 		assertEquals(Common.getIdArrayList(inputInvalid), null);
 	}
-	
+
 	@Test
-	public void testGetCommandDisplayArg() {
-		String[] inputCompleted = {"c", "comp", "complete", "completed"};
-		for (int i = 0; i < inputCompleted.length; i++) {
-			assertEquals(CommandParser.determineDisplayType(inputCompleted[i]), DisplayType.COMPLETED);
+	public void testDetermineDisplayType() {
+		String[] completed = { "c", "comp", "complete", "completed" };
+		for (String input : completed) {
+			assertEquals(CommandParser.determineDisplayType(input), DisplayType.COMPLETED);
 		}
 		
 		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
-		
-		String[] inputAll = {"a", "al", "all"};
-		for (int i = 0; i < inputAll.length; i++) {
-			assertEquals(CommandParser.determineDisplayType(inputAll[i]), DisplayType.ALL);
+
+		String[] all = { "a", "al", "all" };
+		for (String input : all) {
+			assertEquals(CommandParser.determineDisplayType(input), DisplayType.ALL);
 		}
-		
-		String[] inputInvalid = {"every", "cmplt", "com", "error"};
-		for (int i = 0; i < inputInvalid.length; i++) {
-			assertEquals(CommandParser.determineDisplayType(inputInvalid[i]), DisplayType.INVALID);
+
+		String[] invalid = { "every", "cmplt", "com", "error" };
+		for (String input : invalid) {
+			assertEquals(CommandParser.determineDisplayType(input), DisplayType.INVALID);
 		}
 	}
 	
@@ -426,6 +286,38 @@ public class ParserTest {
 //		System.out.println(cmd.getEndDate());
 //	}
 
+	@Test
+	public void testGetTaskDisplayedIdFromContent() {
+		String input = "1 this is the task";
+		int expected = 1;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		input = "5";
+		expected = 5;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		input = "10 ";
+		expected = 10;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+	}
+	
+	@Test(expected=NumberFormatException.class)
+	public void testGetTaskDisplayedIdFromContentThrowException() {
+		String input = "this is the task";
+		CommandParser.getTaskDisplayedIdFromContent(input);
+	}
+	
+	@Test
+	public void testGetTaskDescFromContent() {
+		String input = "4  do cs2103 ";
+		String expected = "do cs2103";
+		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
+		
+		input = "7";
+		expected = "";
+		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
+	}
+	
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);
 		return (difference < 1000 || difference > -1000);
@@ -433,12 +325,12 @@ public class ParserTest {
 
 	private LocalDateTime buildDate(int daysOffsetFromNow, int hours, int minutes) {
 		LocalDateTime date = LocalDateTime.now();
-		date = date.plusDays(daysOffsetFromNow).withHour(hours).withMinute(minutes).withSecond(0);
+		date = date.plusDays(daysOffsetFromNow).withHour(hours).withMinute(minutes).withSecond(0).withNano(0);
 		return date;
 	}
 
 	private LocalDateTime buildDate(int year, int month, int day, int hours, int minutes) {
-		LocalDateTime date = LocalDateTime.of(year, month, day, hours, minutes).withSecond(0);
+		LocalDateTime date = LocalDateTime.of(year, month, day, hours, minutes).withSecond(0).withNano(0);
 		return date;
 	}
 
