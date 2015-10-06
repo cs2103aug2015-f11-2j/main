@@ -6,5 +6,10 @@ public class HelpConstants {
 	public static final String HELP_ADD_OVERVIEW = "add <task> [from <date> to <date>] [by <date>] [priority high | medium | low]";
 	public static final String HELP_ADD_EXAMPLES = "add do tutorials by sunday 10pm\n"
 			+ "add math exam from 26/11/15 1pm to 3pm priority high";
-	
+
+	// EDIT
+	public static final String HELP_EDIT_DESCRIPTION = "Edits a task";
+	public static final String HELP_EDIT_OVERVIEW = "edit <id> [task] [from <date> to <date>] [by <date>] [priority high | medium | low]";
+	public static final String HELP_EDIT_EXAMPLES = "";
+
 }
