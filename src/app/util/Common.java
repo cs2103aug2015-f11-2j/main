@@ -114,7 +114,7 @@ public class Common {
 	 * @return The resultant string without the first word
 	 */
 	public static String removeFirstWord(String commandString) {
-		return commandString.replace(getFirstWord(commandString), "").trim();
+		return commandString.replaceFirst(getFirstWord(commandString), "").trim();
 	}
 	
 	/**

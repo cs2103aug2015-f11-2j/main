@@ -32,14 +32,9 @@ public class CommandMark extends Command {
 		}
 
 		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
-		displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
-
-		if (displayIdsToMarkList == null) {
-			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
-			return viewState;
-		}
-
+		
 		try {
+			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
@@ -52,10 +47,12 @@ public class CommandMark extends Command {
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
+		} catch (NullPointerException e) {
+			LogHelper.getLogger().severe(e.getMessage());
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK,
-					Common.pluralize(displayIdsToMarkList.size(), "task"), getIdListString(displayIdsToMarkList)));
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK));
 		}
 		return viewState;
 	}
