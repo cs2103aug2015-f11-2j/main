@@ -10,6 +10,7 @@ import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.parser.CommandParser;
+import app.storage.TaskStorage;
 import app.util.LogHelper;
 import app.model.Action;
 import app.model.Task;
@@ -42,6 +43,7 @@ public class CommandEdit extends Command {
 
 			boolean isEdited = editTask(display, master, task, taskIndex);
 			if (isEdited == true ) {
+				TaskStorage.getInstance().writeTasks(master);
 				setExecuted(true);
 				LogHelper.getLogger().info("Edited specified task.");
 				viewState.setTaskList(display);
