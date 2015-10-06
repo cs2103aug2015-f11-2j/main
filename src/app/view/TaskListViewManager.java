@@ -55,12 +55,6 @@ public class TaskListViewManager {
 		});
 	}
 
-	public void hideHeaderIfEmpty() {
-		boolean isEmpty = taskListViewLayout.getChildrenUnmodifiable().isEmpty();
-		// if isEmpty == true, set header visibility to false
-		viewManager.setHeaderVisible(!isEmpty);
-	}
-
 	public void scrollTo(Task task) {
 		UUID uuid = task.getId();
 		for (TaskCell cell : taskListViewLayout.getItems()) {
@@ -78,7 +72,7 @@ public class TaskListViewManager {
 	 */
 	public void updateView(TaskList tasks) {
 		taskListViewLayout.setItems(buildTaskCells(tasks));
-		hideHeaderIfEmpty();
+		viewManager.setHeaderVisible(true);
 	}
 
 	private ObservableList<TaskCell> buildTaskCells(TaskList tasks) {
@@ -121,14 +115,19 @@ public class TaskListViewManager {
 		if (node instanceof ScrollBar) {
 			ScrollBar scrollBar = (ScrollBar) node;
 			double newValue = scrollBar.getValue();
+
 			if (direction == ScrollDirection.UP && scrollBar.getValue() != 0) {
 				newValue = scrollBar.getValue() - step;
 			} else if (direction == ScrollDirection.DOWN && scrollBar.getValue() != scrollBar.getMax()) {
 				newValue = scrollBar.getValue() + step;
 			}
 
-			// TODO: if this animation is used elsewhere, refactor to Common or
-			// something.
+			if (newValue < 0) {
+				newValue = 0;
+			} else if (newValue > scrollBar.getMax()) {
+				newValue = scrollBar.getMax();
+			}
+
 			// Animate scroll to provide smooth scrolling
 			Timeline timeline = new Timeline();
 			KeyValue kv = new KeyValue(scrollBar.valueProperty(), newValue);

@@ -10,6 +10,7 @@ import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.storage.TaskStorage;
 import app.util.Common;
 import app.util.LogHelper;
 
@@ -17,7 +18,7 @@ public class CommandDelete extends Command {
 
 	public CommandDelete() {
 		super();
-		this.setCommandType(CommandType.REMOVE);
+		this.setCommandType(CommandType.DELETE);
 	}
 
 	@Override
@@ -49,7 +50,6 @@ public class CommandDelete extends Command {
 					return viewState;
 				}
 			}
-
 			
 			// remove task from display list
 			for (int i : ids) {
@@ -63,6 +63,7 @@ public class CommandDelete extends Command {
 			}
 
 
+			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
 			setExecuted(true);

@@ -3,3 +3,4 @@ logs/
 *.class
 *.log
 *.txt
+config.properties
