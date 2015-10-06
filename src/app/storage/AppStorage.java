@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import app.constants.StorageConstants;
 import app.constants.ViewConstants;
+import app.util.LogHelper;
 
 public class AppStorage {
 	private static AppStorage appStorage;
@@ -30,7 +31,7 @@ public class AppStorage {
 				readProperties();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_APPSTORAGE);
 		}
 	}
 
@@ -79,7 +80,7 @@ public class AppStorage {
 		try {
 			currentWorkingDirectoryPath = replaceBackslash(currentWorkingDirectory.getCanonicalPath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_GET_WORKING_DIRECTORY);
 		}
 
 		setSaveLocation(currentWorkingDirectoryPath);
@@ -95,7 +96,7 @@ public class AppStorage {
 			bufferedWriter.newLine();
 			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME + "=" + getSelectedTheme());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
 		}
 	}
 
@@ -103,7 +104,7 @@ public class AppStorage {
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
 			properties.load(bufferedReader);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
 		}
 	}
 

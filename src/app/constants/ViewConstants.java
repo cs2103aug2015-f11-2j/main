@@ -35,10 +35,15 @@ public class ViewConstants {
 	public static String ERROR_ADD = "Error adding task: %1$s";
 	public static String ERROR_ADD_NO_TASK = "No task specified";
 	
+	// DELETE command
+	public static String MESSAGE_DELETE = "Deleted task: %1$s";
+	public static String ERROR_DELETE = "Error deleting task: %1$s";
+	public static String ERROR_DELETE_NO_TASK = "No task specified";
+	
 	// MARK command
 	public static String MESSAGE_MARK_COMPLETED = "Marked %s completed: %s";
 	public static String MESSAGE_MARK_UNCOMPLETED = "Marked %s uncompleted: %s";
-	public static String ERROR_MARK = "Error marking %1$s: %2$s";
+	public static String ERROR_MARK = "Error marking task";
 	public static String ERROR_MARK_NO_TASK = "No task specified to mark";
 	public static String ERROR_MARK_INVALID_ID = "Error, invalid task ID";
 	
@@ -46,6 +51,13 @@ public class ViewConstants {
 	public static String MESSAGE_DISPLAY = "Displaying %1$s tasks";
 	public static String ERROR_DISPLAY = "Error displaying tasks";
 	public static String ERROR_DISPLAY_INVALID_ARGUMENT = "Invalid option. Available: all, completed, uncompleted (default)";
+	
+	// EDIT command
+	public static String MESSAGE_EDIT = "Edited task: %1$s";
+	public static String ERROR_EDIT = "Error editing task";
+	public static String ERROR_EDIT_NO_TASK = "No task specified to edit";
+	public static String ERROR_EDIT_INVALID_TASK_ID = "Error, invalid task ID";
+	public static String ERROR_EDIT_NO_CHANGES = "No changes specified for editing task %1$s";
 	
 	// INVALID command
 	public static String ERROR_INVALID_CMD = "Invalid command: %1$s";

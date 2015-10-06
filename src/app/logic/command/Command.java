@@ -3,6 +3,7 @@ package app.logic.command;
 import java.time.LocalDateTime;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.model.ViewState;
 
@@ -15,6 +16,7 @@ public abstract class Command {
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private Priority priority;
+	private DisplayType displayType;
 	private boolean isExecuted;
 
 	public Command() {
@@ -78,5 +80,13 @@ public abstract class Command {
 
 	public void setExecuted(boolean isExecuted) {
 		this.isExecuted = isExecuted;
+	}
+
+	public DisplayType getDisplayType() {
+		return displayType;
+	}
+
+	public void setDisplayType(DisplayType displayType) {
+		this.displayType = displayType;
 	}
 }

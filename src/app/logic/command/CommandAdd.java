@@ -10,6 +10,7 @@ import app.model.Action;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
+import app.storage.TaskStorage;
 import app.util.LogHelper;
 
 public class CommandAdd extends Command {
@@ -35,6 +36,7 @@ public class CommandAdd extends Command {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			TaskList displayed = previousViewState.getTaskList();
 			master.addTask(task);
+			TaskStorage.getInstance().writeTasks(master);
 			displayed.addTask(task);
 			viewState.setTaskList(displayed);
 			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, task));

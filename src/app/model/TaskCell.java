@@ -9,8 +9,8 @@ public class TaskCell {
 	private int index;
 	private String style;
 
-	private static final String DATE_PATTERN = "d MMMM";
-	private static final String DATE_PATTERN_WITH_YEAR = "d MMMM yyyy";
+	private static final String DATE_PATTERN = "d MMMM, EEEE";
+	private static final String DATE_PATTERN_WITH_YEAR = "d MMMM yyyy, EEEE";
 
 	public TaskCell(LocalDate labelDate, String style) {
 		this.labelDate = labelDate;

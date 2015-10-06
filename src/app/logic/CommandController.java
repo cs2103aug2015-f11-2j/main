@@ -1,10 +1,14 @@
 package app.logic;
 
 import app.constants.CommandConstants;
+import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants.DisplayType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
+import app.logic.command.CommandDelete;
 import app.logic.command.CommandDisplay;
+import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
@@ -12,6 +16,8 @@ import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
+import app.storage.AppStorage;
+import app.storage.TaskStorage;
 import app.util.Common;
 
 /**
@@ -28,9 +34,26 @@ public class CommandController {
 	private ViewState currentViewState;
 
 	private CommandController() {
-		masterTaskList = new TaskList();
+		masterTaskList = TaskStorage.getInstance().readTasks();
+		initializeViewState();
+	}
+
+	private void initializeViewState() {
 		currentViewState = new ViewState();
-		currentViewState.setTaskList(new TaskList());
+		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
+		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
+				DisplayType.UNCOMPLETED.toString().toLowerCase()));
+		
+		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
+			currentViewState.setTheme(ViewConstants.THEME_DARK_CSS);
+		} else {
+			// invalid selected theme, set theme to light
+			if (!AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
+				AppStorage.getInstance().setSelectedTheme(ViewConstants.THEME_LIGHT);
+			}
+			
+			currentViewState.setTheme(ViewConstants.THEME_LIGHT_CSS);
+		}
 	}
 
 	/**
@@ -79,7 +102,7 @@ public class CommandController {
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
 		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
-			return CommandType.REMOVE;
+			return CommandType.DELETE;
 		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
 			return CommandType.THEME;
 		} else if (CommandConstants.ALIASES_HELP.contains(word)) {
@@ -88,6 +111,8 @@ public class CommandController {
 			return CommandType.MARK;
 		} else if (CommandConstants.ALIASES_DISPLAY.contains(word)) {
 			return CommandType.DISPLAY;
+		} else if (CommandConstants.ALIASES_EDIT.contains(word)) {
+			return CommandType.EDIT;
 		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -118,8 +143,14 @@ public class CommandController {
 		case MARK:
 			cmd = new CommandMark();
 			break;
+		case DELETE:
+			cmd = new CommandDelete();
+			break;
 		case DISPLAY:
 			cmd = new CommandDisplay();
+			break;
+		case EDIT:
+			cmd = new CommandEdit();
 			break;
 		case EXIT:
 			cmd = new CommandExit();
@@ -144,7 +175,11 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
+		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd);
+			break;
+		case SEARCH:
+			CommandParser.parseSearch(cmd);
 			break;
 		default:
 			break;
@@ -153,5 +188,9 @@ public class CommandController {
 
 	public TaskList getMasterTaskList() {
 		return masterTaskList;
+	}
+
+	public ViewState getCurrentViewState() {
+		return currentViewState;
 	}
 }

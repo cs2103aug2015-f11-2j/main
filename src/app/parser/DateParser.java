@@ -54,17 +54,6 @@ public class DateParser {
 	}
 
 	/**
-	 * Converts a LocalDateTime object to Date object
-	 * 
-	 * @param dateTime The LocalDateTime object to convert
-	 * @return The equivalent Date object
-	 */
-	public static Date toDate(LocalDateTime dateTime) {
-		Date date = Date.from(dateTime.toInstant((ZoneOffset) ZoneOffset.systemDefault()));
-		return date;
-	}
-
-	/**
 	 * Tries to return a LocalDateTime object from a given string
 	 * representation. A reference date is specified. For instance, "3pm" would
 	 * result in a date equal to the reference date but with a time of "3pm".

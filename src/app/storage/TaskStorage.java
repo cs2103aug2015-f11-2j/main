@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import app.constants.StorageConstants;
 import app.model.Task;
 import app.model.TaskList;
+import app.util.LogHelper;
 
 public class TaskStorage {
 	private static TaskStorage taskStorage;
@@ -42,7 +43,7 @@ public class TaskStorage {
 				writeTasks(new TaskList());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
 		}
 	}
 
@@ -58,7 +59,7 @@ public class TaskStorage {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
 		}
 	}
 
@@ -70,7 +71,8 @@ public class TaskStorage {
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
 			taskList = new TaskList(arrayList);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_TASKS);
+			taskList = new TaskList();
 		}
 
 		return taskList;

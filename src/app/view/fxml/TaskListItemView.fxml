@@ -64,15 +64,9 @@
 				<VBox fx:id="taskItemDateVbox" alignment="CENTER_RIGHT"
 					nodeOrientation="LEFT_TO_RIGHT" spacing="2.0" styleClass="taskItemDateVbox">
 					<HBox.margin>
-						<Insets />
+						<Insets right="10.0" />
 					</HBox.margin>
 				</VBox>
-				<CheckBox fx:id="taskCheckbox" alignment="CENTER"
-					contentDisplay="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT">
-					<HBox.margin>
-						<Insets left="10.0" right="5.0" />
-					</HBox.margin>
-				</CheckBox>
 			</children>
 		</HBox>
 	</children>
