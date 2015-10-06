@@ -47,7 +47,7 @@ public class AppStorage {
 	}
 
 	public void setSaveLocation(String directoryPath) {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, directoryPath);
+		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, replaceBackslash(directoryPath));
 
 		writeProperties();
 	}
@@ -57,7 +57,7 @@ public class AppStorage {
 	}
 
 	public void setLogFileLocation(String directoryPath) {
-		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, directoryPath);
+		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, replaceBackslash(directoryPath));
 
 		writeProperties();
 	}
@@ -74,12 +74,10 @@ public class AppStorage {
 
 	public void setDefaultProperties() {
 		String currentWorkingDirectoryPath = "";
+		File currentWorkingDirectory = new File(".");
 
 		try {
-			File currentWorkingDirectory = new File(".");
-
-			// replace backslash so that escape characters are not needed in the file
-			currentWorkingDirectoryPath = currentWorkingDirectory.getCanonicalPath().replace("\\", "/");
+			currentWorkingDirectoryPath = replaceBackslash(currentWorkingDirectory.getCanonicalPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -107,5 +105,20 @@ public class AppStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Replace backslashes from file/directory path to forward slashes. This
+	 * method is used to avoid using escape characters in the configuration
+	 * file.
+	 * 
+	 * @param path			File/directory path
+	 * @return replacedPath	File/directory path with backslashes replaced with
+	 *         				forward slashes
+	 */
+	private String replaceBackslash(String path) {
+		String replacedPath = path.replace("\\", "/");
+
+		return replacedPath;
 	}
 }
