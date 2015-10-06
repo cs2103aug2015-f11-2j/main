@@ -3,13 +3,14 @@ package app.constants;
 public class StorageConstants {
 	// file and directory locations
 	public static String FILE_CONFIG_PROPERTIES = "config.properties";
-	public static String FILE_SAVE = "next.txt";
-	
+	public static String FILE_DEFAULT_SAVE = "next.txt";
+	public static String FILE_DEFAULT_LOG = "log.txt";
+
 	// application configuration properties
 	public static String PROPERTIES_SAVE_LOCATION = "saveLocation";
 	public static String PROPERTIES_LOG_FILE_LOCATION = "logFileLocation";
 	public static String PROPERTIES_SELECTED_THEME = "selectedTheme";
-	
+
 	// error messages
 	public static String ERROR_INITIALIZE_APPSTORAGE = "IOException while initializing AppStorage";
 	public static String ERROR_INITIALIZE_TASKSTORAGE = "IOException while initializing TaskStorage";

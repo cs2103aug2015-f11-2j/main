@@ -26,7 +26,9 @@ public class AppStorage {
 			if (!configFile.exists()) {
 				configFile.createNewFile();
 
-				setDefaultProperties();
+				setDefaultSaveLocation();
+				setDefaultLogFileLocation();
+				setDefaultSelectedTheme();
 			} else {
 				readProperties();
 			}
@@ -47,20 +49,32 @@ public class AppStorage {
 		return properties.getProperty(StorageConstants.PROPERTIES_SAVE_LOCATION);
 	}
 
-	public void setSaveLocation(String directoryPath) {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION, replaceBackslash(directoryPath));
+	public void setSaveLocation(String path) {
+		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION,
+							   replaceBackslash(path));
 
 		writeProperties();
+	}
+
+	public void setDefaultSaveLocation() {
+		setSaveLocation(getCurrentWorkingDirectory() + File.separator
+						+ StorageConstants.FILE_DEFAULT_SAVE);
 	}
 
 	public String getLogFileLocation() {
 		return properties.getProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION);
 	}
 
-	public void setLogFileLocation(String directoryPath) {
-		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION, replaceBackslash(directoryPath));
+	public void setLogFileLocation(String path) {
+		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION,
+							   replaceBackslash(path));
 
 		writeProperties();
+	}
+
+	public void setDefaultLogFileLocation() {
+		setLogFileLocation(getCurrentWorkingDirectory() + File.separator
+						   + StorageConstants.FILE_DEFAULT_LOG);
 	}
 
 	public String getSelectedTheme() {
@@ -73,7 +87,43 @@ public class AppStorage {
 		writeProperties();
 	}
 
-	public void setDefaultProperties() {
+	public void setDefaultSelectedTheme() {
+		setSelectedTheme(ViewConstants.THEME_LIGHT);
+	}
+
+	private void writeProperties() {
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
+			bufferedWriter.write(StorageConstants.PROPERTIES_SAVE_LOCATION
+								 + "=" + getSaveLocation());
+			bufferedWriter.newLine();
+			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION
+								 + "=" + getLogFileLocation());
+			bufferedWriter.newLine();
+			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME
+								 + "=" + getSelectedTheme());
+		} catch (IOException e) {
+			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
+		}
+	}
+
+	/**
+	 * Read properties from the file. If the selected theme is invalid, the
+	 * selected theme will be set to default.
+	 */
+	private void readProperties() {
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
+			properties.load(bufferedReader);
+		} catch (IOException e) {
+			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
+		}
+
+		if (!(getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
+				|| getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
+			setDefaultSelectedTheme();
+		}
+	}
+
+	private String getCurrentWorkingDirectory() {
 		String currentWorkingDirectoryPath = "";
 		File currentWorkingDirectory = new File(".");
 
@@ -83,29 +133,7 @@ public class AppStorage {
 			LogHelper.getLogger().severe(StorageConstants.ERROR_GET_WORKING_DIRECTORY);
 		}
 
-		setSaveLocation(currentWorkingDirectoryPath);
-		setLogFileLocation(currentWorkingDirectoryPath);
-		setSelectedTheme(ViewConstants.THEME_LIGHT);
-	}
-
-	private void writeProperties() {
-		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
-			bufferedWriter.write(StorageConstants.PROPERTIES_SAVE_LOCATION + "=" + getSaveLocation());
-			bufferedWriter.newLine();
-			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION + "=" + getLogFileLocation());
-			bufferedWriter.newLine();
-			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME + "=" + getSelectedTheme());
-		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
-		}
-	}
-
-	private void readProperties() {
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
-			properties.load(bufferedReader);
-		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
-		}
+		return currentWorkingDirectoryPath;
 	}
 
 	/**
@@ -113,9 +141,9 @@ public class AppStorage {
 	 * method is used to avoid using escape characters in the configuration
 	 * file.
 	 * 
-	 * @param path			File/directory path
-	 * @return replacedPath	File/directory path with backslashes replaced with
-	 *         				forward slashes
+	 * @param path			File path
+	 * @return replacedPath	File path with backslashes replaced with
+	 *        				forward slashes
 	 */
 	private String replaceBackslash(String path) {
 		String replacedPath = path.replace("\\", "/");
