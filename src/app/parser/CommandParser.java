@@ -98,7 +98,7 @@ public class CommandParser {
 		// validate daterange
 		clearIfCannotParse(rangeStartToken, parsedRangeStart);
 		clearIfCannotParse(rangeEndToken, parsedRangeEnd);
-		clearIfStartBeforeEnd(rangeStartToken, rangeEndToken, parsedRangeStart, parsedRangeEnd);
+		clearIfStartAfterEnd(rangeStartToken, rangeEndToken, parsedRangeStart, parsedRangeEnd);
 
 		// only keep the last start or end token
 		if (endToken.getStart() > startToken.getEnd()) {
@@ -125,7 +125,7 @@ public class CommandParser {
 		clearIfCannotParse(endToken, parsedEnd);
 
 		// If start date > end date, the date range is invalid and is removed
-		clearIfStartBeforeEnd(startToken, endToken, parsedStart, parsedEnd);
+		clearIfStartAfterEnd(startToken, endToken, parsedStart, parsedEnd);
 
 		// Merge disjointed content tokens.
 		updateContentEnd(contentToken, arr, priorityToken, displayToken, startToken, endToken);
@@ -196,7 +196,7 @@ public class CommandParser {
 		clearIfCannotParse(endToken, parsedEnd);
 
 		// If start date > end date, the date range is invalid and is removed
-		clearIfStartBeforeEnd(startToken, endToken, parsedStart, parsedEnd);
+		clearIfStartAfterEnd(startToken, endToken, parsedStart, parsedEnd);
 
 		/*
 		 * Merge disjointed content tokens. For example:
@@ -279,7 +279,7 @@ public class CommandParser {
 		return token;
 	}
 
-	private static void clearIfStartBeforeEnd(ParserToken startToken, ParserToken endToken, LocalDateTime startDate,
+	private static void clearIfStartAfterEnd(ParserToken startToken, ParserToken endToken, LocalDateTime startDate,
 			LocalDateTime endDate) {
 		if (startDate != null && endDate != null && !startDate.isBefore(endDate)) {
 			startToken.clear();
