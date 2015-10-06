@@ -36,7 +36,7 @@ public class CommandEdit extends Command {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			TaskList display = previousViewState.getTaskList();
 			if (taskId > display.getTaskList().size() || taskId <= 0) {
-				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_TASK_ID));
+				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_INVALID_TASK_ID));
 				return viewState;
 			}
 
