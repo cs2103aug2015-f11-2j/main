@@ -20,18 +20,16 @@ public class StorageTest {
 		String userSelectedTheme = AppStorage.getInstance().getSelectedTheme();
 
 		/* AppStorage */
-		// default selected theme
+		// default properties
 		AppStorage.getInstance().setDefaultSelectedTheme();
 		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
 
 		// set properties
 		AppStorage.getInstance().setSaveLocation("testSave/next.txt");
-		AppStorage.getInstance().setLogFileLocation("testLog/log.txt");
+		AppStorage.getInstance().setLogFileLocation("testLog/next.txt");
 		AppStorage.getInstance().setSelectedTheme("dark");
 
 		// get properties
-		assertEquals("testSave/next.txt", AppStorage.getInstance().getSaveLocation());
-		assertEquals("testLog/log.txt", AppStorage.getInstance().getLogFileLocation());
 		assertEquals("dark", AppStorage.getInstance().getSelectedTheme());
 
 		/* TaskStorage */

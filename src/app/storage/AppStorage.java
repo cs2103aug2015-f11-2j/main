@@ -51,14 +51,13 @@ public class AppStorage {
 
 	public void setSaveLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION,
-							   replaceBackslash(path));
+							   replaceBackslash(toCanonicalPath(path)));
 
 		writeProperties();
 	}
 
 	public void setDefaultSaveLocation() {
-		setSaveLocation(getCurrentWorkingDirectory() + File.separator
-						+ StorageConstants.FILE_DEFAULT_SAVE);
+		setSaveLocation(StorageConstants.FILE_DEFAULT_SAVE);
 	}
 
 	public String getLogFileLocation() {
@@ -67,14 +66,13 @@ public class AppStorage {
 
 	public void setLogFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION,
-							   replaceBackslash(path));
+							   replaceBackslash(toCanonicalPath(path)));
 
 		writeProperties();
 	}
 
 	public void setDefaultLogFileLocation() {
-		setLogFileLocation(getCurrentWorkingDirectory() + File.separator
-						   + StorageConstants.FILE_DEFAULT_LOG);
+		setLogFileLocation(StorageConstants.FILE_DEFAULT_LOG);
 	}
 
 	public String getSelectedTheme() {
@@ -122,18 +120,18 @@ public class AppStorage {
 			setDefaultSelectedTheme();
 		}
 	}
-
-	private String getCurrentWorkingDirectory() {
-		String currentWorkingDirectoryPath = "";
-		File currentWorkingDirectory = new File(".");
-
+	
+	private String toCanonicalPath(String path) {
+		File file = new File(path);
+		String canonicalPath = "";
+		
 		try {
-			currentWorkingDirectoryPath = replaceBackslash(currentWorkingDirectory.getCanonicalPath());
+			canonicalPath = file.getCanonicalPath();
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_GET_WORKING_DIRECTORY);
+			LogHelper.getLogger().severe(StorageConstants.ERROR_TO_CANONICAL_PATH);
 		}
-
-		return currentWorkingDirectoryPath;
+		
+		return canonicalPath;
 	}
 
 	/**
