@@ -26,24 +26,20 @@ public class TaskStorage {
 
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
+		file = new File(AppStorage.getInstance().getSaveLocation());
 
-		File directory = new File(AppStorage.getInstance().getSaveLocation());
-
-		if (!directory.exists()) {
-			directory.mkdirs();
-		}
-
-		file = new File(AppStorage.getInstance().getSaveLocation() + File.separator
-						+ StorageConstants.FILE_SAVE);
-
-		try {
-			if (!file.exists()) {
-				file.createNewFile();
-
-				writeTasks(new TaskList());
+		if (!file.exists()) {
+			if (file.getParentFile() != null) {
+				file.getParentFile().mkdirs();
 			}
-		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
+
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
+			}
+
+			writeTasks(new TaskList());
 		}
 	}
 
