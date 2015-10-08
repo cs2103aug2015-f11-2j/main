@@ -54,6 +54,10 @@ public class InfoViewManager {
 			setHelpText(HelpConstants.HELP_EDIT_OVERVIEW, HelpConstants.HELP_EDIT_DESCRIPTION);
 			setCommandEditLabels(cmd);
 			break;
+		case SEARCH:
+			setHelpText(HelpConstants.HELP_SEARCH_OVERVIEW, HelpConstants.HELP_SEARCH_DESCRIPTION);
+			setCommandSearchLabels(cmd);
+			break;
 		default:
 			break;
 		}
@@ -91,7 +95,7 @@ public class InfoViewManager {
 		texts.add(buildText(description, STYLE_INFOVIEW_DESCRIPTION));
 		addInfoRow(texts);
 	}
-	
+
 	private void setCommandEditLabels(Command cmd) {
 		String content = cmd.getContent();
 		setEditText(Common.getFirstWord(content));
@@ -105,7 +109,13 @@ public class InfoViewManager {
 		setDateAndPriorityTexts(cmd);
 		addSeparator();
 	}
-	
+
+	private void setCommandSearchLabels(Command cmd) {
+		setContentText(cmd.getContent());
+		setDateAndPriorityTexts(cmd);
+		addSeparator();
+	}
+
 	private void setEditText(String id) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (!id.isEmpty()) {

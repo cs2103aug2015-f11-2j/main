@@ -6,20 +6,15 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.StatusType;
-import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
-import app.parser.CommandParser;
 import app.util.LogHelper;
-import javafx.collections.ObservableList;
 
 import java.util.List;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.function.Predicate;
 
 public class CommandSearch extends Command {
