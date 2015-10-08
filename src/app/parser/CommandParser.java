@@ -9,7 +9,6 @@ import app.constants.TaskConstants.Priority;
 import app.logic.command.Command;
 import app.model.ParserToken;
 import app.util.Common;
-import app.util.LogHelper;
 
 public class CommandParser {
 

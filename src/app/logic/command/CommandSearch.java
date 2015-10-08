@@ -22,7 +22,6 @@ public class CommandSearch extends Command {
 	public CommandSearch() {
 		super();
 		this.setCommandType(CommandType.SEARCH);
-		List<Predicate<Task>> predicates = new ArrayList<Predicate<Task>>();
 	}
 
 	@Override
