@@ -9,6 +9,7 @@ import app.constants.TaskConstants.Priority;
 import app.logic.command.Command;
 import app.model.ParserToken;
 import app.util.Common;
+import app.util.LogHelper;
 
 public class CommandParser {
 
@@ -46,7 +47,7 @@ public class CommandParser {
 		allSearchKeywords.addAll(PRIORITY_KEYWORDS);
 		allSearchKeywords.addAll(DISPLAY_TYPE_KEYWORDS);
 
-		displayTypes = new ArrayList<String>();
+		displayTypes = new ArrayList<String>();	
 		displayTypes.addAll(DISPLAY_COMPLETED);
 		displayTypes.addAll(DISPLAY_UNCOMPLETED);
 		displayTypes.addAll(DISPLAY_ALL);

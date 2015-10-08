@@ -1,7 +1,9 @@
 package app.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import app.constants.TaskConstants.Priority;
 import javafx.collections.FXCollections;
@@ -13,11 +15,11 @@ public class TaskList {
 	public TaskList() {
 		taskList = FXCollections.observableArrayList();
 	}
-	
+
 	public TaskList(ArrayList<Task> list) {
 		taskList = FXCollections.observableArrayList(list);
 	}
-	
+
 	// Constructor to make a copy from another TaskList
 	public TaskList(TaskList taskList) {
 		this.taskList = FXCollections.observableArrayList(taskList.getTaskList());
@@ -42,7 +44,6 @@ public class TaskList {
 		taskList.sort((t1, t2) -> t1.compareTo(t2));
 	}
 
-	
 	// toggle isCompleted for the task at index location
 	public void markTaskByIndex(Integer index) {
 		Task specifiedTask = taskList.get(index);
@@ -92,7 +93,7 @@ public class TaskList {
 	public UUID getTaskUuidByIndex(int index) {
 		return taskList.get(index).getId();
 	}
-	
+
 	// Takes in the uuid of a task and returns its index in the taskList
 	public Integer getTaskIndexByUuid(UUID uuid) {
 		for (int i = 0; i < taskList.size(); i++) {
@@ -102,12 +103,12 @@ public class TaskList {
 		}
 		return null;
 	}
-	
+
 	// Takes in a task to compare with the old task at specified index,
 	// and updates the old task with respect to the new one
 	public boolean updateTask(Task task, int index) {
 		boolean isEdited = false;
-		if (!task.getName().equals("") && task.getName() != null){
+		if (!task.getName().equals("") && task.getName() != null) {
 			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
@@ -125,5 +126,19 @@ public class TaskList {
 
 	public Task getTaskByIndex(int index) {
 		return taskList.get(index);
+	}
+
+	public TaskList search(List<Predicate<Task>> predicates) {
+		Predicate<Task> query = compositePredicate(predicates);
+		TaskList results = new TaskList();
+		// filter the task list using the predicates
+		// for each result, add it to the results list
+		taskList.stream().filter(query).forEach(t -> results.addTask(t));
+		return results;
+	}
+
+	// combine all predicates with AND
+	private Predicate<Task> compositePredicate(List<Predicate<Task>> predicates) {
+		return predicates.stream().reduce(t -> true, Predicate::and);
 	}
 }

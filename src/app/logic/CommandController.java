@@ -12,6 +12,7 @@ import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
+import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
@@ -109,7 +110,9 @@ public class CommandController {
 			return CommandType.DISPLAY;
 		} else if (CommandConstants.ALIASES_EDIT.contains(word)) {
 			return CommandType.EDIT;
-		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
+		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
+			return CommandType.SEARCH;
+		}  else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
 		return CommandType.INVALID;
@@ -147,6 +150,9 @@ public class CommandController {
 			break;
 		case EDIT:
 			cmd = new CommandEdit();
+			break;
+		case SEARCH:
+			cmd = new CommandSearch();
 			break;
 		case EXIT:
 			cmd = new CommandExit();
