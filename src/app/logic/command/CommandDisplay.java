@@ -3,7 +3,7 @@ package app.logic.command;
 import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;

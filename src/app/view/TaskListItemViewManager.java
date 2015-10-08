@@ -7,7 +7,6 @@ import app.model.Task;
 import app.model.TaskCell;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
@@ -28,8 +27,6 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 	private Label taskId;
 	@FXML
 	private Label taskName;
-	@FXML
-	private CheckBox taskCheckbox;
 	@FXML
 	private Tooltip taskNameTooltip;
 	@FXML
@@ -82,7 +79,6 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 		setGraphic(null);
 		taskItemDateVbox.getChildren().clear();
 		priorityImage.setVisible(false);
-		taskCheckbox.setSelected(false);
 		clearStyleClasses();
 	}
 

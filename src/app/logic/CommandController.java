@@ -3,7 +3,7 @@ package app.logic;
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.logic.command.Command;
 import app.logic.command.CommandAdd;
 import app.logic.command.CommandDelete;
@@ -12,6 +12,7 @@ import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
+import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
 import app.model.TaskList;
 import app.model.ViewState;
@@ -41,18 +42,14 @@ public class CommandController {
 	private void initializeViewState() {
 		currentViewState = new ViewState();
 		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
+		currentViewState.getTaskList().sort();
 		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
 				DisplayType.UNCOMPLETED.toString().toLowerCase()));
 		
-		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
-			currentViewState.setTheme(ViewConstants.THEME_DARK_CSS);
-		} else {
-			// invalid selected theme, set theme to light
-			if (!AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
-				AppStorage.getInstance().setSelectedTheme(ViewConstants.THEME_LIGHT);
-			}
-			
+		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
 			currentViewState.setTheme(ViewConstants.THEME_LIGHT_CSS);
+		} else if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
+			currentViewState.setTheme(ViewConstants.THEME_DARK_CSS);
 		}
 	}
 
@@ -113,7 +110,9 @@ public class CommandController {
 			return CommandType.DISPLAY;
 		} else if (CommandConstants.ALIASES_EDIT.contains(word)) {
 			return CommandType.EDIT;
-		} else if (CommandConstants.ALIASES_EXIT.contains(word)) {
+		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
+			return CommandType.SEARCH;
+		}  else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
 		return CommandType.INVALID;
@@ -152,6 +151,9 @@ public class CommandController {
 		case EDIT:
 			cmd = new CommandEdit();
 			break;
+		case SEARCH:
+			cmd = new CommandSearch();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -175,10 +177,11 @@ public class CommandController {
 		// Additional parsing for certain command types
 		switch (cmd.getCommandType()) {
 		case ADD:
-			CommandParser.parseDatesAndPriority(cmd);
-			break;
 		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd);
+			break;
+		case SEARCH:
+			CommandParser.parseSearch(cmd);
 			break;
 		default:
 			break;

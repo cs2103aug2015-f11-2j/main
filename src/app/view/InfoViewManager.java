@@ -48,7 +48,16 @@ public class InfoViewManager {
 		switch (cmd.getCommandType()) {
 		case ADD:
 			setHelpText(HelpConstants.HELP_ADD_OVERVIEW, HelpConstants.HELP_ADD_DESCRIPTION);
-			setCommandParamLabels(cmd);
+			setCommandAddLabels(cmd);
+			break;
+		case EDIT:
+			setHelpText(HelpConstants.HELP_EDIT_OVERVIEW, HelpConstants.HELP_EDIT_DESCRIPTION);
+			setCommandEditLabels(cmd);
+			break;
+		case SEARCH:
+			setHelpText(HelpConstants.HELP_SEARCH_OVERVIEW, HelpConstants.HELP_SEARCH_DESCRIPTION);
+			setCommandSearchLabels(cmd);
+			break;
 		default:
 			break;
 		}
@@ -87,10 +96,34 @@ public class InfoViewManager {
 		addInfoRow(texts);
 	}
 
-	private void setCommandParamLabels(Command cmd) {
-		setContentText(cmd);
+	private void setCommandEditLabels(Command cmd) {
+		String content = cmd.getContent();
+		setEditText(Common.getFirstWord(content));
+		setContentText(Common.removeFirstWord(content));
 		setDateAndPriorityTexts(cmd);
 		addSeparator();
+	}
+
+	private void setCommandAddLabels(Command cmd) {
+		setContentText(cmd.getContent());
+		setDateAndPriorityTexts(cmd);
+		addSeparator();
+	}
+
+	private void setCommandSearchLabels(Command cmd) {
+		setContentText(cmd.getContent());
+		setDateAndPriorityTexts(cmd);
+		addSeparator();
+	}
+
+	private void setEditText(String id) {
+		ArrayList<Text> texts = new ArrayList<Text>();
+		if (!id.isEmpty()) {
+			Text editingTaskId = buildText("Editing task with ID: ");
+			Text idText = buildText(id);
+			addTextsToList(texts, editingTaskId, idText);
+			addInfoRow(texts);
+		}
 	}
 
 	private void addSeparator() {
@@ -102,13 +135,13 @@ public class InfoViewManager {
 		}
 	}
 
-	private void setContentText(Command cmd) {
+	private void setContentText(String content) {
 		ArrayList<Text> texts = new ArrayList<Text>();
-		if (cmd.getContent() != null && !cmd.getContent().isEmpty()) {
+		if (content != null && !content.isEmpty()) {
 			Text startQuote = buildText("\"");
 			Text endQuote = buildText("\"");
-			Text content = buildText(cmd.getContent(), STYLE_INFOVIEW_CONTENT);
-			addTextsToList(texts, startQuote, content, endQuote);
+			Text contentString = buildText(content, STYLE_INFOVIEW_CONTENT);
+			addTextsToList(texts, startQuote, contentString, endQuote);
 			addInfoRow(texts);
 		}
 	}

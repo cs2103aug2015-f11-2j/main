@@ -14,18 +14,32 @@ import app.storage.TaskStorage;
 public class StorageTest {
 
 	@Test
-	public void testReadandWriteTasks() {
-		/* reading when storage file does not exist (initialization) */
-		TaskList readList = TaskStorage.getInstance().readTasks();
-		assertTrue(readList.getTaskList().isEmpty());
+	public void testStorage() {
+		String userSaveLocation = AppStorage.getInstance().getSaveLocation();
+		String userLogFileLocation = AppStorage.getInstance().getLogFileLocation();
+		String userSelectedTheme = AppStorage.getInstance().getSelectedTheme();
 
+		/* AppStorage */
+		// default properties
+		AppStorage.getInstance().setDefaultSelectedTheme();
+		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
+
+		// set properties
+		AppStorage.getInstance().setSaveLocation("testSave/next.txt");
+		AppStorage.getInstance().setLogFileLocation("testLog/next.txt");
+		AppStorage.getInstance().setSelectedTheme("dark");
+
+		// get properties
+		assertEquals("dark", AppStorage.getInstance().getSelectedTheme());
+
+		/* TaskStorage */
 		/* empty tasklist */
 		// writing
 		TaskList writeList = new TaskList();
 		TaskStorage.getInstance().writeTasks(writeList);
 
 		// reading
-		readList = TaskStorage.getInstance().readTasks();
+		TaskList readList = TaskStorage.getInstance().readTasks();
 		assertTrue(readList.getTaskList().isEmpty());
 
 		/* populated tasklist */
@@ -47,22 +61,9 @@ public class StorageTest {
 		assertEquals(2, readList.getTaskList().size());
 		assertEquals("buy milk", readList.getTaskList().get(0).getName());
 		assertEquals("", readList.getTaskList().get(1).getName());
-	}
 
-	@Test
-	public void testGetAndSetProperties() {
-		// default properties when config file does not exist (initialization)
-		AppStorage.getInstance().setDefaultProperties();
-		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
-
-		// set properties
-		AppStorage.getInstance().setSaveLocation("testSave");
-		AppStorage.getInstance().setLogFileLocation("testLogFile");
-		AppStorage.getInstance().setSelectedTheme("dark");
-
-		// get properties
-		assertEquals("testSave", AppStorage.getInstance().getSaveLocation());
-		assertEquals("testLogFile", AppStorage.getInstance().getLogFileLocation());
-		assertEquals("dark", AppStorage.getInstance().getSelectedTheme());
+		AppStorage.getInstance().setSaveLocation(userSaveLocation);
+		AppStorage.getInstance().setLogFileLocation(userLogFileLocation);
+		AppStorage.getInstance().setSelectedTheme(userSelectedTheme);
 	}
 }

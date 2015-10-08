@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import app.constants.CommandConstants.DisplayType;
+import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.logic.CommandController;
 import app.logic.command.Command;
@@ -153,12 +153,12 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 
 		// medium priority
-		input = "add buy milk priority medium";
+		input = "add buy milk pri medium";
 		cmd = CommandController.getInstance().createCommand(input);
 		assertEquals(Priority.MEDIUM, cmd.getPriority());
 
 		// low priority
-		input = "add buy milk priority low";
+		input = "add buy milk p low";
 		cmd = CommandController.getInstance().createCommand(input);
 		assertEquals(Priority.LOW, cmd.getPriority());
 	}
@@ -258,10 +258,10 @@ public class CommandParserTest {
 		for (String input : completed) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.COMPLETED);
 		}
-
-		String[] uncompleted = { "p", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted" };
-		for (String input : uncompleted) {
-			assertEquals(CommandParser.determineDisplayType(input), DisplayType.UNCOMPLETED);
+		
+		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		for (int i = 0; i < inputUncompleted.length; i++) {
+			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 
 		String[] all = { "a", "al", "all" };
