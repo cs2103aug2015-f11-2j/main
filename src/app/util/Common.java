@@ -1,23 +1,29 @@
 package app.util;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+
+import app.constants.TaskConstants.Priority;
+import app.model.Task;
 
 public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
 	 * @param singular The singular form of the string
-	 * @return The plural form of the string by adding a "s" behind if given count is more than 1
+	 * @return The plural form of the string by adding a "s" behind if given
+	 *         count is more than 1
 	 */
 	public static String pluralize(int count, String singular) {
 		return pluralize(count, singular, null);
 	}
-	
+
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
@@ -35,7 +41,7 @@ public class Common {
 		}
 		return singular;
 	}
-	
+
 	/**
 	 * Builds a string from a string array using specified start/end indexes.
 	 * The start and end indexes are both inclusive.
@@ -52,7 +58,7 @@ public class Common {
 		}
 		return result.trim();
 	}
-	
+
 	/**
 	 * Builds a read-only list from the given arguments.
 	 * 
@@ -82,7 +88,7 @@ public class Common {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Compares the subject with a given range and returns true if subject is
 	 * between or equal to lower and upper indexes.
@@ -96,7 +102,7 @@ public class Common {
 		boolean result = (subject >= lower && subject <= upper);
 		return result;
 	}
-	
+
 	/**
 	 * Returns the first whitespace delimited word of the specified string.
 	 * 
@@ -116,16 +122,77 @@ public class Common {
 	public static String removeFirstWord(String commandString) {
 		return commandString.replaceFirst(getFirstWord(commandString), "").trim();
 	}
-	
+
 	/**
 	 * Removes the duplicated elements in the ArrayList
 	 * 
-	 * @param <T> 
+	 * @param <T>
 	 * @param listWithDuplicates The ArrayList with duplicated elements
 	 * @return An ArrayList with no duplicate elements
 	 */
 	public static <T> ArrayList<T> removeDuplicatesFromArrayList(ArrayList<T> listWithDuplicates) {
 		Set<T> noDuplicates = new LinkedHashSet<T>(listWithDuplicates);
 		return new ArrayList<T>(noDuplicates);
+	}
+
+	/**
+	 * Placeholder
+	 * 
+	 * @param Placeholder
+	 * @param Placeholder
+	 * @return Placeholder
+	 */
+	public static Predicate<Task> endDateBefore(LocalDateTime i) {
+		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(i) || t.getEndDate().isEqual(i)) : false;
+	}
+
+	/**
+	 * Placeholder
+	 * 
+	 * @param Placeholder
+	 * @param Placeholder
+	 * @return Placeholder
+	 */
+	public static Predicate<Task> startDateAfter(LocalDateTime i) {
+		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(i) || t.getEndDate().isEqual(i)) : false;
+	}
+
+	/**
+	 * Placeholder
+	 * 
+	 * @param Placeholder
+	 * @param Placeholder
+	 * @return Placeholder
+	 */
+	public static Predicate<Task> betweenDates(LocalDateTime start, LocalDateTime end) {
+		return t -> (t.getStartDate() != null)
+				? ((t.getStartDate().isAfter(start) || t.getStartDate().isEqual(start))
+						&& (t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end)))
+				: ((t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end))
+						&& (t.getEndDate().isAfter(start) || t.getEndDate().equals(start)));
+	}
+
+	/**
+	 * Placeholder
+	 * 
+	 * @param Placeholder
+	 * @param Placeholder
+	 * @return Placeholder
+	 */
+	public static Predicate<Task> priorityEquals(Priority priority) {
+		return t -> (t.getPriority() != null)
+				? (t.getPriority().toString().toLowerCase().equalsIgnoreCase(priority.toString().toLowerCase()))
+				: false;
+	}
+
+	/**
+	 * Placeholder
+	 * 
+	 * @param Placeholder
+	 * @param Placeholder
+	 * @return Placeholder
+	 */
+	public static Predicate<Task> keywordMatches(String keyword) {
+		return t -> t.getName().toLowerCase().matches(".*\\b" + keyword.toLowerCase() + "\\b.*");
 	}
 }
