@@ -28,6 +28,7 @@ public class CommandMark extends Command {
 		ViewState viewState = new ViewState();
 		if (this.getContent().isEmpty()) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_NO_TASK);
+			LogHelper.getLogger().info(ViewConstants.ERROR_MARK_NO_TASK);
 			return viewState;
 		}
 
@@ -38,17 +39,16 @@ public class CommandMark extends Command {
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
-			LogHelper.getLogger().info("Marked specified task.");
 			viewState.setTaskList(display);
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
 			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getLogger().severe("IndexOutOfBoundsException:" + e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (NullPointerException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getLogger().severe("NullPointerException:" + e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
 		} catch (Exception e) {
 			LogHelper.getLogger().severe(e.getMessage());
@@ -60,21 +60,27 @@ public class CommandMark extends Command {
 	// Set appropriate feedback based on marked tasks' completion
 	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
 			ArrayList<Integer> markedUncompleted, ViewState viewState) {
+		String feedback = "";
 		assert(markedCompleted.size() > 0 || markedUncompleted.size() > 0);
 		
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
-			viewState.setStatus(StatusType.SUCCESS,
-					String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-							Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted),
-							Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED,
+					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted),
+					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+			viewState.setStatus(StatusType.SUCCESS, feedback);
+			LogHelper.getLogger().info(feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
-			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted)));
+			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
+					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted));
+			viewState.setStatus(StatusType.SUCCESS, feedback);
+			LogHelper.getLogger().info(feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
-			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted)));
+			feedback = String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
+					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+			viewState.setStatus(StatusType.SUCCESS, feedback);
+			LogHelper.getLogger().info(feedback);
 			setExecuted(true);
 		}
 		return viewState;
