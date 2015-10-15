@@ -28,6 +28,7 @@ public class CommandAdd extends Command {
 		ViewState viewState = new ViewState();
 		if (this.getContent().isEmpty()) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_ADD_NO_TASK);
+			LogHelper.getLogger().info(ViewConstants.ERROR_ADD_NO_TASK);
 			return viewState;
 		}
 		
@@ -40,11 +41,11 @@ public class CommandAdd extends Command {
 			displayed.addTask(task);
 			viewState.setTaskList(displayed);
 			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, task));
-			
+			LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_ADD, task.getName()));
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_ADD, task.getName()));
 			setExecuted(true);
 		} catch (Exception e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getLogger().severe(e.getMessage() + String.format(ViewConstants.ERROR_ADD, task.getName()));
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_ADD, task.getName()));
 		}
 		
