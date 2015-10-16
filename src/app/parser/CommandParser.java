@@ -63,6 +63,7 @@ public class CommandParser {
 	 * @param cmd The Command object to set parameters for
 	 */
 	public static void parseSearch(Command cmd) {
+		assert cmd != null;
 		String[] arr = cmd.getContent().split(" ");
 		ParserToken contentToken = new ParserToken();
 		contentToken.setStart(0);
@@ -168,6 +169,7 @@ public class CommandParser {
 	 * @param cmd The Command object to set parameters for
 	 */
 	public static void parseDatesAndPriority(Command cmd) {
+		assert cmd != null;
 		String[] arr = cmd.getContent().split(" ");
 		ParserToken contentToken = new ParserToken();
 		contentToken.setStart(0);
