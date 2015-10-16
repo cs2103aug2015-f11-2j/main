@@ -59,6 +59,15 @@ public class ViewConstants {
 	public static String ERROR_EDIT_INVALID_TASK_ID = "Error, invalid task ID";
 	public static String ERROR_EDIT_NO_CHANGES = "No changes specified for editing task %1$s";
 	
+	// SAVE command
+	public static String SAVE_STORAGE = "storage";
+	public static String SAVE_LOG = "log";
+	public static String SAVE_DEFAULT = "default";
+	public static String MESSAGE_SAVE = "Saved %1$s file location: %2$s";
+	public static String ERROR_SAVE = "Error saving file location: %1$s";
+	public static String ERROR_SAVE_NO_LOCATION = "No file location specified";
+	public static String ERROR_SAVE_NO_CHANGES = "No changes specified for saving %1$s file location: %2$s";
+	
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
 	public static String HEADER_SEARCH = "Search results";

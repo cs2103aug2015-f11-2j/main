@@ -21,20 +21,20 @@ import app.util.LogHelper;
 public class TaskStorage {
 	private static TaskStorage taskStorage;
 
-	private File file;
+	private File storageFile;
 	private Gson gson;
 
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
-		file = new File(AppStorage.getInstance().getSaveLocation());
+		storageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 
-		if (!file.exists()) {
-			if (file.getParentFile() != null) {
-				file.getParentFile().mkdirs();
+		if (!storageFile.exists()) {
+			if (storageFile.getParentFile() != null) {
+				storageFile.getParentFile().mkdirs();
 			}
 
 			try {
-				file.createNewFile();
+				storageFile.createNewFile();
 			} catch (IOException e) {
 				LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
 			}
@@ -52,7 +52,7 @@ public class TaskStorage {
 	}
 
 	public void writeTasks(TaskList taskList) {
-		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(storageFile))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
@@ -62,7 +62,7 @@ public class TaskStorage {
 	public TaskList readTasks() {
 		TaskList taskList = null;
 
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(storageFile))) {
 			Type type = new TypeToken<ArrayList<Task>>(){}.getType();
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
 			taskList = new TaskList(arrayList);

@@ -19,14 +19,14 @@ public class AppStorage {
 	private Properties properties;
 
 	private AppStorage() {
-		configFile = new File(StorageConstants.FILE_CONFIG_PROPERTIES);
+		configFile = new File(StorageConstants.FILE_CONFIGURATION);
 		properties = new Properties();
 
 		try {
 			if (!configFile.exists()) {
 				configFile.createNewFile();
 
-				setDefaultSaveLocation();
+				setDefaultStorageFileLocation();
 				setDefaultLogFileLocation();
 				setDefaultSelectedTheme();
 			} else {
@@ -45,19 +45,19 @@ public class AppStorage {
 		return appStorage;
 	}
 
-	public String getSaveLocation() {
-		return properties.getProperty(StorageConstants.PROPERTIES_SAVE_LOCATION);
+	public String getStorageFileLocation() {
+		return properties.getProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION);
 	}
 
-	public void setSaveLocation(String path) {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION,
+	public void setStorageFileLocation(String path) {
+		properties.setProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION,
 							   replaceBackslash(toCanonicalPath(path)));
 
 		writeProperties();
 	}
 
-	public void setDefaultSaveLocation() {
-		setSaveLocation(StorageConstants.FILE_DEFAULT_SAVE);
+	public void setDefaultStorageFileLocation() {
+		setStorageFileLocation(StorageConstants.FILE_DEFAULT_STORAGE);
 	}
 
 	public String getLogFileLocation() {
@@ -80,6 +80,8 @@ public class AppStorage {
 	}
 
 	public void setSelectedTheme(String theme) {
+		assert (theme == ViewConstants.THEME_LIGHT || theme == ViewConstants.THEME_DARK);
+
 		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, theme);
 
 		writeProperties();
@@ -91,8 +93,8 @@ public class AppStorage {
 
 	private void writeProperties() {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
-			bufferedWriter.write(StorageConstants.PROPERTIES_SAVE_LOCATION
-								 + "=" + getSaveLocation());
+			bufferedWriter.write(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION
+								 + "=" + getStorageFileLocation());
 			bufferedWriter.newLine();
 			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION
 								 + "=" + getLogFileLocation());
@@ -114,34 +116,28 @@ public class AppStorage {
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
 		}
-
-		if (!(getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
-				|| getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
-			setDefaultSelectedTheme();
-		}
 	}
-	
+
 	private String toCanonicalPath(String path) {
 		File file = new File(path);
 		String canonicalPath = "";
-		
+
 		try {
 			canonicalPath = file.getCanonicalPath();
 		} catch (IOException e) {
 			LogHelper.getLogger().severe(StorageConstants.ERROR_TO_CANONICAL_PATH);
 		}
-		
+
 		return canonicalPath;
 	}
 
 	/**
-	 * Replace backslashes from file/directory path to forward slashes. This
-	 * method is used to avoid using escape characters in the configuration
-	 * file.
+	 * Replace backslashes from file path to forward slashes. This method is
+	 * used to avoid using escape characters in the configuration file.
 	 * 
-	 * @param path			File path
-	 * @return replacedPath	File path with backslashes replaced with
-	 *        				forward slashes
+	 * @param path 			File path
+	 * @return replacedPath File path with backslashes replaced with forward
+	 *         				slashes
 	 */
 	private String replaceBackslash(String path) {
 		String replacedPath = path.replace("\\", "/");

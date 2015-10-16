@@ -45,6 +45,11 @@ public class CommandController {
 		currentViewState.getTaskList().sort();
 		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
 				DisplayType.UNCOMPLETED.toString().toLowerCase()));
+
+		if (!(AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
+				|| AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
+			AppStorage.getInstance().setDefaultSelectedTheme();
+		}
 		
 		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
 			currentViewState.setTheme(ViewConstants.THEME_LIGHT_CSS);

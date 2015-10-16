@@ -15,7 +15,7 @@ public class StorageTest {
 
 	@Test
 	public void testStorage() {
-		String userSaveLocation = AppStorage.getInstance().getSaveLocation();
+		String userSaveLocation = AppStorage.getInstance().getStorageFileLocation();
 		String userLogFileLocation = AppStorage.getInstance().getLogFileLocation();
 		String userSelectedTheme = AppStorage.getInstance().getSelectedTheme();
 
@@ -25,7 +25,7 @@ public class StorageTest {
 		assertEquals("light", AppStorage.getInstance().getSelectedTheme());
 
 		// set properties
-		AppStorage.getInstance().setSaveLocation("testSave/next.txt");
+		AppStorage.getInstance().setStorageFileLocation("testSave/next.txt");
 		AppStorage.getInstance().setLogFileLocation("testLog/next.txt");
 		AppStorage.getInstance().setSelectedTheme("dark");
 
@@ -62,7 +62,7 @@ public class StorageTest {
 		assertEquals("buy milk", readList.getTaskList().get(0).getName());
 		assertEquals("", readList.getTaskList().get(1).getName());
 
-		AppStorage.getInstance().setSaveLocation(userSaveLocation);
+		AppStorage.getInstance().setStorageFileLocation(userSaveLocation);
 		AppStorage.getInstance().setLogFileLocation(userLogFileLocation);
 		AppStorage.getInstance().setSelectedTheme(userSelectedTheme);
 	}
