@@ -41,6 +41,7 @@ public class CommandController {
 	private void initializeViewState() {
 		currentViewState = new ViewState();
 		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
+		currentViewState.getTaskList().sort();
 		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
 				DisplayType.UNCOMPLETED.toString().toLowerCase()));
 		
