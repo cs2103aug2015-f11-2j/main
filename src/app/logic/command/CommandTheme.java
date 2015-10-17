@@ -19,25 +19,25 @@ public class CommandTheme extends Command {
 		ViewState viewState = new ViewState();
 		if (getContent().isEmpty()) {
 			viewState.setStatus(ViewConstants.MESSAGE_AVAILABLE_THEMES);
-			LogHelper.getLogger().info("No theme entered.");
+			LogHelper.getInstance().getLogger().info("No theme entered.");
 			return viewState;
 		}
 		if (getContent().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
 			AppStorage.getInstance().setSelectedTheme(ViewConstants.THEME_LIGHT);
 			viewState.setTheme(ViewConstants.THEME_LIGHT_CSS);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_LIGHT));
-			LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_LIGHT));
+			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_LIGHT));
 			setExecuted(true);
 		} else if (getContent().equalsIgnoreCase(ViewConstants.THEME_DARK)) {
 			AppStorage.getInstance().setSelectedTheme(ViewConstants.THEME_DARK);
 			
 			viewState.setTheme(ViewConstants.THEME_DARK_CSS);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_DARK));
-			LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_DARK));
+			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_CURRENT_THEME, ViewConstants.THEME_DARK));
 			setExecuted(true);
 		} else {
 			viewState.setStatus(ViewConstants.MESSAGE_AVAILABLE_THEMES);
-			LogHelper.getLogger().info("Invalid theme entered.");
+			LogHelper.getInstance().getLogger().info("Invalid theme entered.");
 		}
 		
 		return viewState;

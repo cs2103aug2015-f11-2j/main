@@ -4,15 +4,18 @@ public class StorageConstants {
 	// file locations
 	public static String FILE_CONFIGURATION = "config.properties";
 	public static String FILE_DEFAULT_STORAGE = "next.txt";
-	public static String FILE_DEFAULT_LOG = "logs/next.txt";
+	public static String FILE_DEFAULT_LOG = "logs/next.log";
 
 	// configuration file properties
 	public static String PROPERTIES_STORAGE_FILE_LOCATION = "storageFileLocation";
 	public static String PROPERTIES_LOG_FILE_LOCATION = "logFileLocation";
 	public static String PROPERTIES_SELECTED_THEME = "selectedTheme";
+	
+	// location of parameters
+	public static int PARAM_POSITION_STORAGE = 0;
+	public static int PARAM_POSITION_LOG = 1;
 
 	// error messages
-	public static String ERROR_INITIALIZE_APPSTORAGE = "IOException while initializing AppStorage";
 	public static String ERROR_INITIALIZE_TASKSTORAGE = "IOException while initializing TaskStorage";
 	public static String ERROR_WRITE_PROPERTIES = "IOException while writing properties to configuration file";
 	public static String ERROR_WRITE_TASKS = "IOException while writing tasks to storage file";

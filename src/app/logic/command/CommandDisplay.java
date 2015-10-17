@@ -21,7 +21,7 @@ public class CommandDisplay extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getLogger().info("Executing CommandDisplay object.");
+		LogHelper.getInstance().getLogger().info("Executing CommandDisplay object.");
 		ViewState viewState = new ViewState();
 
 		TaskList master = CommandController.getInstance().getMasterTaskList();
@@ -40,7 +40,7 @@ public class CommandDisplay extends Command {
 						String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS,
 						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
-				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
 			} else if (type == DisplayType.COMPLETED) {
@@ -48,24 +48,24 @@ public class CommandDisplay extends Command {
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
-				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
 			} else if (type == DisplayType.ALL) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
-				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
 			} else if (type == DisplayType.INVALID) {
 				viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT);
-				LogHelper.getLogger().info(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT);
+				LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT);
 			}
 			
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (Exception e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY));
 		}
 		return viewState;

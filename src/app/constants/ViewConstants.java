@@ -65,8 +65,10 @@ public class ViewConstants {
 	public static String SAVE_DEFAULT = "default";
 	public static String MESSAGE_SAVE = "Saved %1$s file location: %2$s";
 	public static String ERROR_SAVE = "Error saving file location: %1$s";
-	public static String ERROR_SAVE_NO_LOCATION = "No file location specified";
-	public static String ERROR_SAVE_NO_CHANGES = "No changes specified for saving %1$s file location: %2$s";
+	public static String ERROR_SAVE_NO_LOCATION = "No %1$s file location specified";
+	public static String ERROR_SAVE_NO_CHANGES = "Same %1$s file location. No changes to %1$s file location: %2$s";
+	public static String ERROR_SAVE_COPY_FILE = "Error copying %1$s file to specified location: %2$s";
+	public static String ERROR_SAVE_FILE_ALREADY_EXISTS = "File already exists in specified location: %1$s";
 	
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";

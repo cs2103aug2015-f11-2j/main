@@ -17,8 +17,9 @@ import app.constants.StorageConstants;
 import app.model.Task;
 import app.model.TaskList;
 import app.util.LogHelper;
+import app.util.Observer;
 
-public class TaskStorage {
+public class TaskStorage extends Observer {
 	private static TaskStorage taskStorage;
 
 	private File storageFile;
@@ -26,7 +27,8 @@ public class TaskStorage {
 
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
-		storageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+		
+		update();
 
 		if (!storageFile.exists()) {
 			if (storageFile.getParentFile() != null) {
@@ -36,7 +38,7 @@ public class TaskStorage {
 			try {
 				storageFile.createNewFile();
 			} catch (IOException e) {
-				LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
+				LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_INITIALIZE_TASKSTORAGE);
 			}
 
 			writeTasks(new TaskList());
@@ -55,7 +57,7 @@ public class TaskStorage {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(storageFile))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
+			LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_WRITE_TASKS);
 		}
 	}
 
@@ -67,10 +69,15 @@ public class TaskStorage {
 			ArrayList<Task> arrayList = gson.fromJson(bufferedReader, type);
 			taskList = new TaskList(arrayList);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_TASKS);
+			LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_READ_TASKS);
 			taskList = new TaskList();
 		}
 
 		return taskList;
+	}
+	
+	@Override
+	public void update() {
+		storageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 	}
 }

@@ -37,7 +37,7 @@ public class Main extends Application {
 			ViewManager viewManager = loader.getController();
 			viewManager.initialize(primaryStage, rootLayout);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 		}
 	}
 
