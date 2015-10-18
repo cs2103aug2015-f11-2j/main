@@ -60,7 +60,7 @@ public class InputViewManager {
 	 */
 	public void onKeypressEnter() {
 		String commandString = commandInput.getText();
-		LogHelper.getLogger().info("User pressed enter key with input: " + commandString);
+		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + commandString);
 		ViewState newViewState = CommandController.getInstance().executeCommand(commandString);
 		viewManager.updateView(newViewState);
 		commandInput.clear();

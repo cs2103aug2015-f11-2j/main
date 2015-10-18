@@ -94,7 +94,7 @@ public class ViewManager {
 	 * Initializes the TaskListView.
 	 */
 	private void initializeTaskListView() {
-		LogHelper.getLogger().info("Initializing tasklist view");
+		LogHelper.getInstance().getLogger().info("Initializing tasklist view");
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/TaskListView.fxml");
 			taskListViewLayout = loader.load();
@@ -102,7 +102,7 @@ public class ViewManager {
 			taskListViewManager.setViewManager(this);
 			showTaskList();
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 		}
 	}
 
@@ -111,7 +111,7 @@ public class ViewManager {
 	 * the user.
 	 */
 	private void initializeInputView() {
-		LogHelper.getLogger().info("Initializing input view");
+		LogHelper.getInstance().getLogger().info("Initializing input view");
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/InputView.fxml");
 			inputViewLayout = loader.load();
@@ -120,7 +120,7 @@ public class ViewManager {
 			VBox vbox = (VBox) rootLayout.getBottom();
 			vbox.getChildren().add(inputViewLayout);
 		} catch (IOException e) {
-			LogHelper.getLogger().info(e.getMessage());
+			LogHelper.getInstance().getLogger().info(e.getMessage());
 		}
 	}
 
@@ -129,14 +129,14 @@ public class ViewManager {
 	 * (such as help).
 	 */
 	private void initializeTextView() {
-		LogHelper.getLogger().info("Initializing text view");
+		LogHelper.getInstance().getLogger().info("Initializing text view");
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/TextView.fxml");
 			textViewLayout = loader.load();
 			textViewManager = loader.getController();
 			textViewManager.setViewManager(this);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 		}
 	}
 
@@ -145,7 +145,7 @@ public class ViewManager {
 	 * user input.
 	 */
 	private void initializeInfoView() {
-		LogHelper.getLogger().info("Initializing text view");
+		LogHelper.getInstance().getLogger().info("Initializing text view");
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/InfoView.fxml");
 			infoViewLayout = loader.load();
@@ -154,7 +154,7 @@ public class ViewManager {
 			VBox vbox = (VBox) rootLayout.getBottom();
 			vbox.getChildren().add(infoViewLayout);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 		}
 	}
 	

@@ -26,7 +26,7 @@ public class CommandEdit extends Command {
 	
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getLogger().info("Executing CommandEdit object.");
+		LogHelper.getInstance().getLogger().info("Executing CommandEdit object.");
 		ViewState viewState = new ViewState();
 		Task task = new Task(this);
 		
@@ -38,7 +38,7 @@ public class CommandEdit extends Command {
 			TaskList display = previousViewState.getTaskList();
 			if (taskId > display.getTaskList().size() || taskId <= 0) {
 				viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_EDIT_INVALID_TASK_ID);
-				LogHelper.getLogger().info(ViewConstants.ERROR_EDIT_INVALID_TASK_ID);
+				LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_EDIT_INVALID_TASK_ID);
 				return viewState;
 			}
 
@@ -49,16 +49,16 @@ public class CommandEdit extends Command {
 				viewState.setTaskList(display);
 				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
-				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
 			} else {
-				LogHelper.getLogger().info(String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));
 			}
 		} catch (NumberFormatException e) {
-			LogHelper.getLogger().severe("NumberFormatException:" + e.getMessage());
+			LogHelper.getInstance().getLogger().severe("NumberFormatException:" + e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_TASK));
 		} catch (Exception e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT));
 		}
 		viewState.setActiveView(ViewType.TASK_LIST);

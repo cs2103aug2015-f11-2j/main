@@ -48,7 +48,7 @@ public class TaskListViewManager {
 					loader.load();
 					return loader.getController();
 				} catch (IOException e) {
-					LogHelper.getLogger().severe(e.getMessage());
+					LogHelper.getInstance().getLogger().severe(e.getMessage());
 				}
 				return null;
 			}

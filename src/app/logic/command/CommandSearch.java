@@ -26,7 +26,7 @@ public class CommandSearch extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getLogger().info("Executing CommandSearch object.");
+		LogHelper.getInstance().getLogger().info("Executing CommandSearch object.");
 
 		ViewState viewState = new ViewState();
 		TaskList master = CommandController.getInstance().getMasterTaskList();
@@ -36,16 +36,16 @@ public class CommandSearch extends Command {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_SEARCH_NO_PARAMETER);
 			return viewState;
 		}
-		LogHelper.getLogger().info("\nContent: " + this.getContent() + "\nPriority: " + this.getPriority() + "\nStart: "
+		LogHelper.getInstance().getLogger().info("\nContent: " + this.getContent() + "\nPriority: " + this.getPriority() + "\nStart: "
 				+ this.getStartDate() + "\nEnd: " + this.getEndDate() + "\nType: " + this.getDisplayType());
 
 		try {
 		if (this.getDisplayType() == DisplayType.ALL) {
 			retrievedTaskList = master;
-			LogHelper.getLogger().info("All");
+			LogHelper.getInstance().getLogger().info("All");
 		} else if (this.getDisplayType() == DisplayType.COMPLETED) {
 			retrievedTaskList = master.getTaskListByCompletion(true);
-			LogHelper.getLogger().info("Comp");
+			LogHelper.getInstance().getLogger().info("Comp");
 		}
 
 		List<Predicate<Task>> predicates = new ArrayList<Predicate<Task>>();
@@ -71,7 +71,7 @@ public class CommandSearch extends Command {
 				String.format(ViewConstants.SEARCH_MESSAGE, results.getTaskList().size()));
 		setExecuted(true);
 		} catch (Exception e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
 		}
 		return viewState;

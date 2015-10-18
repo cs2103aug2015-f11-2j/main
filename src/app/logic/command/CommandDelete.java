@@ -23,7 +23,7 @@ public class CommandDelete extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getLogger().info("Executing CommandDelete object.");
+		LogHelper.getInstance().getLogger().info("Executing CommandDelete object.");
 		ViewState viewState = new ViewState();
 
 		if (this.getContent().isEmpty()) {
@@ -69,7 +69,7 @@ public class CommandDelete extends Command {
 			setExecuted(true);
 
 		} catch (Exception e) {
-			LogHelper.getLogger().severe(e.getMessage());
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
 		}
 

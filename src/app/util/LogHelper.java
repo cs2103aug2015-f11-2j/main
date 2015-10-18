@@ -2,44 +2,59 @@ package app.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class LogHelper {
+import app.storage.AppStorage;
 
-	private static final String LOG_DIR = "./logs";
-	private static final String LOG_FILE = "next.log";
+public class LogHelper extends Observer {
 
-	private static Logger logger;
+	private static LogHelper logHelper;
+	private Logger logger;
 
 	/**
 	 * Initializes the Logger.
 	 */
-	private static void initializeLogger() {
+	private LogHelper() {
 		logger = Logger.getLogger(LogHelper.class.getName());
-		try {
-			File logDir = new File(LOG_DIR);
-			logDir.mkdir();
-			String path = Paths.get(LOG_DIR, LOG_FILE).toString();
-			FileHandler fileHandler = new FileHandler(path, true);
-			SimpleFormatter formatter = new SimpleFormatter();
-			fileHandler.setFormatter(formatter);
-			logger.addHandler(fileHandler);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		update();
 	}
 
 	/**
 	 * @return The Logger instance
 	 */
-	public static Logger getLogger() {
-		if (logger == null) {
-			initializeLogger();
+	public static LogHelper getInstance() {
+		if (logHelper == null) {
+			logHelper = new LogHelper();
 		}
+		return logHelper;
+	}
+
+	public Logger getLogger() {
 		return logger;
 	}
 
+	@Override
+	public void update() {
+		File logFile = new File(AppStorage.getInstance().getLogFileLocation());
+		logFile.getParentFile().mkdirs();
+
+		try {
+			FileHandler fileHandler = new FileHandler(AppStorage.getInstance().getLogFileLocation(), true);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fileHandler.setFormatter(formatter);
+
+			if (logger.getHandlers().length != 0) {
+				FileHandler prevFileHandler = (FileHandler)logger.getHandlers()[0];
+				logger.removeHandler(prevFileHandler);
+				prevFileHandler.close();
+			}
+
+			logger.addHandler(fileHandler);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -6,58 +6,66 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 import app.util.LogHelper;
+import app.util.Observer;
 
 public class AppStorage {
 	private static AppStorage appStorage;
 
 	private File configFile;
 	private Properties properties;
+	private ArrayList<Observer> observerList;
 
 	private AppStorage() {
-		configFile = new File(StorageConstants.FILE_CONFIG_PROPERTIES);
+		configFile = new File(StorageConstants.FILE_CONFIGURATION);
 		properties = new Properties();
+		observerList = new ArrayList<Observer>();
 
 		try {
 			if (!configFile.exists()) {
 				configFile.createNewFile();
 
-				setDefaultSaveLocation();
-				setDefaultLogFileLocation();
+				setToDefaultStorageFileLocation();
+				setToDefaultLogFileLocation();
 				setDefaultSelectedTheme();
 			} else {
 				readProperties();
 			}
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_INITIALIZE_APPSTORAGE);
+			e.printStackTrace();
 		}
 	}
 
 	public static AppStorage getInstance() {
 		if (appStorage == null) {
 			appStorage = new AppStorage();
+			appStorage.addObservers();
 		}
 
 		return appStorage;
 	}
 
-	public String getSaveLocation() {
-		return properties.getProperty(StorageConstants.PROPERTIES_SAVE_LOCATION);
+	public String getStorageFileLocation() {
+		return properties.getProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION);
 	}
 
-	public void setSaveLocation(String path) {
-		properties.setProperty(StorageConstants.PROPERTIES_SAVE_LOCATION,
-							   replaceBackslash(toCanonicalPath(path)));
-
+	public void setStorageFileLocation(String path) {
+		properties.setProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION,
+							   toValidCanonicalPath(path));
 		writeProperties();
+
+		if (!observerList.isEmpty()) {
+			notifyObserver(StorageConstants.PARAM_POSITION_STORAGE);
+		}
 	}
 
-	public void setDefaultSaveLocation() {
-		setSaveLocation(StorageConstants.FILE_DEFAULT_SAVE);
+	public void setToDefaultStorageFileLocation() {
+		setStorageFileLocation(StorageConstants.FILE_DEFAULT_STORAGE);
 	}
 
 	public String getLogFileLocation() {
@@ -66,12 +74,15 @@ public class AppStorage {
 
 	public void setLogFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION,
-							   replaceBackslash(toCanonicalPath(path)));
-
+							   toValidCanonicalPath(path));
 		writeProperties();
+
+		if (!observerList.isEmpty()) {
+			notifyObserver(StorageConstants.PARAM_POSITION_LOG);
+		}
 	}
 
-	public void setDefaultLogFileLocation() {
+	public void setToDefaultLogFileLocation() {
 		setLogFileLocation(StorageConstants.FILE_DEFAULT_LOG);
 	}
 
@@ -80,8 +91,9 @@ public class AppStorage {
 	}
 
 	public void setSelectedTheme(String theme) {
-		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, theme);
+		assert(theme == ViewConstants.THEME_LIGHT || theme == ViewConstants.THEME_DARK);
 
+		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, theme);
 		writeProperties();
 	}
 
@@ -91,16 +103,16 @@ public class AppStorage {
 
 	private void writeProperties() {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
-			bufferedWriter.write(StorageConstants.PROPERTIES_SAVE_LOCATION
-								 + "=" + getSaveLocation());
+			bufferedWriter.write(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION + "="
+								 + getStorageFileLocation());
 			bufferedWriter.newLine();
-			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION
-								 + "=" + getLogFileLocation());
+			bufferedWriter.write(StorageConstants.PROPERTIES_LOG_FILE_LOCATION + "="
+								 + getLogFileLocation());
 			bufferedWriter.newLine();
-			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME
-								 + "=" + getSelectedTheme());
+			bufferedWriter.write(StorageConstants.PROPERTIES_SELECTED_THEME + "="
+								 + getSelectedTheme());
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
+			LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_WRITE_PROPERTIES);
 		}
 	}
 
@@ -112,40 +124,47 @@ public class AppStorage {
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(configFile))) {
 			properties.load(bufferedReader);
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
-		}
-
-		if (!(getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
-				|| getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
-			setDefaultSelectedTheme();
+			LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_READ_PROPERTIES);
 		}
 	}
-	
+
 	private String toCanonicalPath(String path) {
 		File file = new File(path);
-		String canonicalPath = "";
-		
+		String canonicalPath = path;
+
 		try {
 			canonicalPath = file.getCanonicalPath();
 		} catch (IOException e) {
-			LogHelper.getLogger().severe(StorageConstants.ERROR_TO_CANONICAL_PATH);
+			LogHelper.getInstance().getLogger().severe(StorageConstants.ERROR_TO_CANONICAL_PATH);
 		}
-		
+
 		return canonicalPath;
 	}
 
 	/**
-	 * Replace backslashes from file/directory path to forward slashes. This
-	 * method is used to avoid using escape characters in the configuration
-	 * file.
+	 * Convert path to a valid canonical path by removing whitespace before slashes and
+	 * replace backslashes to forward slashes. This is used to avoid using escape
+	 * characters in the configuration file.
 	 * 
-	 * @param path			File path
-	 * @return replacedPath	File path with backslashes replaced with
-	 *        				forward slashes
+	 * Note: The path returned may not be valid since the file system does not allow
+	 * certain characters and combinations.
+	 * 
+	 * @param path 			File path.
+	 * @return 				Valid file path with backslash replaced with forward
+	 * 						slash and removed whitespace before slash.
 	 */
-	private String replaceBackslash(String path) {
-		String replacedPath = path.replace("\\", "/");
+	public String toValidCanonicalPath(String path) {
+		String validPath = toCanonicalPath(path).replace("\\", "/").replaceAll("\\s*/\\s*", "/");
 
-		return replacedPath;
+		return validPath;
+	}
+
+	private void addObservers() {
+		observerList.add(TaskStorage.getInstance());
+		observerList.add(LogHelper.getInstance());
+	}
+
+	private void notifyObserver(int i) {
+		observerList.get(i).update();
 	}
 }
