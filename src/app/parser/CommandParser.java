@@ -7,6 +7,7 @@ import java.util.List;
 
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.logic.command.Command;
 import app.model.ParserToken;
 import app.util.Common;
@@ -251,10 +252,10 @@ public class CommandParser {
 
 		if (removableParams) {
 			if (!removeDateToken.isEmpty()) {
-				System.out.println("REMOVE DATE!");
+				cmd.addFieldToRemove(RemovableField.DATE);
 			}
 			if (priorityString.equalsIgnoreCase("none")) {
-				System.out.println("REMOVE PRIORITY!");
+				cmd.addFieldToRemove(RemovableField.PRIORITY);
 			}
 		}
 

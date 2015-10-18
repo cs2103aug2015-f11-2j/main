@@ -11,4 +11,10 @@ public class TaskConstants {
 	public enum DisplayType {
 		COMPLETED, UNCOMPLETED, ALL, INVALID;
 	}
+	
+	//Enum value for specifying fields to remove from a task
+	public enum RemovableField {
+		DATE, PRIORITY;
+	}
+
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -116,10 +117,28 @@ public class TaskList {
 			taskList.get(index).setEndDate(task.getEndDate());
 			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
+		} else {
+			for (RemovableField field : task.getRemoveField()) {
+				if (field.equals(RemovableField.DATE) && 
+						(taskList.get(index).getStartDate() != null || 
+						taskList.get(index).getEndDate() != null)) {
+					taskList.get(index).setStartDate(null);
+					taskList.get(index).setEndDate(null);
+					isEdited = true;
+				}
+			}
 		}
 		if (task.getPriority() != Priority.NONE) {
 			taskList.get(index).setPriority(task.getPriority());
 			isEdited = true;
+		} else {
+			for (RemovableField field : task.getRemoveField()) {
+				if (field.equals(RemovableField.PRIORITY) && 
+						taskList.get(index).getPriority() != Priority.NONE) {
+					taskList.get(index).setPriority(Priority.NONE);
+					isEdited = true;
+				}
+			}
 		}
 		return isEdited;
 	}
