@@ -1,9 +1,11 @@
 package app.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.logic.command.Command;
 
 public class Task implements Comparable<Task> {
@@ -12,7 +14,7 @@ public class Task implements Comparable<Task> {
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private Priority priority;
-
+	private ArrayList<RemovableField> removeField;
 	private boolean isCompleted;
 
 	public Task(Command cmd) {
@@ -21,6 +23,7 @@ public class Task implements Comparable<Task> {
 		startDate = cmd.getStartDate();
 		endDate = cmd.getEndDate();
 		priority = cmd.getPriority();
+		removeField = cmd.getRemoveField();
 		isCompleted = false;
 	}
 
@@ -78,6 +81,10 @@ public class Task implements Comparable<Task> {
 
 	public boolean isEvent() {
 		return (getStartDate() != null && getEndDate() != null);
+	}
+	
+	public ArrayList<RemovableField> getRemoveField() {
+		return removeField;
 	}
 
 	public LocalDateTime getSortKey() {

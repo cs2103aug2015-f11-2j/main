@@ -1,10 +1,12 @@
 package app.logic.command;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.model.ViewState;
 
 
@@ -17,9 +19,11 @@ public abstract class Command {
 	private LocalDateTime endDate;
 	private Priority priority;
 	private DisplayType displayType;
+	private ArrayList<RemovableField> removeField;
 	private boolean isExecuted;
 
 	public Command() {
+		removeField = new ArrayList<RemovableField>();
 		commandString = "";
 		priority = Priority.NONE;
 	}
@@ -88,5 +92,13 @@ public abstract class Command {
 
 	public void setDisplayType(DisplayType displayType) {
 		this.displayType = displayType;
+	}
+
+	public void addFieldToRemove(RemovableField field) {
+		this.removeField.add(field);
+	}
+
+	public ArrayList<RemovableField> getRemoveField() {
+		return removeField;
 	}
 }

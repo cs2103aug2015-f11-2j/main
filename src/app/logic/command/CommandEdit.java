@@ -49,7 +49,9 @@ public class CommandEdit extends Command {
 				viewState.setTaskList(display);
 				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
-				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
+
+				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getId()));
+
 			} else {
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, taskId));

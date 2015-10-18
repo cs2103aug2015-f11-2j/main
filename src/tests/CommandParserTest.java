@@ -9,15 +9,14 @@ import org.junit.Test;
 
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.logic.CommandController;
 import app.logic.command.Command;
 import app.parser.CommandParser;
 import app.util.Common;
 
 public class CommandParserTest {
-
-	// TODO: rewrite tests to use CommandParser.parseDatesAndPriority instead of
-	// .createCommand()
+	
 	@Test
 	public void testParseDueDate() {
 		String input = "add buy milk due 15/11/15 0959";
@@ -235,6 +234,41 @@ public class CommandParserTest {
 		assertNull(cmd.getStartDate());
 		assertNull(cmd.getEndDate());
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
+	}
+	
+	@Test
+	public void testParseRemovePriority() {
+		String input = "edit 4 drink milk priority none";
+		Command cmd = CommandController.getInstance().createCommand(input);
+		CommandParser.parseDatesAndPriority(cmd, true);
+		assertEquals(RemovableField.PRIORITY, cmd.getRemoveField().get(0));
+		
+		input = "edit 4 drink milk priority high";
+		cmd = CommandController.getInstance().createCommand(input);
+		CommandParser.parseDatesAndPriority(cmd, true);
+		assertTrue(cmd.getRemoveField().isEmpty());
+	}
+	
+	@Test
+	public void testParseRemoveDate() {
+		String input = "edit 7 destroy milk date none";
+		Command cmd = CommandController.getInstance().createCommand(input);
+		CommandParser.parseDatesAndPriority(cmd, true);
+		assertEquals(RemovableField.DATE, cmd.getRemoveField().get(0));
+		
+		input = "edit 4 drink milk date empty";
+		cmd = CommandController.getInstance().createCommand(input);
+		CommandParser.parseDatesAndPriority(cmd, true);
+		assertTrue(cmd.getRemoveField().isEmpty());
+	}
+	
+	@Test
+	public void testParseRemoveDateAndPriority() {
+		String input = "edit 7 destroy milk date none priority none";
+		Command cmd = CommandController.getInstance().createCommand(input);
+		CommandParser.parseDatesAndPriority(cmd, true);
+		assertEquals(RemovableField.DATE, cmd.getRemoveField().get(0));
+		assertEquals(RemovableField.PRIORITY, cmd.getRemoveField().get(1));
 	}
 
 	// TODO: this should belong in CommonTest

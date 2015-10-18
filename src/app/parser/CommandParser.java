@@ -2,10 +2,12 @@ package app.parser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.logic.command.Command;
 import app.model.ParserToken;
 import app.util.Common;
@@ -16,6 +18,7 @@ public class CommandParser {
 	private static final List<String> START_DATE_KEYWORDS = Common.getUnmodifiableList("start", "from", "begin");
 	private static final List<String> END_DATE_KEYWORDS = Common.getUnmodifiableList("by", "due", "end", "to");
 	private static final List<String> PRIORITY_LEVELS = Common.getUnmodifiableList("high", "medium", "low");
+	private static final List<String> PRIORITY_LEVELS_WITH_NONE = Common.getUnmodifiableList("high", "medium", "low", "none");
 
 	private static final List<String> DISPLAY_COMPLETED = Common.getUnmodifiableList("c", "comp", "complete",
 			"completed");
@@ -157,10 +160,16 @@ public class CommandParser {
 		cmd.setDisplayType(type);
 	}
 
+	public static void parseDatesAndPriority(Command cmd) {
+		parseDatesAndPriority(cmd, false);
+	}
+
 	/**
-	 * Parses and sets parameters for the Command object specified. The
-	 * commandString of the specified Command object should already be set
-	 * before calling this method.
+	 * TODO: update params 
+	 * 
+	 * Parses and sets parameters for the Command object
+	 * specified. The commandString of the specified Command object should
+	 * already be set before calling this method.
 	 * 
 	 * The following parameters are set:
 	 * 
@@ -168,7 +177,7 @@ public class CommandParser {
 	 * 
 	 * @param cmd The Command object to set parameters for
 	 */
-	public static void parseDatesAndPriority(Command cmd) {
+	public static void parseDatesAndPriority(Command cmd, boolean removableParams) {
 		assert cmd != null;
 		String[] arr = cmd.getContent().split(" ");
 		ParserToken contentToken = new ParserToken();
@@ -176,7 +185,12 @@ public class CommandParser {
 
 		ParserToken startToken = dateToken(arr, START_DATE_KEYWORDS, allKeywords);
 		ParserToken endToken = dateToken(arr, END_DATE_KEYWORDS, allKeywords);
-		ParserToken priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
+		ParserToken priorityToken = new ParserToken();
+		if (removableParams) {
+			priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS_WITH_NONE);
+		} else {
+			priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
+		}
 
 		// Try to parse the dates detected.
 		String startDateString = Common.getStringFromArrayIndexRange(startToken.getStart() + 1, startToken.getEnd(),
@@ -203,11 +217,25 @@ public class CommandParser {
 		// If start date > end date, the date range is invalid and is removed
 		clearIfStartAfterEnd(startToken, endToken, parsedStart, parsedEnd);
 
+		// If called with removableParams == true, check for keyword "date none"
+		// to see if the user wants to remove a date. Used for edit command.
+		ParserToken removeDateToken = new ParserToken();
+		if (removableParams) {
+			removeDateToken = singleArgToken(arr, Arrays.asList("date"), Arrays.asList("none"));
+			if (!removeDateToken.isEmpty() && removeDateToken.getStart() > startToken.getEnd()
+					&& removeDateToken.getStart() > endToken.getEnd()) {
+				startToken.clear();
+				endToken.clear();
+			} else {
+				removeDateToken.clear();
+			}
+		}
+
 		// Merge disjointed content tokens.
-		updateContentEnd(contentToken, arr, priorityToken, startToken, endToken);
+		updateContentEnd(contentToken, arr, priorityToken, startToken, endToken, removeDateToken);
 
 		// Remove any tokens we merged over.
-		clearTokensBeforeContent(contentToken, startToken, endToken, priorityToken);
+		clearTokensBeforeContent(contentToken, startToken, endToken, priorityToken, removeDateToken);
 		if (startToken.isEmpty()) {
 			parsedStart = null;
 		}
@@ -218,9 +246,18 @@ public class CommandParser {
 		// Builds the content from the token indexes
 		// Parses the priority level if exists
 		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
-		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart(), priorityToken.getEnd(),
+		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart() + 1, priorityToken.getEnd(),
 				arr);
 		Priority priority = determinePriority(priorityString);
+
+		if (removableParams) {
+			if (!removeDateToken.isEmpty()) {
+				cmd.addFieldToRemove(RemovableField.DATE);
+			}
+			if (priorityString.equalsIgnoreCase("none")) {
+				cmd.addFieldToRemove(RemovableField.PRIORITY);
+			}
+		}
 
 		// Sets the parsed parameters
 		cmd.setContent(content);
@@ -307,7 +344,6 @@ public class CommandParser {
 	 * The priority token should be considered part of the content, hence:
 	 * 
 	 * [ADD] [--------- CONTENT ----------] [DEADLINE]
-	 * 
 	 */
 	private static void updateContentEnd(ParserToken content, String[] arr, ParserToken... tokens) {
 		for (int i = arr.length - 1; i >= 0; i--) {
@@ -331,6 +367,7 @@ public class CommandParser {
 	 * @param priorityString The priority level as a string
 	 * @return The corresponding priority level
 	 */
+	// TODO: remove magic strings
 	private static Priority determinePriority(String priorityString) {
 		if (priorityString.contains("high")) {
 			return Priority.HIGH;
