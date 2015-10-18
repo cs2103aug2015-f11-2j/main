@@ -56,7 +56,7 @@ public class AppStorage {
 
 	public void setStorageFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION,
-							   replaceBackslash(toCanonicalPath(path)));
+							   toValidCanonicalPath(path));
 		writeProperties();
 
 		if (!observerList.isEmpty()) {
@@ -74,7 +74,7 @@ public class AppStorage {
 
 	public void setLogFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION,
-							   replaceBackslash(toCanonicalPath(path)));
+							   toValidCanonicalPath(path));
 		writeProperties();
 
 		if (!observerList.isEmpty()) {
@@ -130,7 +130,7 @@ public class AppStorage {
 
 	private String toCanonicalPath(String path) {
 		File file = new File(path);
-		String canonicalPath = "";
+		String canonicalPath = path;
 
 		try {
 			canonicalPath = file.getCanonicalPath();
@@ -142,17 +142,21 @@ public class AppStorage {
 	}
 
 	/**
-	 * Replace backslashes from file path to forward slashes. This method is
-	 * used to avoid using escape characters in the configuration file.
+	 * Convert path to a valid canonical path by removing whitespace before slashes and
+	 * replace backslashes to forward slashes. This is used to avoid using escape
+	 * characters in the configuration file.
+	 * 
+	 * Note: The path returned may not be valid since the file system does not allow
+	 * certain characters and combinations.
 	 * 
 	 * @param path 			File path.
-	 * @return replacedPath File path with backslashes replaced with forward
-	 *         				slashes.
+	 * @return 				Valid file path with backslash replaced with forward
+	 * 						slash and removed whitespace before slash.
 	 */
-	private String replaceBackslash(String path) {
-		String replacedPath = path.replace("\\", "/");
+	public String toValidCanonicalPath(String path) {
+		String validPath = toCanonicalPath(path).replace("\\", "/").replaceAll("\\s*/\\s*", "/");
 
-		return replacedPath;
+		return validPath;
 	}
 
 	private void addObservers() {

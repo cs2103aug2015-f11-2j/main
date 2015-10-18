@@ -2,6 +2,7 @@ package app;
 
 import java.io.IOException;
 
+import app.storage.AppStorage;
 import app.util.LogHelper;
 import app.view.ViewManager;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		AppStorage.getInstance(); // initialize config/storage/log files
 		initializeStage(stage);
 		initializeViewManager();
 	}

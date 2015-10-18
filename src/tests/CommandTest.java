@@ -125,10 +125,10 @@ public class CommandTest {
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
-			String parentLocation = prevStorageFileLocation.replace("next.txt", "");
-			assertEquals("Saved storage file location: " + parentLocation + "testsave/storage",
+			String parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParent());
+			assertEquals("Saved storage file location: " + parentLocation + "/testsave/storage",
 						 viewState.getStatusMessage());
-			assertEquals(parentLocation + "testsave/storage", AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(parentLocation + "/testsave/storage", AppStorage.getInstance().getStorageFileLocation());
 			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
 			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
 			assertEquals(prevLogFileLines, currLogFileLines);
@@ -151,10 +151,10 @@ public class CommandTest {
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
-			parentLocation = prevLogFileLocation.replace("logs/next.log", "");
-			assertEquals("Saved log file location: " + parentLocation + "testsave/log", viewState.getStatusMessage());
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevLogFile.getParentFile().getParent());
+			assertEquals("Saved log file location: " + parentLocation + "/testsave/log", viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(parentLocation + "testsave/log", AppStorage.getInstance().getLogFileLocation());
+			assertEquals(parentLocation + "/testsave/log", AppStorage.getInstance().getLogFileLocation());
 			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
 			assertEquals(prevLogFileLines, currLogFileLines);
 			assertTrue(prevStorageFile.exists());
@@ -165,6 +165,204 @@ public class CommandTest {
 
 			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
 			prevLogFile = new File(prevLogFileLocation);
+
+			// storage file location with spaces
+			input = "save test  save  /  storage  test";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParentFile().getParent());
+			assertEquals("Saved storage file location: " + parentLocation + "/test  save/storage  test",
+						 viewState.getStatusMessage());
+			assertEquals(parentLocation + "/test  save/storage  test", AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertFalse(prevStorageFile.exists());
+			assertTrue(prevLogFile.exists());
+			assertFalse(prevStorageFile.equals(currStorageFile));
+			assertTrue(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
+			prevStorageFile = new File(prevStorageFileLocation);
+
+			// log file location with spaces
+			input = "save log test  save  /  log  test";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevLogFile.getParentFile().getParent());
+			assertEquals("Saved log file location: " + parentLocation + "/test  save/log  test", viewState.getStatusMessage());
+			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(parentLocation + "/test  save/log  test", AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertTrue(prevStorageFile.exists());
+			assertFalse(prevLogFile.exists());
+			assertTrue(prevStorageFile.equals(currStorageFile));
+			assertFalse(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
+			prevLogFile = new File(prevLogFileLocation);
+
+			// storage file location at different directory
+			input = "save ../../testsave/storage";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(
+					prevStorageFile.getParentFile().getParentFile().getParentFile().getParent());
+			assertEquals("Saved storage file location: " + parentLocation + "/testsave/storage",
+					viewState.getStatusMessage());
+			assertEquals(parentLocation + "/testsave/storage", AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertFalse(prevStorageFile.exists());
+			assertTrue(prevLogFile.exists());
+			assertFalse(prevStorageFile.equals(currStorageFile));
+			assertTrue(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
+			prevStorageFile = new File(prevStorageFileLocation);
+
+			// log file location at different directory
+			input = "save log ../../testsave/log";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(
+					prevLogFile.getParentFile().getParentFile().getParentFile().getParent());
+			assertEquals("Saved log file location: " + parentLocation + "/testsave/log", viewState.getStatusMessage());
+			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(parentLocation + "/testsave/log", AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertTrue(prevStorageFile.exists());
+			assertFalse(prevLogFile.exists());
+			assertTrue(prevStorageFile.equals(currStorageFile));
+			assertFalse(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
+			prevLogFile = new File(prevLogFileLocation);
+
+			// default storage file location
+			input = "save default";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(".");
+			assertEquals("Saved storage file location: " + parentLocation + "/next.txt",
+					viewState.getStatusMessage());
+			assertEquals(parentLocation + "/next.txt", AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertFalse(prevStorageFile.exists());
+			assertTrue(prevLogFile.exists());
+			assertFalse(prevStorageFile.equals(currStorageFile));
+			assertTrue(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
+			prevStorageFile = new File(prevStorageFileLocation);
+
+			// default log file location
+			input = "save log default";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			parentLocation = AppStorage.getInstance().toValidCanonicalPath(".");
+			assertEquals("Saved log file location: " + parentLocation + "/logs/next.log", viewState.getStatusMessage());
+			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(parentLocation + "/logs/next.log", AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertTrue(prevStorageFile.exists());
+			assertFalse(prevLogFile.exists());
+			assertTrue(prevStorageFile.equals(currStorageFile));
+			assertFalse(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
+			prevLogFile = new File(prevLogFileLocation);
+
+			// no changes for default storage file location
+			input = "save default";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			assertEquals("Same storage file location. No changes to storage file location: " + prevStorageFileLocation,
+					viewState.getStatusMessage());
+			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertTrue(prevStorageFile.exists());
+			assertTrue(prevLogFile.exists());
+			assertTrue(prevStorageFile.equals(currStorageFile));
+			assertTrue(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+
+			// no changes for default log file location
+			input = "save log default";
+			cmd = CommandController.getInstance().createCommand(input);
+			viewState = cmd.execute(null);
+			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
+				currLogFileLines.remove(i - 1);
+			}
+			assertEquals("Same log file location. No changes to log file location: " + prevLogFileLocation, viewState.getStatusMessage());
+			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
+			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
+			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
+			assertEquals(prevLogFileLines, currLogFileLines);
+			assertTrue(prevStorageFile.exists());
+			assertTrue(prevLogFile.exists());
+			assertTrue(prevStorageFile.equals(currStorageFile));
+			assertTrue(prevLogFile.equals(currLogFile));
+			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 
 			input = "save " + userStorageFileLocation;
 			cmd = CommandController.getInstance().createCommand(input);

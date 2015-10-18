@@ -55,15 +55,6 @@ public class CommandSave extends Command {
 			String prevFileLocation = (isLog) ? AppStorage.getInstance().getLogFileLocation()
 					: AppStorage.getInstance().getStorageFileLocation();
 
-			if (this.getContent().equals(prevFileLocation)) {
-				String errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_CHANGES,
-						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE, prevFileLocation);
-				viewState.setStatus(StatusType.ERROR, errorMsg);
-				LogHelper.getInstance().getLogger().info(errorMsg);
-
-				return viewState;
-			}
-
 			String errorMsg = changeFileLocation(prevFileLocation, this.getContent());
 
 			if (errorMsg == null) {
@@ -141,14 +132,19 @@ public class CommandSave extends Command {
 	private String copyFile(String sourceLocation, String destLocation) {
 		String errorMsg = null;
 		File sourceFile = new File(sourceLocation);
-		File destFile = new File(destLocation);
+		File destFile = new File(AppStorage.getInstance().toValidCanonicalPath(destLocation));
 
 		if (destFile.getParentFile() != null) {
 			destFile.getParentFile().mkdirs();
 		}
 
 		try {
-			Files.copy(sourceFile.toPath(), destFile.toPath());
+			if (destFile.exists() && Files.isSameFile(sourceFile.toPath(), destFile.toPath())) {
+				errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_CHANGES,
+						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE, sourceLocation);
+			} else {
+				Files.copy(sourceFile.toPath(), destFile.toPath());
+			}
 		} catch (FileAlreadyExistsException e) {
 			errorMsg = String.format(ViewConstants.ERROR_SAVE_FILE_ALREADY_EXISTS, this.getContent());
 		} catch (IOException e) {
@@ -160,16 +156,20 @@ public class CommandSave extends Command {
 	}
 
 	private void removeFileAndParentsIfEmpty(String pathStr) throws IOException {
-		Path path = new File(pathStr).toPath();
-		File baseFile = new File(".");
+		File file = new File(pathStr);
+		Path path = file.toPath();
 
-		if (path == null || path.equals(baseFile.getCanonicalFile().toPath())) {
+		if (path == null) {
 			return;
 		}
 
 		if (Files.isRegularFile(path)) {
 			Files.deleteIfExists(path);
 		} else if (Files.isDirectory(path)) {
+			if (file.list().length != 0) {
+				return;
+			}
+
 			try {
 				Files.delete(path);
 			} catch (DirectoryNotEmptyException e) {
