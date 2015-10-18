@@ -15,9 +15,7 @@ import app.parser.CommandParser;
 import app.util.Common;
 
 public class CommandParserTest {
-
-	// TODO: rewrite tests to use CommandParser.parseDatesAndPriority instead of
-	// .createCommand()
+	
 	@Test
 	public void testParseDueDate() {
 		String input = "add buy milk due 15/11/15 0959";
