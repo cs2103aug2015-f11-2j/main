@@ -41,7 +41,7 @@ public class CommandAdd extends Command {
 			displayed.addTask(task);
 			viewState.setTaskList(displayed);
 			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, task));
-			LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_ADD, task.getName()));
+			LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_ADD, task.getName() + "; UUID:" + task.getId()));
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_ADD, task.getName()));
 			setExecuted(true);
 		} catch (Exception e) {

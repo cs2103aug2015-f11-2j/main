@@ -47,14 +47,16 @@ public class CommandDisplay extends Command {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
-				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS, 
+						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
 			} else if (type == DisplayType.ALL) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
-				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS, 
+						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				LogHelper.getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
