@@ -57,7 +57,7 @@ public class ViewConstants {
 	public static String ERROR_EDIT = "Error editing task";
 	public static String ERROR_EDIT_NO_TASK = "No task specified to edit";
 	public static String ERROR_EDIT_INVALID_TASK_ID = "Error, invalid task ID";
-	public static String ERROR_EDIT_NO_CHANGES = "No changes specified for editing task %1$s";
+	public static String ERROR_EDIT_NO_CHANGES = "No changes made for task %1$s";
 	
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";

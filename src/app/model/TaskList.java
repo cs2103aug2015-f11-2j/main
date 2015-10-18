@@ -109,37 +109,40 @@ public class TaskList {
 	// and updates the old task with respect to the new one
 	public boolean updateTask(Task task, int index) {
 		boolean isEdited = false;
-		if (!task.getName().equals("") && task.getName() != null) {
+		// Edit if name is not empty, not null, and not same as previous
+		if (!task.getName().equals("") && task.getName() != null && 
+				!task.getName().equals(taskList.get(index).getName())) {
 			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
+		// Edit if either date is not null
 		if (task.getEndDate() != null || task.getStartDate() != null) {
 			taskList.get(index).setEndDate(task.getEndDate());
 			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
-		} else {
-			for (RemovableField field : task.getRemoveField()) {
-				if (field.equals(RemovableField.DATE) && 
-						(taskList.get(index).getStartDate() != null || 
-						taskList.get(index).getEndDate() != null)) {
-					taskList.get(index).setStartDate(null);
-					taskList.get(index).setEndDate(null);
-					isEdited = true;
-				}
-			}
 		}
-		if (task.getPriority() != Priority.NONE) {
+		// Edit if priority is not none (default priority) or same as previous
+		if (task.getPriority() != Priority.NONE && 
+				task.getPriority() != taskList.get(index).getPriority()) {
 			taskList.get(index).setPriority(task.getPriority());
 			isEdited = true;
-		} else {
-			for (RemovableField field : task.getRemoveField()) {
-				if (field.equals(RemovableField.PRIORITY) && 
-						taskList.get(index).getPriority() != Priority.NONE) {
-					taskList.get(index).setPriority(Priority.NONE);
-					isEdited = true;
-				}
+		}
+		// Remove date and/or priority if specified
+		for (RemovableField field : task.getRemoveField()) {
+			if (field.equals(RemovableField.PRIORITY) && 
+					taskList.get(index).getPriority() != Priority.NONE) {
+				taskList.get(index).setPriority(Priority.NONE);
+				isEdited = true;
+			}
+			if (field.equals(RemovableField.DATE) && 
+					(taskList.get(index).getStartDate() != null || 
+					taskList.get(index).getEndDate() != null)) {
+				taskList.get(index).setStartDate(null);
+				taskList.get(index).setEndDate(null);
+				isEdited = true;
 			}
 		}
+
 		return isEdited;
 	}
 
