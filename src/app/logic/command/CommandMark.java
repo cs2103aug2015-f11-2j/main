@@ -38,15 +38,15 @@ public class CommandMark extends Command {
 			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
-			ArrayList<UUID> markedTasksUuidList = markSelectedTasks(displayIdsToMarkList, display, master);
+			markSelectedTasks(displayIdsToMarkList, display, master);
 			viewState.setTaskList(display);
 			
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
 			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
 			
-			ArrayList<UUID> markedCompletedUuid = getUuidListByCompletion(markedTasksUuidList, display, true);
-			ArrayList<UUID> markedUncompletedUuid = getUuidListByCompletion(markedTasksUuidList, display, false);
+			ArrayList<UUID> markedCompletedUuid = display.getTasksUuidList(markedCompleted);
+			ArrayList<UUID> markedUncompletedUuid = display.getTasksUuidList(markedUncompleted);
 			logUuidByMarkedTaskCompletion(markedCompletedUuid, markedUncompletedUuid);
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
@@ -108,14 +108,13 @@ public class CommandMark extends Command {
 	}
 	
 	// Locate the specific tasks based on displayed id and mark them
-	private ArrayList<UUID> markSelectedTasks(ArrayList<Integer> displayIdsToMarkList, TaskList display, TaskList master) {
+	private void markSelectedTasks(ArrayList<Integer> displayIdsToMarkList, TaskList display, TaskList master) {
 		ArrayList<UUID> tasksUuidList = display.getTasksUuidList(displayIdsToMarkList);
 		ArrayList<Integer> masterIdsList = master.getTasksIdList(tasksUuidList);
 		for (int i = 0; i < masterIdsList.size(); i++) {
 			master.markTaskByIndex(masterIdsList.get(i));
 		}
 		TaskStorage.getInstance().writeTasks(master);
-		return tasksUuidList;
 	}
 
 	// Filter the ArrayList of task Ids to get an ArrayList of only completed or uncompleted tasks IDs
@@ -127,17 +126,6 @@ public class CommandMark extends Command {
 			}
 		}
 		return idList;
-	}
-	
-	// Filter the ArrayList of task UUIDs to get an ArrayList of only completed or uncompleted tasks UUIDs
-	private ArrayList<UUID> getUuidListByCompletion(ArrayList<UUID> arr, TaskList taskList, boolean isCompleted) {
-		ArrayList<UUID> uuidList = new ArrayList<UUID>();
-		for (int i = 0; i < arr.size(); i++) {
-			if (taskList.isTaskCompleted(taskList.getTaskIndexByUuid(arr.get(i))) == isCompleted) {
-				uuidList.add(arr.get(i));
-			}
-		}
-		return uuidList;
 	}
 
 	// converts the ArrayList of id into a String, with each id separated by comma
