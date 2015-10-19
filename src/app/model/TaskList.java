@@ -115,11 +115,23 @@ public class TaskList {
 			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
-		// Edit if either date is not null
-		if (task.getEndDate() != null || task.getStartDate() != null) {
-			taskList.get(index).setEndDate(task.getEndDate());
-			taskList.get(index).setStartDate(task.getStartDate());
-			isEdited = true;
+		// Edit if date is different from previous and at least EndDate is not null
+		if (task.getEndDate() != null) { 
+			if (taskList.get(index).getEndDate() == null || 
+					taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0) {
+				taskList.get(index).setEndDate(task.getEndDate());
+				taskList.get(index).setStartDate(task.getStartDate());
+				isEdited = true;
+			} else if (task.getStartDate() == null && taskList.get(index).getStartDate() != null) {
+				taskList.get(index).setEndDate(task.getEndDate());
+				taskList.get(index).setStartDate(task.getStartDate());
+				isEdited = true;
+			} else if (task.getStartDate() != null && (taskList.get(index).getStartDate() == null || 
+					taskList.get(index).getStartDate().compareTo(task.getStartDate()) != 0)) {
+				taskList.get(index).setEndDate(task.getEndDate());
+				taskList.get(index).setStartDate(task.getStartDate());
+				isEdited = true;
+			}
 		}
 		// Edit if priority is not none (default priority) or same as previous
 		if (task.getPriority() != Priority.NONE && 
