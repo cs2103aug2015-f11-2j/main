@@ -115,24 +115,12 @@ public class TaskList {
 			taskList.get(index).setName(task.getName());
 			isEdited = true;
 		}
-		// Edit if date is different from previous and at least EndDate is not null
-		if (task.getEndDate() != null) { 
-			if (taskList.get(index).getEndDate() == null || 
-					taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0) {
-				taskList.get(index).setEndDate(task.getEndDate());
-				taskList.get(index).setStartDate(task.getStartDate());
-				isEdited = true;
-			} else if (task.getStartDate() == null && taskList.get(index).getStartDate() != null) {
-				taskList.get(index).setEndDate(task.getEndDate());
-				taskList.get(index).setStartDate(task.getStartDate());
-				isEdited = true;
-			} else if (task.getStartDate() != null && (taskList.get(index).getStartDate() == null || 
-					taskList.get(index).getStartDate().compareTo(task.getStartDate()) != 0)) {
-				taskList.get(index).setEndDate(task.getEndDate());
-				taskList.get(index).setStartDate(task.getStartDate());
-				isEdited = true;
-			}
-		}
+		// Edit if at least EndDate is not null and either date is different from previous
+		if ((isEndDateDiff(task, index) || isStartDateDiff(task, index))) { 
+			taskList.get(index).setEndDate(task.getEndDate());
+			taskList.get(index).setStartDate(task.getStartDate());
+			isEdited = true;
+		}				
 		// Edit if priority is not none (default priority) or same as previous
 		if (task.getPriority() != Priority.NONE && 
 				task.getPriority() != taskList.get(index).getPriority()) {
@@ -154,8 +142,18 @@ public class TaskList {
 				isEdited = true;
 			}
 		}
-
 		return isEdited;
+	}
+	
+	private boolean isEndDateDiff(Task task, int index) {
+		return (task.getEndDate() != null && (taskList.get(index).getEndDate() == null || 
+				taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0));
+	}
+	
+	private boolean isStartDateDiff(Task task, int index) {
+		return ((task.getStartDate() == null && taskList.get(index).getStartDate() != null) || 
+				(task.getStartDate() != null && (taskList.get(index).getStartDate() == null || 
+				taskList.get(index).getStartDate().compareTo(task.getStartDate()) != 0)));
 	}
 
 	public Task getTaskByIndex(int index) {
