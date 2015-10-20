@@ -190,6 +190,9 @@ public class CommandController {
 		case ADD:
 			CommandParser.parseDatesAndPriority(cmd);
 			break;
+		case DISPLAY:
+			cmd.setContent(CommandParser.determineDisplayType(cmd.getContent()).toString());
+			break;
 		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd, true);
 			break;

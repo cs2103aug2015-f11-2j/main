@@ -9,7 +9,6 @@ import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
 import app.model.TaskList;
 import app.model.ViewState;
-import app.parser.CommandParser;
 import app.util.LogHelper;
 
 public class CommandDisplay extends Command {
@@ -28,12 +27,10 @@ public class CommandDisplay extends Command {
 		TaskList retrievedTaskList = new TaskList();
 
 		try {
-			DisplayType type = CommandParser.determineDisplayType(this.getContent());
-			String arg = type.toString().toLowerCase();
-			
+			String arg = this.getContent();
+
 			// default display argument is uncompleted
-			if (this.getContent().isEmpty() || type == DisplayType.UNCOMPLETED) {
-				arg = DisplayType.UNCOMPLETED.toString().toLowerCase();
+			if (arg.equals(DisplayType.UNCOMPLETED.toString())) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(
@@ -43,7 +40,7 @@ public class CommandDisplay extends Command {
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
-			} else if (type == DisplayType.COMPLETED) {
+			} else if (arg.equals(DisplayType.COMPLETED.toString())) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
@@ -51,14 +48,14 @@ public class CommandDisplay extends Command {
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
-			} else if (type == DisplayType.ALL) {
+			} else if (arg.equals(DisplayType.ALL.toString())) {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
-			} else if (type == DisplayType.INVALID) {
+			} else if (arg.equals(DisplayType.INVALID.toString())) {
 				viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT);
 				LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_DISPLAY_INVALID_ARGUMENT);
 			}

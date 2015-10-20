@@ -389,7 +389,7 @@ public class CommandParser {
 		String type = arg.toLowerCase().trim();
 		if (DISPLAY_COMPLETED.contains(type)) {
 			return DisplayType.COMPLETED;
-		} else if (DISPLAY_UNCOMPLETED.contains(type)) {
+		} else if (DISPLAY_UNCOMPLETED.contains(type) || type.isEmpty()) {
 			return DisplayType.UNCOMPLETED;
 		} else if (DISPLAY_ALL.contains(type)) {
 			return DisplayType.ALL;
