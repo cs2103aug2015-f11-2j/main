@@ -116,7 +116,8 @@ public class TaskList {
 			isEdited = true;
 		}
 		// Edit if at least EndDate is not null and either date is different from previous
-		if ((isEndDateDiff(task, index) || isStartDateDiff(task, index))) { 
+		if (task.getEndDate() != null && 
+				(isEndDateDiff(task, index) || isStartDateDiff(task, index))) { 
 			taskList.get(index).setEndDate(task.getEndDate());
 			taskList.get(index).setStartDate(task.getStartDate());
 			isEdited = true;
@@ -146,8 +147,9 @@ public class TaskList {
 	}
 	
 	private boolean isEndDateDiff(Task task, int index) {
-		return (task.getEndDate() != null && (taskList.get(index).getEndDate() == null || 
-				taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0));
+		assert(task.getEndDate() != null);
+		return (taskList.get(index).getEndDate() == null || 
+				taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0);
 	}
 	
 	private boolean isStartDateDiff(Task task, int index) {
