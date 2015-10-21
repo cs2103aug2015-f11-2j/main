@@ -21,7 +21,7 @@ public class AddTasksIntegrationTest {
 	public void testAddTasks() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/integration1.txt");
-		createTestFile();
+		File testFile = createTestFile();
 		
 		String[] commands = {
 			"add first task", 
@@ -35,13 +35,13 @@ public class AddTasksIntegrationTest {
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
-			removeFileAndParentsIfEmpty(AppStorage.getInstance().getStorageFileLocation());
+			removeFileAndParentsIfEmpty(testFile.toPath());
 			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
 		}
 
 	}
 
-	private void createTestFile() {
+	private File createTestFile() {
 		File testFile = new File(AppStorage.getInstance().getStorageFileLocation());
 		
 		if (!testFile.exists()) {
@@ -57,19 +57,20 @@ public class AddTasksIntegrationTest {
 
 			TaskStorage.getInstance().writeTasks(new TaskList());
 		}
+
+		return testFile;
 	}
 
-	private void removeFileAndParentsIfEmpty(String pathStr) throws IOException {
-		if (pathStr == null) {
+	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
+		if (path == null) {
 			return;
 		}
-
-		File file = new File(pathStr);
-		Path path = file.toPath();
 
 		if (Files.isRegularFile(path)) {
 			Files.deleteIfExists(path);
 		} else if (Files.isDirectory(path)) {
+			File file = path.toFile();
+
 			if (file.list().length != 0) {
 				return;
 			}
@@ -81,6 +82,6 @@ public class AddTasksIntegrationTest {
 			}
 		}
 
-		removeFileAndParentsIfEmpty(path.getParent().toString());
+		removeFileAndParentsIfEmpty(path.getParent());
 	}
 }
