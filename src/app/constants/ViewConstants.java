@@ -96,7 +96,7 @@ public class ViewConstants {
 	}
 	
 	public enum ActionType {
-		SCROLL_TASK_LIST_TO;
+		SCROLL_TASK_LIST_TO, EXIT;
 	}
 	
 	public static Queue<String> getItemColorsQueue() {
