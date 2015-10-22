@@ -274,36 +274,55 @@ public class CommandParserTest {
 	// TODO: this should belong in CommonTest
 	@Test
 	public void testGetIdArrayList() {
-		String inputValid = "1, 5,7 9";
-		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
-		expectedValid.add(1);
-		expectedValid.add(5);
-		expectedValid.add(7);
-		expectedValid.add(9);
-		assertEquals(Common.getIdArrayList(inputValid), expectedValid);
+		// Test using Equivalence Partitioning, space and comma separates numbers
+		// Input are valid positive integers
+		String inputValidPositive = "1, 5,7 95";
+		ArrayList<Integer> expectedValidPositive = new ArrayList<Integer>();
+		expectedValidPositive.add(1);
+		expectedValidPositive.add(5);
+		expectedValidPositive.add(7);
+		expectedValidPositive.add(95);
+		assertEquals(Common.getIdArrayList(inputValidPositive), expectedValidPositive);
+		
+		// Input are valid negative integers
+		String inputValidNegative = "-4, -8, -9 -10";
+		ArrayList<Integer> expectedValidNegative = new ArrayList<Integer>();
+		expectedValidNegative.add(-4);
+		expectedValidNegative.add(-8);
+		expectedValidNegative.add(-9);
+		expectedValidNegative.add(-10);
+		assertEquals(Common.getIdArrayList(inputValidNegative), expectedValidNegative);
 
+		// Inputs are invalid
 		String inputInvalid = "6, g7";
+		assertEquals(Common.getIdArrayList(inputInvalid), null);
+		inputInvalid = "45.54, 7";
 		assertEquals(Common.getIdArrayList(inputInvalid), null);
 	}
 
 	@Test
 	public void testDetermineDisplayType() {
-		String[] completed = { "c", "comp", "complete", "completed" };
+		// Test using Equivalence Partitioning, not case sensitive
+		// Aliases for "completed"
+		String[] completed = { "c", "comp", "complete", "completed", "CoMpleTed" };
 		for (String input : completed) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.COMPLETED);
 		}
 		
+		// Aliases for "uncompleted"
 		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 
-		String[] all = { "a", "al", "all" };
+		// Aliases for "all"
+		String[] all = { "a", "al", "all", "A", "AL", "ALl" };
 		for (String input : all) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.ALL);
 		}
 
-		String[] invalid = { "every", "cmplt", "com", "error" };
+		// Any other string that are invalid
+		String[] invalid = { "every", "cmplt", "com", "error", null };
 		for (String input : invalid) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.INVALID);
 		}
