@@ -10,6 +10,7 @@ import app.logic.command.CommandDelete;
 import app.logic.command.CommandDisplay;
 import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
+import app.logic.command.CommandHelp;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
@@ -39,6 +40,7 @@ public class CommandController {
 		masterTaskList = TaskStorage.getInstance().readTasks();
 		initializeViewState();
 	}
+	
 
 	private void initializeViewState() {
 		currentViewState = new ViewState();
@@ -165,6 +167,9 @@ public class CommandController {
 		case SEARCH:
 			cmd = new CommandSearch();
 			break;
+		case HELP:
+			cmd = new CommandHelp();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -214,4 +219,5 @@ public class CommandController {
 	public ViewState getCurrentViewState() {
 		return currentViewState;
 	}
+	
 }

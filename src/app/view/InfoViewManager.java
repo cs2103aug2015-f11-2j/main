@@ -58,6 +58,10 @@ public class InfoViewManager {
 			setHelpText(HelpConstants.HELP_SEARCH_OVERVIEW, HelpConstants.HELP_SEARCH_DESCRIPTION);
 			setCommandSearchLabels(cmd);
 			break;
+		case DELETE:
+			setHelpText(HelpConstants.HELP_DELETE_OVERVIEW, HelpConstants.HELP_DELETE_DESCRIPTION);
+			setCommandDeleteLabels(cmd);
+			break;
 		default:
 			break;
 		}
@@ -116,6 +120,12 @@ public class InfoViewManager {
 		addSeparator();
 	}
 
+	private void setCommandDeleteLabels(Command cmd) {
+		setContentText(cmd.getContent());
+		setDateAndPriorityTexts(cmd);
+		addSeparator();
+	}
+	
 	private void setEditText(String id) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (!id.isEmpty()) {
