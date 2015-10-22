@@ -51,14 +51,16 @@ public class CommandMark extends Command {
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
-			LogHelper.getInstance().getLogger().severe("IndexOutOfBoundsException:" + e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
+			LogHelper.getInstance().getLogger().severe("IndexOutOfBoundsException:" + e.getMessage() +
+					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 		} catch (NullPointerException e) {
-			LogHelper.getInstance().getLogger().severe("NullPointerException:" + e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK_INVALID_ID));
+			LogHelper.getInstance().getLogger().severe("NullPointerException:" + e.getMessage() + 
+					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_MARK));
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK);
 		}
 		return viewState;
 	}

@@ -195,6 +195,9 @@ public class CommandController {
 			break;
 		case EDIT:
 			CommandParser.parseDatesAndPriority(cmd, true);
+			CommandEdit e = (CommandEdit) cmd;
+			e.setDisplayId(CommandParser.getTaskDisplayedIdFromContent(cmd.getContent()));
+			e.setContent(CommandParser.getTaskDescFromContent(cmd.getContent()));
 			break;
 		case SEARCH:
 			CommandParser.parseSearch(cmd);

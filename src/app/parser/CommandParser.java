@@ -404,8 +404,14 @@ public class CommandParser {
 	 * @param content The content or name of a task
 	 * @return The displayed Id of the task
 	 */
-	public static int getTaskDisplayedIdFromContent(String content) throws NumberFormatException {
-		return Integer.parseInt(Common.getFirstWord(content));
+	public static Integer getTaskDisplayedIdFromContent(String content) {
+		Integer id;
+		try {
+			id = Integer.parseInt(Common.getFirstWord(content));
+		} catch (NumberFormatException e) {
+			id = null;
+		}
+		return id;
 	}
 
 	/**

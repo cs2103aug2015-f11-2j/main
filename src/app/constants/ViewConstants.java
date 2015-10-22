@@ -45,7 +45,7 @@ public class ViewConstants {
 	public static String MESSAGE_MARK_UNCOMPLETED = "Marked %s uncompleted: %s";
 	public static String ERROR_MARK = "Error marking task";
 	public static String ERROR_MARK_NO_TASK = "No task specified to mark";
-	public static String ERROR_MARK_INVALID_ID = "Error, invalid task ID";
+	public static String ERROR_MARK_INVALID_ID = "Invalid task ID entered";
 	
 	// DISPLAY command
 	public static String MESSAGE_DISPLAY = "Displaying %1$s tasks";
@@ -56,7 +56,7 @@ public class ViewConstants {
 	public static String MESSAGE_EDIT = "Edited task: %1$s";
 	public static String ERROR_EDIT = "Error editing task";
 	public static String ERROR_EDIT_NO_TASK = "No task specified to edit";
-	public static String ERROR_EDIT_INVALID_TASK_ID = "Error, invalid task ID";
+	public static String ERROR_EDIT_INVALID_TASK_ID = "Invalid task ID entered";
 	public static String ERROR_EDIT_NO_CHANGES = "No changes made for task %1$s";
 	
 	// SAVE command

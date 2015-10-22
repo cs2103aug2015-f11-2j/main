@@ -312,22 +312,15 @@ public class CommandParserTest {
 	@Test
 	public void testGetTaskDisplayedIdFromContent() {
 		String input = "1 this is the task";
-		int expected = 1;
+		Integer expected = 1;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
 		input = "5";
 		expected = 5;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
-		input = "10 ";
-		expected = 10;
-		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
-	}
-	
-	@Test(expected=NumberFormatException.class)
-	public void testGetTaskDisplayedIdFromContentThrowException() {
-		String input = "this is the task";
-		CommandParser.getTaskDisplayedIdFromContent(input);
+		input = "hello";
+		assertNull(CommandParser.getTaskDisplayedIdFromContent(input));
 	}
 	
 	@Test
@@ -340,7 +333,7 @@ public class CommandParserTest {
 		expected = "";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 	}
-	
+
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);
 		return (difference < 1000 || difference > -1000);
