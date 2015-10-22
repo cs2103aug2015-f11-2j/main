@@ -69,6 +69,16 @@ public class CommandEdit extends Command {
 		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
 	}
+	
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		// TODO: undo code here
+		return new ViewState();
+	}
 
 	// Base on displayed index, find task in master tasklist and update it.
 	// Returns an integer which is more than 0 if something has been edited

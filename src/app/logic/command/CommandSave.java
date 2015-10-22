@@ -78,7 +78,12 @@ public class CommandSave extends Command {
 		return viewState;
 	}
 
-	public ViewState undo(ViewState previousViewState) {
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
 		ViewState viewState = new ViewState();
 
 		try {

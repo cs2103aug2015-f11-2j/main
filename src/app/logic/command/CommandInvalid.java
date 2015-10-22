@@ -24,5 +24,15 @@ public class CommandInvalid extends Command {
 		
 		return viewState;
 	}
+	
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		// TODO: undo code here
+		return new ViewState();
+	}
 
 }

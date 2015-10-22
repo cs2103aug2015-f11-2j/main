@@ -149,4 +149,14 @@ public class CommandMark extends Command {
 		idList = idList.replaceAll(",[ \t]*$", "");
 		return idList;
 	}
+	
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		// TODO: undo code here
+		return new ViewState();
+	}
 }

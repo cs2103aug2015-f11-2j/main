@@ -29,6 +29,7 @@ public abstract class Command {
 	}
 	
 	public abstract	ViewState execute(ViewState previousViewState);
+	public abstract ViewState undo();
 
 	public String getContent() {
 		return content;

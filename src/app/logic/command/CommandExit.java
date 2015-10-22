@@ -17,4 +17,13 @@ public class CommandExit extends Command {
 		return new ViewState();
 	}
 
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		// TODO: undo code here
+		return new ViewState();
+	}
 }
