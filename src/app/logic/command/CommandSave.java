@@ -58,7 +58,8 @@ public class CommandSave extends Command {
 			String errorMsg = changeFileLocation(prevFileLocation, this.getContent());
 
 			if (errorMsg == null) {
-				removeFileAndParentsIfEmpty(prevFileLocation);
+				File prevFile = new File(prevFileLocation);
+				removeFileAndParentsIfEmpty(prevFile.toPath());
 
 				String successMsg = String.format(ViewConstants.MESSAGE_SAVE,
 						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE,
@@ -155,10 +156,7 @@ public class CommandSave extends Command {
 		return errorMsg;
 	}
 
-	private void removeFileAndParentsIfEmpty(String pathStr) throws IOException {
-		File file = new File(pathStr);
-		Path path = file.toPath();
-
+	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {
 			return;
 		}
@@ -166,6 +164,8 @@ public class CommandSave extends Command {
 		if (Files.isRegularFile(path)) {
 			Files.deleteIfExists(path);
 		} else if (Files.isDirectory(path)) {
+			File file = path.toFile();
+
 			if (file.list().length != 0) {
 				return;
 			}
@@ -177,6 +177,6 @@ public class CommandSave extends Command {
 			}
 		}
 
-		removeFileAndParentsIfEmpty(path.getParent().toString());
+		removeFileAndParentsIfEmpty(path.getParent());
 	}
 }
