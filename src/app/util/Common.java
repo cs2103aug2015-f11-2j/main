@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import app.constants.TaskConstants.Priority;
 import app.model.Task;
@@ -120,7 +121,8 @@ public class Common {
 	 * @return The resultant string without the first word
 	 */
 	public static String removeFirstWord(String commandString) {
-		return commandString.replaceFirst(getFirstWord(commandString), "").trim();
+		String word = Pattern.quote(getFirstWord(commandString));
+		return commandString.replaceFirst(word, "").trim();
 	}
 
 	/**
