@@ -80,7 +80,10 @@ public class ViewConstants {
 	
 	// Header constants
 	public static String HEADER_DISPLAY = "Displaying %1$s tasks";
-
+	
+	// Help Message 
+	public static String HEADER_HELP = " Displaying Help List";
+	
 	// Enum values for the different statusbar statuses
 	public enum StatusType {
 		SUCCESS, ERROR, INFO;
