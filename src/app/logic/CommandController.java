@@ -15,6 +15,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.logic.command.CommandUndo;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
@@ -120,6 +121,8 @@ public class CommandController {
 			return CommandType.SAVE;
 		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
 			return CommandType.SEARCH;
+		} else if (CommandConstants.ALIASES_UNDO.contains(word)) {
+			return CommandType.UNDO;
 		}  else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -161,6 +164,9 @@ public class CommandController {
 			break;
 		case SAVE:
 			cmd = new CommandSave();
+			break;
+		case UNDO:
+			cmd = new CommandUndo();
 			break;
 		case SEARCH:
 			cmd = new CommandSearch();

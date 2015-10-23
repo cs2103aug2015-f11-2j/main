@@ -17,9 +17,10 @@ public class CommandConstants {
 	public static final List<String> ALIASES_EDIT = Common.getUnmodifiableList("edit", "modify", "change", "update", "ed", "edi");
 	public static final List<String> ALIASES_SEARCH = Common.getUnmodifiableList("search", "s");
 	public static final List<String> ALIASES_SAVE = Common.getUnmodifiableList("save");
+	public static final List<String> ALIASES_UNDO = Common.getUnmodifiableList("undo");
 
 	// Enum values for the different types of commands
 	public enum CommandType {
-		ADD, DELETE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY, EDIT, SAVE;
+		ADD, DELETE, UPDATE, SEARCH, EXIT, HELP, THEME, INVALID, MARK, DISPLAY, EDIT, SAVE, UNDO;
 	}
 }
