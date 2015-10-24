@@ -3,7 +3,6 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -13,7 +12,6 @@ import app.constants.TaskConstants.RemovableField;
 import app.logic.CommandController;
 import app.logic.command.Command;
 import app.parser.CommandParser;
-import app.util.Common;
 
 public class CommandParserTest {
 	
@@ -271,58 +269,29 @@ public class CommandParserTest {
 		assertEquals(RemovableField.PRIORITY, cmd.getRemoveField().get(1));
 	}
 
-	// TODO: this should belong in CommonTest
-	@Test
-	public void testGetIdArrayList() {
-		// Test using Equivalence Partitioning, space and comma separates numbers
-		// Input are valid positive integers
-		String inputValidPositive = "1, 5,7 95";
-		ArrayList<Integer> expectedValidPositive = new ArrayList<Integer>();
-		expectedValidPositive.add(1);
-		expectedValidPositive.add(5);
-		expectedValidPositive.add(7);
-		expectedValidPositive.add(95);
-		assertEquals(Common.getIdArrayList(inputValidPositive), expectedValidPositive);
-		
-		// Input are valid negative integers
-		String inputValidNegative = "-4, -8, -9 -10";
-		ArrayList<Integer> expectedValidNegative = new ArrayList<Integer>();
-		expectedValidNegative.add(-4);
-		expectedValidNegative.add(-8);
-		expectedValidNegative.add(-9);
-		expectedValidNegative.add(-10);
-		assertEquals(Common.getIdArrayList(inputValidNegative), expectedValidNegative);
-
-		// Inputs are invalid
-		String inputInvalid = "6, g7";
-		assertEquals(Common.getIdArrayList(inputInvalid), null);
-		inputInvalid = "45.54, 7";
-		assertEquals(Common.getIdArrayList(inputInvalid), null);
-	}
-
 	@Test
 	public void testDetermineDisplayType() {
-		// Test using Equivalence Partitioning, not case sensitive
+		// Split into partitions, input is not case sensitive and leading/trailing spaces do not matter
 		// Aliases for "completed"
-		String[] completed = { "c", "comp", "complete", "completed", "CoMpleTed" };
+		String[] completed = { "c", "comp ", "complete", "completed", "CoMpleTed" };
 		for (String input : completed) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.COMPLETED);
 		}
 		
 		// Aliases for "uncompleted"
-		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		String[] inputUncompleted = { " ", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 
 		// Aliases for "all"
-		String[] all = { "a", "al", "all", "A", "AL", "ALl" };
+		String[] all = { "a", "al", "all ", " A", "AL", "ALl" };
 		for (String input : all) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.ALL);
 		}
 
-		// Any other string that are invalid
-		String[] invalid = { "every", "cmplt", "com", "error", null };
+		// Any other string that are invalid or cause exception
+		String[] invalid = { " cmplt", "c o m p l e t e", "-1", null };
 		for (String input : invalid) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.INVALID);
 		}
@@ -330,24 +299,34 @@ public class CommandParserTest {
 
 	@Test
 	public void testGetTaskDisplayedIdFromContent() {
-		String input = "1 this is the task";
+		// With number, positive
+		String input = " 1 this is the task";
 		Integer expected = 1;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
+		// With number, negative
+		input = "-5    this is not the task";
+		expected = -5;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		// With number, no String
 		input = "5";
 		expected = 5;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
-		input = "hello";
+		// Without number
+		input = " hello";
 		assertNull(CommandParser.getTaskDisplayedIdFromContent(input));
 	}
 	
 	@Test
 	public void testGetTaskDescFromContent() {
+		// normal input
 		String input = "4  do cs2103 ";
 		String expected = "do cs2103";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 		
+		// no String
 		input = "7";
 		expected = "";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);

@@ -1,22 +1,18 @@
 package app.util;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
-
-import app.constants.TaskConstants.Priority;
-import app.model.Task;
 
 public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @return The plural form of the string by adding a "s" behind if given
 	 *         count is more than 1
@@ -28,6 +24,7 @@ public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @param plural The plural form of the string
 	 * @return The plural form of the string if given count is more than 1
