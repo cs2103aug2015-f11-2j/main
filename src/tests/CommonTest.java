@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -184,6 +185,30 @@ public class CommonTest {
 		expectedArrStr.add("twoo");
 		expectedArrStr.add("onemillion4");
 		assertEquals(Common.removeDuplicatesFromArrayList(arrStr), expectedArrStr);
+	}
+	
+	@Test
+	public void testGetIdListString() {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		arr.add(1);
+		arr.add(-1);
+		arr.add(0);
+		arr.add(50);
+		String expected = "1, -1, 0, 50";
+		assertEquals(Common.getIdListString(arr), expected);
+	}
+	
+	@Test
+	public void testGetUuidListString() {
+		ArrayList<UUID> arr = new ArrayList<UUID>();
+		UUID id1 = UUID.randomUUID();
+		UUID id2 = UUID.randomUUID(); 
+		UUID id3 = UUID.randomUUID(); 
+		arr.add(id1);
+		arr.add(id2);
+		arr.add(id3);
+		String expected = id1 + ", " + id2 + ", " + id3;
+		assertEquals(Common.getUuidListString(arr), expected);
 	}
 
 }

@@ -51,8 +51,10 @@ public class CommandDelete extends Command {
 				}
 			}
 			
+			ArrayList<UUID> deletedTask = new ArrayList<UUID>();
 			// remove task from display list
 			for (int i : ids) {
+				deletedTask.add(display.getTaskUuidByIndex(i-1));
 				display.getTaskList().remove(i - 1);
 			}
 
@@ -66,6 +68,7 @@ public class CommandDelete extends Command {
 			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
+			logDeletedTaskUuid(deletedTask);
 			setExecuted(true);
 
 		} catch (Exception e) {
@@ -75,6 +78,11 @@ public class CommandDelete extends Command {
 
 		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
+	}
+
+	private void logDeletedTaskUuid(ArrayList<UUID> arr) {
+		String uuidFeedback = Common.getUuidListString(arr);
+		LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DELETE, uuidFeedback));
 	}
 
 }
