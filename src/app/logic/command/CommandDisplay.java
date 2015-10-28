@@ -12,6 +12,8 @@ import app.model.ViewState;
 import app.util.LogHelper;
 
 public class CommandDisplay extends Command {
+	
+	private ViewState previousViewState;
 
 	public CommandDisplay() {
 		super();
@@ -21,6 +23,7 @@ public class CommandDisplay extends Command {
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandDisplay object.");
+		this.previousViewState = new ViewState(previousViewState);
 		ViewState viewState = new ViewState();
 
 		TaskList master = CommandController.getInstance().getMasterTaskList();
@@ -65,6 +68,7 @@ public class CommandDisplay extends Command {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DISPLAY));
 		}
+		
 		return viewState;
 	}
 	
@@ -73,8 +77,6 @@ public class CommandDisplay extends Command {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
-		// TODO: undo code here
-		return new ViewState();
+		return previousViewState;
 	}
 }

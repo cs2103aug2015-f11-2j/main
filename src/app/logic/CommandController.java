@@ -1,5 +1,7 @@
 package app.logic;
 
+import java.util.Stack;
+
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
@@ -33,11 +35,12 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
-
 	private ViewState currentViewState;
+	private Stack<Command> executedCommands;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		executedCommands = new Stack<Command>();
 		initializeViewState();
 	}
 
@@ -87,6 +90,9 @@ public class CommandController {
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
+			if (cmd.getCommandType() != CommandType.UNDO) {
+				executedCommands.push(cmd);
+			}
 		} else {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);
@@ -171,6 +177,9 @@ public class CommandController {
 		case SEARCH:
 			cmd = new CommandSearch();
 			break;
+		case UNDO:
+			cmd = new CommandUndo();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -219,5 +228,9 @@ public class CommandController {
 
 	public ViewState getCurrentViewState() {
 		return currentViewState;
+	}
+
+	public Stack<Command> getExecutedCommands() {
+		return executedCommands;
 	}
 }
