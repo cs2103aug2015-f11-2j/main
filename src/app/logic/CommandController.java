@@ -1,5 +1,7 @@
 package app.logic;
 
+import java.util.Stack;
+
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
@@ -15,6 +17,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.logic.command.CommandUndo;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
@@ -32,11 +35,12 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
-
 	private ViewState currentViewState;
+	private Stack<Command> executedCommands;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		executedCommands = new Stack<Command>();
 		initializeViewState();
 	}
 
@@ -86,6 +90,9 @@ public class CommandController {
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
+			if (cmd.getCommandType() != CommandType.UNDO) {
+				executedCommands.push(cmd);
+			}
 		} else {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);
@@ -120,6 +127,8 @@ public class CommandController {
 			return CommandType.SAVE;
 		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
 			return CommandType.SEARCH;
+		} else if (CommandConstants.ALIASES_UNDO.contains(word)) {
+			return CommandType.UNDO;
 		}  else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -164,6 +173,9 @@ public class CommandController {
 			break;
 		case SEARCH:
 			cmd = new CommandSearch();
+			break;
+		case UNDO:
+			cmd = new CommandUndo();
 			break;
 		case EXIT:
 			cmd = new CommandExit();
@@ -213,5 +225,9 @@ public class CommandController {
 
 	public ViewState getCurrentViewState() {
 		return currentViewState;
+	}
+
+	public Stack<Command> getExecutedCommands() {
+		return executedCommands;
 	}
 }

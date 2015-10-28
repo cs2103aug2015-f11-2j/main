@@ -15,6 +15,18 @@ public class ViewState {
 	private String textArea;
 	private String theme;
 	private List<Action> actions;
+	
+	// Clone state
+	public ViewState(ViewState state) {
+		header = state.getHeader();
+		statusMessage = state.getStatusMessage();
+		statusType = state.getStatusType();
+		activeView = state.getActiveView();
+		taskList = state.getTaskList();
+		textArea = state.getTextArea();
+		theme = state.getTheme();
+		actions = state.getActions();
+	}
 
 	public ViewState() {
 		actions = new ArrayList<Action>();
