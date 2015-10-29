@@ -6,7 +6,9 @@ import java.util.List;
 
 import app.constants.HelpConstants;
 import app.constants.TaskConstants.Priority;
+import app.constants.TaskConstants.RemovableField;
 import app.logic.command.Command;
+import app.logic.command.CommandEdit;
 import app.util.Common;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -101,9 +103,12 @@ public class InfoViewManager {
 	}
 
 	private void setCommandEditLabels(Command cmd) {
-		String content = cmd.getContent();
-		setEditText(Common.getFirstWord(content));
-		setContentText(Common.removeFirstWord(content));
+		CommandEdit editCmd = (CommandEdit) cmd;
+		Integer id = editCmd.getDisplayId();
+		if (id != null) {
+			setEditText(id.toString());
+		}
+		setContentText(cmd.getContent());
 		setDateAndPriorityTexts(cmd);
 		addSeparator();
 	}
@@ -125,7 +130,7 @@ public class InfoViewManager {
 		setDateAndPriorityTexts(cmd);
 		addSeparator();
 	}
-	
+
 	private void setEditText(String id) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (!id.isEmpty()) {
@@ -157,13 +162,14 @@ public class InfoViewManager {
 	}
 
 	private void setDateAndPriorityTexts(Command cmd) {
-		if (cmd.getContent().isEmpty()) {
-			return;
-		}
 		ArrayList<Text> texts = new ArrayList<Text>();
 
 		// Add parsed dates
-		if (cmd.getStartDate() == null && cmd.getEndDate() != null) {
+		if (cmd.getRemoveField().contains(RemovableField.DATE)) {
+			Text withDate = buildText(" with date ");
+			Text dateNone = buildText("NONE", STYLE_INFOVIEW_DATE);
+			addTextsToList(texts, withDate, dateNone);
+		} else if (cmd.getStartDate() == null && cmd.getEndDate() != null) {
 			Text due = buildText(" due ");
 			Text endDate = buildText(dateFormatter.format(cmd.getEndDate()), STYLE_INFOVIEW_DATE);
 			addTextsToList(texts, due, endDate);
@@ -176,7 +182,8 @@ public class InfoViewManager {
 		}
 
 		// Add parsed priority
-		if (cmd.getPriority() != null && cmd.getPriority() != Priority.NONE) {
+		if (cmd.getPriority() != null
+				&& (cmd.getRemoveField().contains(RemovableField.PRIORITY) || cmd.getPriority() != Priority.NONE)) {
 			Text withPriority = buildText(" with priority ");
 			Text priorityLevel = buildText(cmd.getPriority().toString(), STYLE_INFOVIEW_PRIORITY);
 			addTextsToList(texts, withPriority, priorityLevel);

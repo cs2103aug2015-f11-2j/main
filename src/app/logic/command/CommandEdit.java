@@ -81,6 +81,10 @@ public class CommandEdit extends Command {
 	public void setDisplayId(Integer id) {
 		this.displayId = id;
 	}
+
+	public Integer getDisplayId() {
+		return displayId;
+	}
 }
 	
 
