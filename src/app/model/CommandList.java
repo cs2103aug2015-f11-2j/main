@@ -11,34 +11,35 @@ public class CommandList {
 		index = -1;
 	}
 	
-	public void addCommand(String cmd) {
+	public void add(String cmd) {
 		commandList.add(cmd);
-		//reset index to latest command
-		index = commandList.size() - 1;
+		reset();
 	}
 	
 	//decrements index and returns command (String)
-	public String getPrevCommand() {
+	public String prev() {
 		index--;
-		if (index != -1) {
+		if (isValidIndex(index)) {
 			return commandList.get(index);
 		} else {
-			return "-1";
+			return "";
 		}
 	}
 	
-	public String getNextCommand() {
+	public String next() {
 		index++;
-		if (index < commandList.size() - 1) {
+		if (isValidIndex(index)) {
 			return commandList.get(index);
 		} else {
-			//reset back to latest command and return -1
-			index = commandList.size() - 1;
-			return "-1";
+			return "";
 		}
 	}
 	
-	public void resetIndex() {
+	public void reset() {
 		index = commandList.size() - 1;
+	}
+	
+	private boolean isValidIndex(int index) {
+		return (index >= 0 && index < commandList.size());
 	}
 }

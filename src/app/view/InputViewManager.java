@@ -39,8 +39,26 @@ public class InputViewManager {
 				viewManager.scrollTaskList(ScrollDirection.UP);
 			} else if (scrollDown.match(event)) {
 				viewManager.scrollTaskList(ScrollDirection.DOWN);
+			} else if (event.getCode() == KeyCode.UP) {
+				prevCommandFromHistory();
+			} else if (event.getCode() == KeyCode.DOWN) {
+				nextCommandFromHistory();
 			}
 		});
+	}
+	
+	private void nextCommandFromHistory() {
+		String cmd = CommandController.getInstance().getCommandHistory().next();
+		if (!cmd.isEmpty()) {
+			commandInput.setText(cmd);
+		}
+	}
+	
+	private void prevCommandFromHistory() {
+		String cmd = CommandController.getInstance().getCommandHistory().prev();
+		if (!cmd.isEmpty()) {
+			commandInput.setText(cmd);
+		}
 	}
 
 	/**

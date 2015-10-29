@@ -37,11 +37,11 @@ public class CommandController {
 
 	private ViewState currentViewState;
 	
-	private CommandList currentCommands;
+	private CommandList commandHistory;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
-		currentCommands = new CommandList();
+		commandHistory = new CommandList();
 		initializeViewState();
 	}
 	
@@ -88,6 +88,7 @@ public class CommandController {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
 		ViewState newViewState = cmd.execute(currentViewState);
+		commandHistory.add(cmd.getCommandString());
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
@@ -96,7 +97,7 @@ public class CommandController {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);
 		}
-
+		
 		return currentViewState;
 	}
 
@@ -185,7 +186,6 @@ public class CommandController {
 		cmd.setCommandString(commandString);
 		cmd.setContent(Common.removeFirstWord(cmd.getCommandString()));
 		parseCommand(cmd);
-		currentCommands.addCommand(cmd.getCommandString());
 		return cmd;
 	}
 
@@ -223,6 +223,10 @@ public class CommandController {
 
 	public ViewState getCurrentViewState() {
 		return currentViewState;
+	}
+	
+	public CommandList getCommandHistory() {
+		return commandHistory;
 	}
 
 	
