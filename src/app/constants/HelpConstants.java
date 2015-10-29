@@ -11,6 +11,7 @@ public class HelpConstants {
 			+ "\n\n" + HelpConstants.HELP_DISPLAY_DESCRIPTION + "\n" + HelpConstants.HELP_DISPLAY_OVERVIEW + "\n" + HelpConstants.HELP_DISPLAY_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_MARK_DESCRIPTION + "\n" + HelpConstants.HELP_MARK_OVERVIEW + "\n" + HelpConstants.HELP_MARK_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_UNDO_DESCRIPTION + "\n" + HelpConstants.HELP_UNDO_OVERVIEW
+			+ "\n\n" + HelpConstants.HELP_SAVE_DESCRIPTION + "\n" + HelpConstants.HELP_SAVE_OVERVIEW + "\n" + HelpConstants.HELP_SAVE_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_THEME_DESCRIPTION + "\n" + HelpConstants.HELP_THEME_OVERVIEW + "\n" + HelpConstants.HELP_THEME_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_EXIT_DESCRIPTION + "\n" + HelpConstants.HELP_EXIT_OVERVIEW;
 
@@ -59,7 +60,7 @@ public class HelpConstants {
 	// SAVE
 	public static final String HELP_SAVE_DESCRIPTION = "Change the location of storage files";
 	public static final String HELP_SAVE_OVERVIEW = "save [log] <path>";
-	public static final String HELP_SAVE_EXAMPLES = "[example]: save /path/to/storage.txt"
+	public static final String HELP_SAVE_EXAMPLES = "[example]: save /path/to/storage.txt\n"
 			+ "save [log] /path/to/log.txt";
 	
 	// EXIT
