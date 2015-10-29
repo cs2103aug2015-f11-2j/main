@@ -59,9 +59,13 @@ public class InputViewManager {
 	 * command input field.
 	 */
 	public void onKeypressEnter() {
-		String commandString = commandInput.getText();
-		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + commandString);
-		ViewState newViewState = CommandController.getInstance().executeCommand(commandString);
+		String input = commandInput.getText();
+		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + input);
+		executeUserInput(input);
+	}
+	
+	public void executeUserInput(String input) {
+		ViewState newViewState = CommandController.getInstance().executeCommand(input);
 		viewManager.updateView(newViewState);
 		commandInput.clear();
 	}
