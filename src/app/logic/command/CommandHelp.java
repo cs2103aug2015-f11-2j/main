@@ -15,7 +15,11 @@ public class CommandHelp extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
+<<<<<<< HEAD
 		//LogHelper.getLogger().info("Executing CommandHelp object.");
+=======
+		LogHelper.getInstance().getLogger().info("Executing CommandHelp object.");
+>>>>>>> origin/master
 		ViewState viewState = new ViewState();
 
 		viewState.setTextArea(HelpConstants.LIST_ALL);

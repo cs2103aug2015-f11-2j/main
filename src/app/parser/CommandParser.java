@@ -386,15 +386,20 @@ public class CommandParser {
 	 * @return The specified DisplayType parsed from arg
 	 */
 	public static DisplayType determineDisplayType(String arg) {
-		String type = arg.toLowerCase().trim();
-		if (DISPLAY_COMPLETED.contains(type)) {
-			return DisplayType.COMPLETED;
-		} else if (DISPLAY_UNCOMPLETED.contains(type) || type.isEmpty()) {
-			return DisplayType.UNCOMPLETED;
-		} else if (DISPLAY_ALL.contains(type)) {
-			return DisplayType.ALL;
+		try {
+			String type = arg.toLowerCase().trim();
+			if (DISPLAY_COMPLETED.contains(type)) {
+				return DisplayType.COMPLETED;
+			} else if (DISPLAY_UNCOMPLETED.contains(type) || type.isEmpty()) {
+				return DisplayType.UNCOMPLETED;
+			} else if (DISPLAY_ALL.contains(type)) {
+				return DisplayType.ALL;
+			} else {
+				return DisplayType.INVALID;
+			}
+		} catch (Exception e) {
+			return DisplayType.INVALID;
 		}
-		return DisplayType.INVALID;
 	}
 
 	/**

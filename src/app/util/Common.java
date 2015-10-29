@@ -1,22 +1,19 @@
 package app.util;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.UUID;
 import java.util.regex.Pattern;
-
-import app.constants.TaskConstants.Priority;
-import app.model.Task;
 
 public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @return The plural form of the string by adding a "s" behind if given
 	 *         count is more than 1
@@ -28,6 +25,7 @@ public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @param plural The plural form of the string
 	 * @return The plural form of the string if given count is more than 1
@@ -72,10 +70,10 @@ public class Common {
 
 	/**
 	 * Builds an Integer ArrayList from the command content containing task
-	 * id(s)
+	 * ID(s)
 	 * 
 	 * @param content The content of the Command object
-	 * @return An integer ArrayList of the content(id) separated by comma
+	 * @return An integer ArrayList of the ID(s)
 	 */
 	public static ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
@@ -135,5 +133,37 @@ public class Common {
 	public static <T> ArrayList<T> removeDuplicatesFromArrayList(ArrayList<T> listWithDuplicates) {
 		Set<T> noDuplicates = new LinkedHashSet<T>(listWithDuplicates);
 		return new ArrayList<T>(noDuplicates);
+	}
+	
+	/**
+	 * Builds a string of task ID(s) separated by comma
+	 * from an Integer ArrayList of task ID
+	 * 
+	 * @param arr The Integer ArrayList of task ID(s)
+	 * @return A string containing the task ID(s) separated by comma
+	 */
+	public static String getIdListString(ArrayList<Integer> arr) {
+		String idList = "";
+		for (int i = 0; i < arr.size(); i++) {
+			idList += String.valueOf(arr.get(i)) + ", ";
+		}
+		idList = idList.replaceAll(",[ \t]*$", "");
+		return idList;
+	}
+	
+	/**
+	 * Builds a String of UUID(s) separated by comma
+	 * from an ArrayList of task UUID
+	 * 
+	 * @param arr The UUID ArrayList of task ID(s)
+	 * @return A String containing the task UUID(s) separated by comma
+	 */
+	public static String getUuidListString(ArrayList<UUID> arr) {
+		String idList = "";
+		for (int i = 0; i < arr.size(); i++) {
+			idList += String.valueOf(arr.get(i)) + ", ";
+		}
+		idList = idList.replaceAll(",[ \t]*$", "");
+		return idList;
 	}
 }

@@ -3,7 +3,6 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -13,7 +12,6 @@ import app.constants.TaskConstants.RemovableField;
 import app.logic.CommandController;
 import app.logic.command.Command;
 import app.parser.CommandParser;
-import app.util.Common;
 
 public class CommandParserTest {
 	
@@ -271,39 +269,29 @@ public class CommandParserTest {
 		assertEquals(RemovableField.PRIORITY, cmd.getRemoveField().get(1));
 	}
 
-	// TODO: this should belong in CommonTest
-	@Test
-	public void testGetIdArrayList() {
-		String inputValid = "1, 5,7 9";
-		ArrayList<Integer> expectedValid = new ArrayList<Integer>();
-		expectedValid.add(1);
-		expectedValid.add(5);
-		expectedValid.add(7);
-		expectedValid.add(9);
-		assertEquals(Common.getIdArrayList(inputValid), expectedValid);
-
-		String inputInvalid = "6, g7";
-		assertEquals(Common.getIdArrayList(inputInvalid), null);
-	}
-
 	@Test
 	public void testDetermineDisplayType() {
-		String[] completed = { "c", "comp", "complete", "completed" };
+		// Split into partitions, input is not case sensitive and leading/trailing spaces do not matter
+		// Aliases for "completed"
+		String[] completed = { "c", "comp ", "complete", "completed", "CoMpleTed" };
 		for (String input : completed) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.COMPLETED);
 		}
 		
-		String[] inputUncompleted = {"pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
+		// Aliases for "uncompleted"
+		String[] inputUncompleted = { " ", "pend", "pending", "i", "incomp", "incomplete", "u", "uncomp", "uncompleted"};
 		for (int i = 0; i < inputUncompleted.length; i++) {
 			assertEquals(CommandParser.determineDisplayType(inputUncompleted[i]), DisplayType.UNCOMPLETED);
 		}
 
-		String[] all = { "a", "al", "all" };
+		// Aliases for "all"
+		String[] all = { "a", "al", "all ", " A", "AL", "ALl" };
 		for (String input : all) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.ALL);
 		}
 
-		String[] invalid = { "every", "cmplt", "com", "error" };
+		// Any other string that are invalid or cause exception
+		String[] invalid = { " cmplt", "c o m p l e t e", "-1", null };
 		for (String input : invalid) {
 			assertEquals(CommandParser.determineDisplayType(input), DisplayType.INVALID);
 		}
@@ -311,24 +299,34 @@ public class CommandParserTest {
 
 	@Test
 	public void testGetTaskDisplayedIdFromContent() {
-		String input = "1 this is the task";
+		// With number, positive
+		String input = " 1 this is the task";
 		Integer expected = 1;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
+		// With number, negative
+		input = "-5    this is not the task";
+		expected = -5;
+		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
+		
+		// With number, no String
 		input = "5";
 		expected = 5;
 		assertEquals(CommandParser.getTaskDisplayedIdFromContent(input), expected);
 		
-		input = "hello";
+		// Without number
+		input = " hello";
 		assertNull(CommandParser.getTaskDisplayedIdFromContent(input));
 	}
 	
 	@Test
 	public void testGetTaskDescFromContent() {
+		// normal input
 		String input = "4  do cs2103 ";
 		String expected = "do cs2103";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 		
+		// no String
 		input = "7";
 		expected = "";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);

@@ -51,11 +51,11 @@ public class CommandMark extends Command {
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
-			LogHelper.getInstance().getLogger().severe("IndexOutOfBoundsException:" + e.getMessage() +
+			LogHelper.getInstance().getLogger().info("IndexOutOfBoundsException:" + e.getMessage() +
 					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 		} catch (NullPointerException e) {
-			LogHelper.getInstance().getLogger().severe("NullPointerException:" + e.getMessage() + 
+			LogHelper.getInstance().getLogger().info("NullPointerException:" + e.getMessage() + 
 					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 		} catch (Exception e) {
@@ -73,18 +73,18 @@ public class CommandMark extends Command {
 		
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted),
-					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getIdListString(markedCompleted),
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getIdListString(markedUncompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getIdListString(markedCompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getIdListString(markedUncompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		}
@@ -98,14 +98,14 @@ public class CommandMark extends Command {
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + 
 					ViewConstants.MESSAGE_MARK_UNCOMPLETED, Common.pluralize(markedCompleted.size(), "task"), 
-					getUuidListString(markedCompleted), Common.pluralize(markedUncompleted.size(), "task"), 
-					getUuidListString(markedUncompleted)));
+					Common.getUuidListString(markedCompleted), Common.pluralize(markedUncompleted.size(), "task"), 
+					Common.getUuidListString(markedUncompleted)));
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getUuidListString(markedCompleted)));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getUuidListString(markedCompleted)));
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedUncompleted.size(), "task"), getUuidListString(markedUncompleted)));
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getUuidListString(markedUncompleted)));
 		}
 	}
 	
@@ -127,26 +127,6 @@ public class CommandMark extends Command {
 				idList.add(arr.get(i));
 			}
 		}
-		return idList;
-	}
-
-	// converts the ArrayList of id into a String, with each id separated by comma
-	private String getIdListString(ArrayList<Integer> arr) {
-		String idList = "";
-		for (int i = 0; i < arr.size(); i++) {
-			idList += String.valueOf(arr.get(i)) + ", ";
-		}
-		idList = idList.replaceAll(",[ \t]*$", "");
-		return idList;
-	}
-	
-	// converts the ArrayList of UUID into a String, with each UUID separated by comma
-	private String getUuidListString(ArrayList<UUID> arr) {
-		String idList = "";
-		for (int i = 0; i < arr.size(); i++) {
-			idList += String.valueOf(arr.get(i)) + ", ";
-		}
-		idList = idList.replaceAll(",[ \t]*$", "");
 		return idList;
 	}
 }
