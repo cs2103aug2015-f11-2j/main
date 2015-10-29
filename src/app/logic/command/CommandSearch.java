@@ -72,11 +72,12 @@ public class CommandSearch extends Command {
 		viewState.setHeader(ViewConstants.HEADER_SEARCH);
 		viewState.setStatus(StatusType.SUCCESS,
 				String.format(ViewConstants.SEARCH_MESSAGE, results.getTaskList().size()));
-		setExecuted(true);
+		this.setExecuted(true);
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
 		}
+		this.setExecuted(true);
 		return viewState;
 	}
 }
