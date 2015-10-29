@@ -22,6 +22,7 @@ public class CommandList {
 		if (isValidIndex(index)) {
 			return commandList.get(index);
 		} else {
+			index = 0;
 			return "";
 		}
 	}
@@ -31,12 +32,13 @@ public class CommandList {
 		if (isValidIndex(index)) {
 			return commandList.get(index);
 		} else {
+			index = commandList.size();
 			return "";
 		}
 	}
 	
 	public void reset() {
-		index = commandList.size() - 1;
+		index = commandList.size();
 	}
 	
 	private boolean isValidIndex(int index) {
