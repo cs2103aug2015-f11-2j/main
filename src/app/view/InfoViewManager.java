@@ -64,6 +64,21 @@ public class InfoViewManager {
 			setHelpText(HelpConstants.HELP_DELETE_OVERVIEW, HelpConstants.HELP_DELETE_DESCRIPTION);
 			setCommandDeleteLabels(cmd);
 			break;
+		case DISPLAY:
+			setHelpText(HelpConstants.HELP_DISPLAY_OVERVIEW, HelpConstants.HELP_DISPLAY_DESCRIPTION);
+			break;
+		case MARK:
+			setHelpText(HelpConstants.HELP_MARK_OVERVIEW, HelpConstants.HELP_MARK_DESCRIPTION);
+			break;
+		case THEME:
+			setHelpText(HelpConstants.HELP_THEME_OVERVIEW, HelpConstants.HELP_THEME_DESCRIPTION);
+			break;
+		case EXIT:
+			setHelpText(HelpConstants.HELP_EXIT_OVERVIEW, HelpConstants.HELP_EXIT_DESCRIPTION);
+			break;
+		case SAVE:
+			setHelpText(HelpConstants.HELP_SAVE_OVERVIEW, HelpConstants.HELP_SAVE_DESCRIPTION);
+			break;
 		default:
 			break;
 		}

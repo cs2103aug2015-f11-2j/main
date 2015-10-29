@@ -7,7 +7,12 @@ public class HelpConstants {
 			HelpConstants.HELP_ADD_DESCRIPTION + "\n" + HelpConstants.HELP_ADD_OVERVIEW + "\n" + HelpConstants.HELP_ADD_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_EDIT_DESCRIPTION + "\n" + HelpConstants.HELP_EDIT_OVERVIEW + "\n" + HelpConstants.HELP_EDIT_EXAMPLES
 			+ "\n\n" + HelpConstants.HELP_SEARCH_DESCRIPTION + "\n" + HelpConstants.HELP_SEARCH_OVERVIEW + "\n" + HelpConstants.HELP_SEARCH_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_DELETE_DESCRIPTION + "\n" + HelpConstants.HELP_DELETE_OVERVIEW + "\n" + HelpConstants.HELP_DELETE_EXAMPLES;
+			+ "\n\n" + HelpConstants.HELP_DELETE_DESCRIPTION + "\n" + HelpConstants.HELP_DELETE_OVERVIEW + "\n" + HelpConstants.HELP_DELETE_EXAMPLES
+			+ "\n\n" + HelpConstants.HELP_DISPLAY_DESCRIPTION + "\n" + HelpConstants.HELP_DISPLAY_OVERVIEW + "\n" + HelpConstants.HELP_DISPLAY_EXAMPLES
+			+ "\n\n" + HelpConstants.HELP_MARK_DESCRIPTION + "\n" + HelpConstants.HELP_MARK_OVERVIEW + "\n" + HelpConstants.HELP_MARK_EXAMPLES
+			+ "\n\n" + HelpConstants.HELP_UNDO_DESCRIPTION + "\n" + HelpConstants.HELP_UNDO_OVERVIEW
+			+ "\n\n" + HelpConstants.HELP_THEME_DESCRIPTION + "\n" + HelpConstants.HELP_THEME_OVERVIEW + "\n" + HelpConstants.HELP_THEME_EXAMPLES
+			+ "\n\n" + HelpConstants.HELP_EXIT_DESCRIPTION + "\n" + HelpConstants.HELP_EXIT_OVERVIEW;
 
 	
 	// ADD
@@ -30,11 +35,35 @@ public class HelpConstants {
 	public static final String HELP_DELETE_DESCRIPTION = "Delete single/multiple task(s)";
 	public static final String HELP_DELETE_OVERVIEW = "delete <id>";
 	public static final String HELP_DELETE_EXAMPLES = "[example]: delete 2 3 4";
+	
+	// DISPLAY
+	public static final String HELP_DISPLAY_DESCRIPTION = "Display tasks";
+	public static final String HELP_DISPLAY_OVERVIEW = "display [completed | uncompleted | all]";
+	public static final String HELP_DISPLAY_EXAMPLES = "[example]: display\n"
+			+ "display completed";
 
 	// MARK
+	public static final String HELP_MARK_DESCRIPTION = "Mark tasks as completed or uncompleted";
+	public static final String HELP_MARK_OVERVIEW = "mark <id>";
+	public static final String HELP_MARK_EXAMPLES = "[example]: mark 1 2 3";
 
 	// UNDO
+	public static final String HELP_UNDO_DESCRIPTION = "Undo the last successfully executed command";
+	public static final String HELP_UNDO_OVERVIEW = "undo";
 	
+	// THEME
+	public static final String HELP_THEME_DESCRIPTION = "Change the current theme";
+	public static final String HELP_THEME_OVERVIEW = "theme [light | dark]";
+	public static final String HELP_THEME_EXAMPLES = "[example]: theme light";
 	
+	// SAVE
+	public static final String HELP_SAVE_DESCRIPTION = "Change the location of storage files";
+	public static final String HELP_SAVE_OVERVIEW = "save [log] <path>";
+	public static final String HELP_SAVE_EXAMPLES = "[example]: save /path/to/storage.txt"
+			+ "save [log] /path/to/log.txt";
+	
+	// EXIT
+	public static final String HELP_EXIT_DESCRIPTION = "Exit Next";
+	public static final String HELP_EXIT_OVERVIEW = "exit";
 	
 }
