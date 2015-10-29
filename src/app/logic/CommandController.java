@@ -16,6 +16,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.model.CommandList;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
@@ -35,9 +36,12 @@ public class CommandController {
 	private TaskList masterTaskList;
 
 	private ViewState currentViewState;
+	
+	private CommandList currentCommands;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		currentCommands = new CommandList();
 		initializeViewState();
 	}
 	
@@ -181,6 +185,7 @@ public class CommandController {
 		cmd.setCommandString(commandString);
 		cmd.setContent(Common.removeFirstWord(cmd.getCommandString()));
 		parseCommand(cmd);
+		currentCommands.addCommand(cmd.getCommandString());
 		return cmd;
 	}
 
@@ -219,5 +224,6 @@ public class CommandController {
 	public ViewState getCurrentViewState() {
 		return currentViewState;
 	}
+
 	
 }
