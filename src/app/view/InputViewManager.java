@@ -5,6 +5,7 @@ import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.ViewState;
 import app.util.LogHelper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -48,17 +49,22 @@ public class InputViewManager {
 	}
 	
 	private void nextCommandFromHistory() {
-		String cmd = CommandController.getInstance().getCommandHistory().next();
-		if (!cmd.isEmpty()) {
-			commandInput.setText(cmd);
-		}
+		String text = CommandController.getInstance().getCommandHistory().next();
+		setText(text);
 	}
 	
 	private void prevCommandFromHistory() {
-		String cmd = CommandController.getInstance().getCommandHistory().prev();
-		if (!cmd.isEmpty()) {
-			commandInput.setText(cmd);
+		String text = CommandController.getInstance().getCommandHistory().prev();
+		setText(text);
+	}
+	
+	private void setText(String text) {
+		if (!text.isEmpty()) {
+			commandInput.setText(text);
 		}
+		Platform.runLater(() -> {
+			commandInput.positionCaret(commandInput.getLength());
+		});
 	}
 
 	/**
