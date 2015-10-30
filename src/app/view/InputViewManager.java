@@ -50,18 +50,18 @@ public class InputViewManager {
 	
 	private void nextCommandFromHistory() {
 		String text = CommandController.getInstance().getCommandHistory().next();
-		setText(text);
+		setText(text, true);
 	}
 	
 	private void prevCommandFromHistory() {
 		String text = CommandController.getInstance().getCommandHistory().prev();
-		setText(text);
+		setText(text, false);
 	}
 	
-	private void setText(String text) {
-		if (!text.isEmpty()) {
+	private void setText(String text, boolean allowEmpty) {
+		if (allowEmpty || !text.isEmpty()) {
 			commandInput.setText(text);
-		}
+		}		
 		Platform.runLater(() -> {
 			commandInput.positionCaret(commandInput.getLength());
 		});
