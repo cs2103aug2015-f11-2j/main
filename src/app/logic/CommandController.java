@@ -16,6 +16,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.model.CommandList;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
@@ -35,9 +36,12 @@ public class CommandController {
 	private TaskList masterTaskList;
 
 	private ViewState currentViewState;
+	
+	private CommandList commandHistory;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		commandHistory = new CommandList();
 		initializeViewState();
 	}
 	
@@ -84,6 +88,7 @@ public class CommandController {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
 		ViewState newViewState = cmd.execute(currentViewState);
+		commandHistory.add(cmd.getCommandString());
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
@@ -92,7 +97,7 @@ public class CommandController {
 			// If not executed, simply update status bar.
 			currentViewState.mergeStatus(newViewState);
 		}
-
+		
 		return currentViewState;
 	}
 
@@ -219,5 +224,10 @@ public class CommandController {
 	public ViewState getCurrentViewState() {
 		return currentViewState;
 	}
+	
+	public CommandList getCommandHistory() {
+		return commandHistory;
+	}
+
 	
 }
