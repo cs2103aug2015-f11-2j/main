@@ -4,17 +4,131 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.Test;
 
 import app.logic.CommandController;
-import app.logic.command.Command;
+import app.model.Task;
+import app.model.TaskList;
 import app.model.ViewState;
 import app.storage.AppStorage;
+import app.storage.TaskStorage;
 
 public class CommandTest {
+
+	@Test
+	public void testCommandAdd() throws Exception {
+		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
+		AppStorage.getInstance().setStorageFileLocation("testStorage/testadd.txt");
+		File testFile = createTestFile();
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
+		master.getTaskList().clear();
+		display.getTaskList().clear();
+
+		try {
+			// no parameters
+			String input = "add";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No task specified", viewState.getStatusMessage());
+
+			// have parameters
+			input = "add add1 pri high";
+			viewState = CommandController.getInstance().executeCommand(input);
+			List<Task> tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Added task: add1", viewState.getStatusMessage());
+			assertEquals(1, tasks.size());
+
+			// have parameters but without task name
+			input = "add pri high";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No task specified", viewState.getStatusMessage());
+		} catch (Exception e) {
+			throw e; // JUnit will handle this and report a failed assertion
+		} finally {
+			removeFileAndParentsIfEmpty(testFile.toPath());
+			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
+		}
+	}
+	
+	@Test
+	public void testCommandDelete() throws Exception {
+		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
+		AppStorage.getInstance().setStorageFileLocation("testStorage/testdelete.txt");
+		File testFile = createTestFile();
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
+		master.getTaskList().clear();
+		display.getTaskList().clear();
+		
+		try {
+			// populate tasklist
+			Task task = new Task(CommandController.getInstance().createCommand("add delete1"));
+			master.addTask(task);
+			display.addTask(task);
+			task = new Task(CommandController.getInstance().createCommand("add delete2"));
+			master.addTask(task);
+			display.addTask(task);
+			task = new Task(CommandController.getInstance().createCommand("add delete3"));
+			master.addTask(task);
+			display.addTask(task);
+			task = new Task(CommandController.getInstance().createCommand("add delete4"));
+			master.addTask(task);
+			display.addTask(task);
+			TaskStorage.getInstance().writeTasks(master);
+			
+			// no parameters
+			String input = "delete";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No task specified", viewState.getStatusMessage());
+
+			/* invalid id */
+			// equivalence partition: [1, display.getTaskList().size()]
+			// boundary case: 0
+			input = "delete 0";
+			viewState = CommandController.getInstance().executeCommand(input);
+			List<Task> tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+			
+			// boundary case: 4
+			input = "delete 4";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+
+			// 1 id
+			// boundary case: 1
+			input = "delete 1";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+			assertEquals(3, tasks.size());
+
+			// duplicate id
+			input = "delete 1 1";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+			assertEquals(2, tasks.size());
+
+			// multiple id
+			// boundary case: 2
+			input = "delete 1 2";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			assertEquals("Deleted task: 1 2", viewState.getStatusMessage());
+			assertEquals(0, tasks.size());
+		} catch (Exception e) {
+			throw e; // JUnit will handle this and report a failed assertion
+		} finally {
+			removeFileAndParentsIfEmpty(testFile.toPath());
+			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
+		}
+	}
 
 	@Test
 	public void testCommandSave() {
@@ -30,66 +144,32 @@ public class CommandTest {
 
 			// no storage file location
 			String input = "save";
-			Command cmd = CommandController.getInstance().createCommand(input);
-			ViewState viewState = cmd.execute(null);
-			File currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No storage file location specified", viewState.getStatusMessage());
-			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
-			assertTrue(prevStorageFile.exists());
-			assertTrue(prevStorageFile.equals(currStorageFile));
 
 			// no log file location
-			List<String> prevLogFileLines = Files.readAllLines(prevLogFile.toPath());
 			input = "save log";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
-			File currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
-			List<String> currLogFileLines = Files.readAllLines(currLogFile.toPath());
-			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
-				currLogFileLines.remove(i - 1);
-			}
+			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No log file location specified", viewState.getStatusMessage());
-			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
-			assertEquals(prevLogFileLines, currLogFileLines);
-			assertTrue(prevLogFile.exists());
-			assertTrue(prevLogFile.equals(currLogFile));
 
 			// no changes to storage file location
 			input = "save " + prevStorageFileLocation;
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
-			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Same storage file location. No changes to storage file location: "
 						 + prevStorageFileLocation, viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
-			assertTrue(prevStorageFile.exists());
-			assertTrue(prevStorageFile.equals(currStorageFile));
 
 			// no changes to log file location
-			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log " + prevLogFileLocation;
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
-			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
-			currLogFileLines = Files.readAllLines(currLogFile.toPath());
-			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
-				currLogFileLines.remove(i - 1);
-			}
+			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Same log file location. No changes to log file location: "
 						 + prevLogFileLocation, viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
-			assertEquals(prevLogFileLines, currLogFileLines);
-			assertTrue(prevLogFile.exists());
-			assertTrue(prevLogFile.equals(currLogFile));
 
 			// storage file location without file extension
 			input = "save testsave/storage";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
-			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
+			viewState = CommandController.getInstance().executeCommand(input);
+			File currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			String parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParent());
 			assertEquals("Saved storage file location: " + parentLocation + "/testsave/storage",
 						 viewState.getStatusMessage());
@@ -102,12 +182,11 @@ public class CommandTest {
 			prevStorageFile = new File(prevStorageFileLocation);
 
 			// log file location without file extension
-			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
+			List<String> prevLogFileLines = Files.readAllLines(prevLogFile.toPath());
 			input = "save log testsave/log";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
-			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
-			currLogFileLines = Files.readAllLines(currLogFile.toPath());
+			viewState = CommandController.getInstance().executeCommand(input);
+			File currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
+			List<String> currLogFileLines = Files.readAllLines(currLogFile.toPath());
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
@@ -123,8 +202,7 @@ public class CommandTest {
 
 			// storage file location with spaces
 			input = "save test  save  /  storage  test";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParentFile().getParent());
 			assertEquals("Saved storage file location: " + parentLocation + "/test  save/storage  test",
@@ -141,8 +219,7 @@ public class CommandTest {
 			// log file location with spaces
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log test  save  /  log  test";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
 			currLogFileLines = Files.readAllLines(currLogFile.toPath());
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
@@ -161,8 +238,7 @@ public class CommandTest {
 
 			// storage file location at different directory
 			input = "save ../../testsave/storage";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			parentLocation = AppStorage.getInstance()
 					.toValidCanonicalPath(prevStorageFile.getParentFile().getParentFile().getParentFile().getParent());
@@ -179,8 +255,7 @@ public class CommandTest {
 			// log file location at different directory
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log ../../testsave/log";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
 			currLogFileLines = Files.readAllLines(currLogFile.toPath());
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
@@ -199,8 +274,7 @@ public class CommandTest {
 
 			// default storage file location
 			input = "save default";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			parentLocation = AppStorage.getInstance().toValidCanonicalPath(".");
 			assertEquals("Saved storage file location: " + parentLocation + "/next.txt", viewState.getStatusMessage());
@@ -215,8 +289,7 @@ public class CommandTest {
 			// default log file location
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log default";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
 			currLogFileLines = Files.readAllLines(currLogFile.toPath());
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
@@ -234,21 +307,16 @@ public class CommandTest {
 
 			// no changes for default storage file location
 			input = "save default";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			assertEquals("Same storage file location. No changes to storage file location: " + prevStorageFileLocation,
 					viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
-			assertTrue(prevStorageFile.exists());
-			assertTrue(prevStorageFile.equals(currStorageFile));
 
 			// no changes for default log file location
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log default";
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
 			currLogFileLines = Files.readAllLines(currLogFile.toPath());
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
@@ -257,20 +325,58 @@ public class CommandTest {
 			assertEquals("Same log file location. No changes to log file location: " + prevLogFileLocation,
 					viewState.getStatusMessage());
 			assertEquals(prevLogFileLocation, AppStorage.getInstance().getLogFileLocation());
-			assertEquals(prevLogFileLines, currLogFileLines);
-			assertTrue(prevLogFile.exists());
-			assertTrue(prevLogFile.equals(currLogFile));
 
 			input = "save " + userStorageFileLocation;
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 
 			input = "save log " + userLogFileLocation;
-			cmd = CommandController.getInstance().createCommand(input);
-			viewState = cmd.execute(null);
+			viewState = CommandController.getInstance().executeCommand(input);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
+	private File createTestFile() {
+		File testFile = new File(AppStorage.getInstance().getStorageFileLocation());
+		
+		if (!testFile.exists()) {
+			if (testFile.getParentFile() != null) {
+				testFile.getParentFile().mkdirs();
+			}
+
+			try {
+				testFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			TaskStorage.getInstance().writeTasks(new TaskList());
+		}
+
+		return testFile;
+	}
+
+	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
+		if (path == null) {
+			return;
+		}
+
+		if (Files.isRegularFile(path)) {
+			Files.deleteIfExists(path);
+		} else if (Files.isDirectory(path)) {
+			File file = path.toFile();
+
+			if (file.list().length != 0) {
+				return;
+			}
+
+			try {
+				Files.delete(path);
+			} catch (DirectoryNotEmptyException e) {
+				return;
+			}
+		}
+
+		removeFileAndParentsIfEmpty(path.getParent());
+	}
 }
