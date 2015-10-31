@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
+import app.model.Action;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.storage.TaskStorage;
@@ -40,15 +42,17 @@ public class CommandMark extends Command {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			viewState.setTaskList(display);
+			Integer taskIndex = getFirstTaskIndex(displayIdsToMarkList);
+			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));	
 			
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
-			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
+			setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
 			
 			ArrayList<UUID> markedCompletedUuid = display.getTasksUuidList(markedCompleted);
 			ArrayList<UUID> markedUncompletedUuid = display.getTasksUuidList(markedUncompleted);
 			logUuidByMarkedTaskCompletion(markedCompletedUuid, markedUncompletedUuid);
-					
+			
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
 			LogHelper.getInstance().getLogger().info("IndexOutOfBoundsException:" + e.getMessage() +
@@ -65,8 +69,12 @@ public class CommandMark extends Command {
 		return viewState;
 	}
 
+	private Integer getFirstTaskIndex(ArrayList<Integer> displayIdsToMarkList) {
+		return displayIdsToMarkList.get(0) - 1;
+	}
+
 	// Set appropriate feedback based on marked tasks' completion
-	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
+	private void setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
 			ArrayList<Integer> markedUncompleted, ViewState viewState) {
 		String feedback = "";
 		assert(markedCompleted.size() > 0 || markedUncompleted.size() > 0);
@@ -88,7 +96,6 @@ public class CommandMark extends Command {
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		}
-		return viewState;
 	}
 
 	private void logUuidByMarkedTaskCompletion(ArrayList<UUID> markedCompleted,
