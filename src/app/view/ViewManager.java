@@ -185,6 +185,9 @@ public class ViewManager {
 			case SCROLL_TASK_LIST_TO:
 				scrollTaskListTo(action.getActionObject());
 				break;
+			case SCROLL_TASK_LIST_TO_TOP:
+				scrollTaskListToTop();
+				break;
 			case EXIT:	// exit the application
 				Platform.exit();
 				break;
@@ -228,6 +231,10 @@ public class ViewManager {
 		// TODO: replace the magic string once WJ updates his code to get rid of
 		// magic strings.
 		setHeader(String.format(ViewConstants.HEADER_DISPLAY, "all"));
+	}
+
+	public void scrollTaskListToTop() {
+		taskListViewManager.scrollToTop();
 	}
 
 	/**

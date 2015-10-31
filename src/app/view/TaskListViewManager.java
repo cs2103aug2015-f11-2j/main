@@ -54,6 +54,14 @@ public class TaskListViewManager {
 			}
 		});
 	}
+	
+	public void scrollToTop() {
+		Node node = taskListViewLayout.lookup(".scroll-bar");
+		if (node instanceof ScrollBar) {
+			ScrollBar scrollBar = (ScrollBar) node;
+			scrollBar.setValue(0);
+		}
+	}
 
 	public void scrollTo(Task task) {
 		UUID uuid = task.getId();
