@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants;
 import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
@@ -33,13 +34,19 @@ public class CommandMark extends Command {
 			LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_MARK_NO_TASK);
 			return viewState;
 		}
-
-		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+		
+		ArrayList<Integer> displayIdsToMarkList = new ArrayList<Integer>();
 		
 		try {
-			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
+
+			if (this.getContent().equals(TaskConstants.MARK_ALL_TASK)) {
+				displayIdsToMarkList = getAllDisplayedIds(display);
+			} else {
+				displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+				displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
+			}
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			viewState.setTaskList(display);
 			Integer taskIndex = getFirstTaskIndex(displayIdsToMarkList);
@@ -69,6 +76,17 @@ public class CommandMark extends Command {
 		return viewState;
 	}
 
+	// Create a list of IDs containing all the IDs in the displayed taskList
+	private ArrayList<Integer> getAllDisplayedIds(TaskList display) {
+		ArrayList<Integer> allIds = new ArrayList<Integer>();
+		int size = display.getTaskListSize();
+		for (int i = 1; i <= size; i++) {
+			allIds.add(i);
+		}
+		return allIds;
+	}
+
+	// convert the first task ID from an array of displayed IDs to the task index
 	private Integer getFirstTaskIndex(ArrayList<Integer> displayIdsToMarkList) {
 		return displayIdsToMarkList.get(0) - 1;
 	}

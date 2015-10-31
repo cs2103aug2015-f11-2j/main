@@ -212,6 +212,9 @@ public class CommandController {
 		case SEARCH:
 			CommandParser.parseSearch(cmd);
 			break;
+		case MARK:
+			cmd.setContent(CommandParser.determineMarkAll(cmd.getContent()).toString());
+			break;
 		default:
 			break;
 		}

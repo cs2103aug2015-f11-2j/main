@@ -331,6 +331,23 @@ public class CommandParserTest {
 		expected = "";
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 	}
+	
+	@Test
+	public void testDetermineMarkAll() {
+		String content = "a";
+		String expected = "ALL";
+		assertEquals(CommandParser.determineMarkAll(content), expected);
+		content = "al";
+		assertEquals(CommandParser.determineMarkAll(content), expected);
+		content = "all";
+		assertEquals(CommandParser.determineMarkAll(content), expected);
+		content = "ag";
+		expected = "ag";
+		assertEquals(CommandParser.determineMarkAll(content), expected);
+		content = "1, 3 4 ,7, 50,50";
+		expected = "1, 3 4 ,7, 50,50";
+		assertEquals(CommandParser.determineMarkAll(content), expected);
+	}
 
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);

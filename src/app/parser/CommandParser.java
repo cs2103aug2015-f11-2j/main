@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import app.constants.TaskConstants;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
@@ -25,6 +26,7 @@ public class CommandParser {
 	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("pend", "pending", "i", "incomp",
 			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = Common.getUnmodifiableList("a", "al", "all");
+	private static final List<String> MARK_ALL = Common.getUnmodifiableList("a", "al", "all");
 	private static final List<String> DISPLAY_TYPE_KEYWORDS = Common.getUnmodifiableList("type");
 
 	private static final List<String> SEARCH_START_DATE_KEYWORDS = Common.getUnmodifiableList("after", "since");
@@ -428,6 +430,25 @@ public class CommandParser {
 	 */
 	public static String getTaskDescFromContent(String content) {
 		return Common.removeFirstWord(content);
+	}
+
+	/**
+	 * Determine the mark argument from the entered string
+	 * 
+	 * @param content The specified mark argument
+	 * @return Either the original content or the task constant MARK_ALL_TASK
+	 */
+	public static String determineMarkAll(String content) {
+		try {
+			String param = content.toLowerCase().trim();
+			if (MARK_ALL.contains(param)) {
+				return TaskConstants.MARK_ALL_TASK;
+			} else {
+				return content;
+			}
+		} catch (Exception e) {
+			return content;
+		}
 	}
 
 }
