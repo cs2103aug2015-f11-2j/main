@@ -1,5 +1,7 @@
 package app.logic;
 
+import java.util.ArrayList;
+
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
@@ -16,6 +18,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.model.Action;
 import app.model.CommandList;
 import app.model.TaskList;
 import app.model.ViewState;
@@ -94,8 +97,9 @@ public class CommandController {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
 		} else {
-			// If not executed, simply update status bar.
+			// If not executed, simply update status bar and reset actions.
 			currentViewState.mergeStatus(newViewState);
+			currentViewState.setActions(new ArrayList<Action>());
 		}
 		
 		return currentViewState;
