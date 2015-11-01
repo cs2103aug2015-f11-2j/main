@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Test;
 
@@ -24,6 +23,17 @@ import app.storage.TaskStorage;
 
 public class CommandTest {
 
+	/**
+	 * Equivalence partition
+	 * command content: [have task name and no parameters], [have task name and have parameters]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no task name and no parameters (invalid), have task name and no parameters (valid),
+	 * have task name and have parameters (valid), no task name and have parameters (invalid)
+	 * 
+	 * Note: parameters includes startDate, endDate and priority.
+	 */
 	@Test
 	public void testCommandAdd() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -35,31 +45,31 @@ public class CommandTest {
 		display.getTaskList().clear();
 
 		try {
-			// no parameters
+			// command content: no task name and no parameters (invalid)
 			String input = "add";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified", viewState.getStatusMessage());
 
-			// have task name
+			// command content: have task name and no parameters (valid)
 			input = "add add1";
 			viewState = CommandController.getInstance().executeCommand(input);
-			List<Task> tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			TaskList tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Added task: add1", viewState.getStatusMessage());
-			assertEquals(1, tasks.size());
-			assertEquals("add1", viewState.getTaskList().getTaskByIndex(0).getName());
+			assertEquals(1, tasks.getTaskList().size());
+			assertEquals("add1", tasks.getTaskByIndex(0).getName());
 
-			// have task name, have parameters
+			// command content: have task name and have parameters (valid)
 			input = "add add2 priority high from 01/01/01 1pm to 02/02/02 2pm";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Added task: add2", viewState.getStatusMessage());
-			assertEquals(2, tasks.size());
-			assertEquals("add2", viewState.getTaskList().getTaskByIndex(1).getName());
-			assertEquals(Priority.HIGH, viewState.getTaskList().getTaskByIndex(1).getPriority());
-			assertEquals(LocalDateTime.of(2001, 1, 1, 13, 0), viewState.getTaskList().getTaskByIndex(1).getStartDate());
-			assertEquals(LocalDateTime.of(2002, 2, 2, 14, 0), viewState.getTaskList().getTaskByIndex(1).getEndDate());
+			assertEquals(2, tasks.getTaskList().size());
+			assertEquals("add2", tasks.getTaskByIndex(1).getName());
+			assertEquals(Priority.HIGH, tasks.getTaskByIndex(1).getPriority());
+			assertEquals(LocalDateTime.of(2001, 1, 1, 13, 0), tasks.getTaskByIndex(1).getStartDate());
+			assertEquals(LocalDateTime.of(2002, 2, 2, 14, 0), tasks.getTaskByIndex(1).getEndDate());
 
-			// no task name, have parameters
+			// command content: no task name and have parameters (invalid)
 			input = "add priority high from 01/01/01 1pm to 02/02/02 2pm";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified", viewState.getStatusMessage());
@@ -70,7 +80,19 @@ public class CommandTest {
 			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
 		}
 	}
-	
+
+	/**
+	 * Equivalence partition
+	 * command content: [single id], [multiple id], [duplicate id]
+	 * id: [1 .. display.getTaskList().size()]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no id (invalid), single id (valid), multiple id (valid), duplicate id (valid)
+	 * 
+	 * id:
+	 * 0 (invalid), 1 (valid), display.getTaskList().size() (valid), display.getTaskList().size() + 1 (invalid)
+	 */
 	//@Test
 	public void testCommandDelete() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -91,63 +113,59 @@ public class CommandTest {
 				display.addTask(task);
 			}
 			TaskStorage.getInstance().writeTasks(master);
-
-			// no parameters
+			
+			// command content: no id (invalid)
 			String input = "delete";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified", viewState.getStatusMessage());
 
-			/* id: equivalence partition: [1, display.getTaskList().size()] */
-
-			// 1 id
-			// boundary case: 0 (invalid)
+			// command content: single id (valid)
+			// id: 0 (invalid)
 			input = "delete 0";
 			viewState = CommandController.getInstance().executeCommand(input);
-			List<Task> tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+			TaskList tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("", viewState.getStatusMessage());
 			
-			// boundary case: 5 (invalid)
-			input = "delete 5";
+			// id: display.getTaskList().size() + 1 [6] (invalid)
+			input = "delete 6";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			assertEquals("Deleted task: 1", viewState.getStatusMessage());
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("", viewState.getStatusMessage());
 
-			// boundary case: 1 (valid)
+			// id: 1 (valid)
 			input = "delete 1";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			List<String> logFileLines = Files.readAllLines(new File(AppStorage.getInstance().getLogFileLocation()).toPath());
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 1", viewState.getStatusMessage());
-			assertEquals(4, tasks.size());
-			assertEquals("INFO: Deleted task: " + testTasks.remove(0).getId(), logFileLines.get(logFileLines.size() - 1));
+			assertEquals(4, tasks.getTaskList().size());
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
 			
-			// boundary case: display.getTaskList().size() [4] (valid)
+			// id: display.getTaskList().size() [4] (valid)
 			input = "delete 4";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			logFileLines = Files.readAllLines(new File(AppStorage.getInstance().getLogFileLocation()).toPath());
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 4", viewState.getStatusMessage());
-			assertEquals(3, tasks.size());
-			assertEquals("INFO: Deleted task: " + testTasks.remove(3).getId(), logFileLines.get(logFileLines.size() - 1));
+			assertEquals(3, tasks.getTaskList().size());
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(3).getId()));
 
-			// multiple id
-			input = "delete 1 2";
+			// command content: multiple id (valid)
+			// id: any valid value
+			input = "delete 1 3";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			logFileLines = Files.readAllLines(new File(AppStorage.getInstance().getLogFileLocation()).toPath());
-			assertEquals("Deleted task: 1 2", viewState.getStatusMessage());
-			assertEquals(1, tasks.size());
-			assertEquals("INFO: Deleted task: " + testTasks.remove(1).getId() + ", " + testTasks.remove(0).getId(),
-					logFileLines.get(logFileLines.size() - 1));
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Deleted task: 1 3", viewState.getStatusMessage());
+			assertEquals(1, tasks.getTaskList().size());
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(2).getId()));
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
 
-			// duplicate id
+			// command content: duplicate id (valid)
+			// idL any valid value
 			input = "delete 1 1";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks().getTaskList();
-			logFileLines = Files.readAllLines(new File(AppStorage.getInstance().getLogFileLocation()).toPath());
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 1", viewState.getStatusMessage());
-			assertEquals(0, tasks.size());
-			assertEquals("INFO: Deleted task: " + testTasks.remove(0).getId(), logFileLines.get(logFileLines.size() - 1));
+			assertEquals(0, tasks.getTaskList().size());
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
@@ -156,6 +174,15 @@ public class CommandTest {
 		}
 	}
 
+	/**
+	 * Equivalence partition
+	 * command content: [""], ["all"], ["completed"], ["uncompleted"]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * "" (valid), "all" (valid), "completed" (valid), "uncompleted" (valid),
+	 * any other String (invalid)
+	 */
 	@Test
 	public void testCommandDisplay() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -167,8 +194,6 @@ public class CommandTest {
 		display.getTaskList().clear();
 
 		try {
-			/* command contents: equivalence partition: [no parameters (default), "all", "completed", "uncompleted"] */
-
 			// populate tasklist
 			Task task = new Task(CommandController.getInstance().createCommand("add completed task"));
 			master.addTask(task);
@@ -176,7 +201,7 @@ public class CommandTest {
 			master.addTask(task);
 			master.markTaskByIndex(0);
 
-			// no parameters (default)
+			// command content: "" (valid)
 			String input = "display";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Displaying UNCOMPLETED tasks", viewState.getStatusMessage());
@@ -184,7 +209,7 @@ public class CommandTest {
 			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("uncompleted task", viewState.getTaskList().getTaskByIndex(0).getName());
 
-			// "all"
+			// command content: "all" (valid)
 			input = "display all";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Displaying ALL tasks", viewState.getStatusMessage());
@@ -193,7 +218,7 @@ public class CommandTest {
 			assertEquals("completed task", viewState.getTaskList().getTaskByIndex(0).getName());
 			assertEquals("uncompleted task", viewState.getTaskList().getTaskByIndex(1).getName());
 			
-			// "completed"
+			// command content: "completed" (valid)
 			input = "display completed";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Displaying COMPLETED tasks", viewState.getStatusMessage());
@@ -201,7 +226,7 @@ public class CommandTest {
 			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("completed task", viewState.getTaskList().getTaskByIndex(0).getName());
 			
-			// "uncompleted"
+			// command content: "uncompleted" (valid)
 			input = "display uncompleted";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Displaying UNCOMPLETED tasks", viewState.getStatusMessage());
@@ -209,7 +234,7 @@ public class CommandTest {
 			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("uncompleted task", viewState.getTaskList().getTaskByIndex(0).getName());
 			
-			// invalid
+			// command content: any other String (invalid)
 			input = "display abc";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid option. Available: all, completed, uncompleted (default)", viewState.getStatusMessage());
@@ -220,7 +245,32 @@ public class CommandTest {
 			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
 		}
 	}
-	
+
+	/**
+	 * Equivalence partition
+	 * command content: [have id and have parameters with changes]
+	 * id: [1 .. display.getTaskList().size()]
+	 * date: ["none"], [valid date from DateParser]
+	 * priority: ["none"], [valid priority from CommandParser]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no id and no parameters (invalid), no id and have parameters (invalid),
+	 * have id and no parameters (invalid), have id and have parameters without changes (invalid),
+	 * have id and have parameters with changes (valid)
+	 * 
+	 * id:
+	 * 0 (invalid), 1 (valid), display.getTaskList().size() (valid), display.getTaskList().size() + 1 (invalid)
+	 * 
+	 * date:
+	 * "none" (valid), valid values from DateParser (valid)
+	 * 
+	 * priority:
+	 * "none" (valid), valid values from CommandParser (valid)
+	 * 
+	 * Note: parameters includes name, startDate, endDate and priority. Invalid values for
+	 * date and priority are tested in DateParserTest and CommandParserTest respectively.
+	 */
 	@Test
 	public void testCommandEdit() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -242,129 +292,155 @@ public class CommandTest {
 			}
 			TaskStorage.getInstance().writeTasks(master);
 
-			// no parameters
+			// command content: no id and no parameters (invalid)
 			String input = "edit";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified to edit", viewState.getStatusMessage());
 
-			/* id: equivalence partition: [1, display.getTaskList().size()] */
+			// command content: no id and have parameters (invalid)
+			input = "edit priority high";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No task specified to edit", viewState.getStatusMessage());
 
-			// single change
-			// edit name
-			// boundary case: 0 (invalid)
+			// command content: have id and have parameters with changes (valid)
+			// id: 0 (invalid)
+			// changes to name
 			input = "edit 0 edited0";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
-			
-			// boundary case: 4 (invalid)
+
+			// command content: have id and have parameters with changes (valid)
+			// id: 4 (invalid)
+			// changes to name
 			input = "edit 4 edited4";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
-			
-			// boundary case: 1 (valid)
-			UUID editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(0);
+
+			// command content: have id and have parameters with changes (valid)
+			// id: 1 (valid)
+			// changes to name
 			input = "edit 1 edited1";
 			viewState = CommandController.getInstance().executeCommand(input);
-			int editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
+			TaskList tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Edited task: edited1", viewState.getStatusMessage());
-			assertEquals("edited1", viewState.getTaskList().getTaskByIndex(editedTaskIndex).getName());
-			
-			// boundary case: display.getTaskList().size() [3] (valid)
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
+			assertEquals("edited1", tasks.getTaskByIndex(0).getName());
+
+			// command content: have id and have parameters with changes (valid)
+			// id: display.getTaskList().size() [3] (valid)
+			// changes to name
 			input = "edit 3 edited3";
 			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Edited task: edited3", viewState.getStatusMessage());
-			assertEquals("edited3", viewState.getTaskList().getTaskByIndex(editedTaskIndex).getName());
+			assertEquals("edited3", tasks.getTaskByIndex(0).getName());
 			
+			// command content: have id and have parameters without changes (invalid)
+			// id: any valid values
 			// no changes to name
 			input = "edit 3 edited3";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No changes made for task 3", viewState.getStatusMessage());
 			
-			// edit endDate
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			Task editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 3 by 01/01/01 1pm";
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// date: valid values from DateParser
+			// changes to startDate and endDate
+			input = "edit 3 from 01/01/01 1pm to 03/03/03 3pm";
 			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(LocalDateTime.of(2001, 1, 1, 13, 0), viewState.getTaskList().getTaskByIndex(editedTaskIndex).getEndDate());
-			
-			// edit startDate and endDate
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 3 from 01/01/01 1pm to 02/02/02 2pm";
-			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(LocalDateTime.of(2001, 1, 1, 13, 0), viewState.getTaskList().getTaskByIndex(editedTaskIndex).getStartDate());
-			assertEquals(LocalDateTime.of(2002, 2, 2, 14, 0), viewState.getTaskList().getTaskByIndex(editedTaskIndex).getEndDate());
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edited3", viewState.getStatusMessage());
+			assertEquals(LocalDateTime.of(2001, 1, 1, 13, 0), tasks.getTaskByIndex(0).getStartDate());
+			assertEquals(LocalDateTime.of(2003, 3, 3, 15, 0), tasks.getTaskByIndex(0).getEndDate());
 
-			// no changes to date
-			input = "edit 3 from 01/01/01 1pm to 02/02/02 2pm";
+			// command content: have id and have parameters without changes (invalid)
+			// id: any valid values
+			// date: valid values from DateParser
+			// no changes to startDate and endDate
+			input = "edit 3 from 01/01/01 1pm to 03/03/03 3pm";
 			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("No changes made for task 3", viewState.getStatusMessage());
 
-			// edit priority
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 3 priority high";
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// date: valid values from DateParser
+			// changes to startDate
+			input = "edit 3 by 03/03/03 3pm";
 			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(Priority.HIGH, viewState.getTaskList().getTaskByIndex(editedTaskIndex).getPriority());
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edited3", viewState.getStatusMessage());
+			assertEquals(null, tasks.getTaskByIndex(0).getStartDate());
 
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// date: valid values from DateParser
+			// changes to endDate
+			input = "edit 3 by 02/02/02 2pm";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edited3", viewState.getStatusMessage());
+			assertEquals(LocalDateTime.of(2002, 2, 2, 14, 0), tasks.getTaskByIndex(0).getEndDate());
+
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// date: "none"
+			// changes to dates
+			input = "edit 3 date none";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edited3", viewState.getStatusMessage());
+			assertEquals(null, tasks.getTaskByIndex(0).getEndDate());
+
+			// command content: have id and have parameters without changes (invalid)
+			// id: any valid values
+			// date: "none"
+			// no changes to startDate and endDate
+			input = "edit 3 date none";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("No changes made for task 3", viewState.getStatusMessage());
+
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// priority: valid values from CommandParser
+			// changes to priority
+			input = "edit 1 priority high";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edit2", viewState.getStatusMessage());
+			assertEquals(Priority.HIGH, tasks.getTaskByIndex(1).getPriority());
+
+			// command content: have id and have parameters without changes (invalid)
+			// id: any valid values
+			// priority: valid values from CommandParser
 			// no changes to priority
-			input = "edit 3 priority high";
+			input = "edit 1 priority high";
 			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("No changes made for task 3", viewState.getStatusMessage());
-			
-			// edit priority to none
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 3 priority none";
-			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(Priority.NONE, viewState.getTaskList().getTaskByIndex(editedTaskIndex).getPriority());
-			
-			// no changes to priority none
-			input = "edit 3 priority none";
-			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("No changes made for task 3", viewState.getStatusMessage());
-			
-			// edit date to none
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(2);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 3 date none";
-			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(null, viewState.getTaskList().getTaskByIndex(editedTaskIndex).getStartDate());
-			assertEquals(null, viewState.getTaskList().getTaskByIndex(editedTaskIndex).getEndDate());
+			assertEquals("No changes made for task 1", viewState.getStatusMessage());
 
-			// no changes to date none
-			input = "edit 3 date none";
+			// command content: have id and have parameters with changes (valid)
+			// id: any valid values
+			// priority: "none"
+			// changes to priority
+			input = "edit 1 priority none";
 			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("No changes made for task 3", viewState.getStatusMessage());
-			
-			// multiple changes
-			editedTaskUUID = viewState.getTaskList().getTaskUuidByIndex(0);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			editedTask = viewState.getTaskList().getTaskByIndex(editedTaskIndex);
-			input = "edit 1 priority low from 02/02/02 2pm to 03/03/03 3pm";
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Edited task: edit2", viewState.getStatusMessage());
+			assertEquals(Priority.NONE, tasks.getTaskByIndex(1).getPriority());
+
+			// command content: have id and have parameters without changes (invalid)
+			// id: any valid values
+			// priority: "none"
+			// no changes to priority
+			input = "edit 1 priority none";
 			viewState = CommandController.getInstance().executeCommand(input);
-			editedTaskIndex = viewState.getTaskList().getTaskIndexByUuid(editedTaskUUID);
-			assertEquals("Edited task: " + editedTask.getName(), viewState.getStatusMessage());
-			assertEquals(Priority.LOW, viewState.getTaskList().getTaskByIndex(editedTaskIndex).getPriority());
-			assertEquals(LocalDateTime.of(2002, 2, 2, 14, 0), viewState.getTaskList().getTaskByIndex(editedTaskIndex).getStartDate());
-			assertEquals(LocalDateTime.of(2003, 3, 3, 15, 0), viewState.getTaskList().getTaskByIndex(editedTaskIndex).getEndDate());
+			assertEquals("No changes made for task 1", viewState.getStatusMessage());
+
+			// command content: have id and no parameters (invalid)
+			// id: any valid values
+			input = "edit 1";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No changes made for task 1", viewState.getStatusMessage());
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
@@ -372,6 +448,18 @@ public class CommandTest {
 			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
 		}
 	}
+	
+	/**
+	 * Equivalence partition
+	 * command content: [""], [invalid command]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * "" (valid), invalid command (valid)
+	 * 
+	 * Note: These cases are considered valid because the commands are tested to see if
+	 * invalid commands are passed here. Valid commands are tested in CommandTest.
+	 */
 	@Test
 	public void testCommandInvalid() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -383,13 +471,13 @@ public class CommandTest {
 		display.getTaskList().clear();
 
 		try {
-			// empty input
+			// command content: "" (valid)
 			ViewState currentViewState = CommandController.getInstance().getCurrentViewState();
 			String input = "";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals(viewState, currentViewState);
 			
-			// invalid command
+			// command content: invalid command (valid)
 			input = "abc";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid command: abc", viewState.getStatusMessage());
@@ -401,6 +489,25 @@ public class CommandTest {
 		}
 	}
 
+	/**
+	 * Equivalence partition
+	 * command content: [no log keyword and have location with changes], [have log keyword and have location with changes]
+	 * location: ["default"], [valid location]
+	 * file: [does not exist]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no log keyword and no location (invalid), have log keyword and no location (invalid),
+	 * no log keyword and have location without changes (invalid),
+	 * have log keyword and have location without changes (invalid),
+	 * no log keyword and have location with changes (valid), have log keyword and have location with changes (valid),
+	 * 
+	 * location:
+	 * "default" (valid), valid location (valid), valid location with spaces (valid)
+	 * 
+	 * file:
+	 * exist (invalid), does not exist (valid)
+	 */
 	@Test
 	public void testCommandSave() {
 		try {
@@ -413,31 +520,33 @@ public class CommandTest {
 			File prevLogFile = new File(prevLogFileLocation);
 			List<String> prevStorageFileLines = Files.readAllLines(prevStorageFile.toPath());
 
-			// no storage file location
+			// command content: no log keyword and no location (invalid)
 			String input = "save";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No storage file location specified", viewState.getStatusMessage());
 
-			// no log file location
+			// command content: have log keyword and no location (invalid)
 			input = "save log";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No log file location specified", viewState.getStatusMessage());
 
-			// no changes to storage file location
+			// command content: no log keyword and have location without changes (invalid)
 			input = "save " + prevStorageFileLocation;
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Same storage file location. No changes to storage file location: "
 						 + prevStorageFileLocation, viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
 
-			// no changes to log file location
+			// command content: have log keyword and have location without changes (invalid)
 			input = "save log " + prevLogFileLocation;
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Same log file location. No changes to log file location: "
 						 + prevLogFileLocation, viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
 
-			// storage file location without file extension
+			// command content: no log keyword and have location with changes (valid)
+			// location: valid location (valid)
+			// file: does not exist (valid)
 			input = "save testsave/storage";
 			viewState = CommandController.getInstance().executeCommand(input);
 			File currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
@@ -452,7 +561,9 @@ public class CommandTest {
 			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
 			prevStorageFile = new File(prevStorageFileLocation);
 
-			// log file location without file extension
+			// command content: have log keyword and have location with changes (valid)
+			// location: valid location (valid)
+			// file: does not exist (valid)
 			List<String> prevLogFileLines = Files.readAllLines(prevLogFile.toPath());
 			input = "save log testsave/log";
 			viewState = CommandController.getInstance().executeCommand(input);
@@ -471,7 +582,9 @@ public class CommandTest {
 			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
 			prevLogFile = new File(prevLogFileLocation);
 
-			// storage file location with spaces
+			// command content: no log keyword and have location with changes (valid)
+			// location: valid location with spaces (valid)
+			// file: does not exist (valid)
 			input = "save test  save  /  storage  test";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
@@ -487,7 +600,9 @@ public class CommandTest {
 			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
 			prevStorageFile = new File(prevStorageFileLocation);
 
-			// log file location with spaces
+			// command content: have log keyword and have location with changes (valid)
+			// location: valid location with spaces (valid)
+			// file: does not exist (valid)
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log test  save  /  log  test";
 			viewState = CommandController.getInstance().executeCommand(input);
@@ -507,43 +622,9 @@ public class CommandTest {
 			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
 			prevLogFile = new File(prevLogFileLocation);
 
-			// storage file location at different directory
-			input = "save ../../testsave/storage";
-			viewState = CommandController.getInstance().executeCommand(input);
-			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
-			parentLocation = AppStorage.getInstance()
-					.toValidCanonicalPath(prevStorageFile.getParentFile().getParentFile().getParentFile().getParent());
-			assertEquals("Saved storage file location: " + parentLocation + "/testsave/storage",
-					viewState.getStatusMessage());
-			assertEquals(parentLocation + "/testsave/storage", AppStorage.getInstance().getStorageFileLocation());
-			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
-			assertFalse(prevStorageFile.exists());
-			assertFalse(prevStorageFile.equals(currStorageFile));
-
-			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
-			prevStorageFile = new File(prevStorageFileLocation);
-
-			// log file location at different directory
-			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
-			input = "save log ../../testsave/log";
-			viewState = CommandController.getInstance().executeCommand(input);
-			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
-			currLogFileLines = Files.readAllLines(currLogFile.toPath());
-			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
-				currLogFileLines.remove(i - 1);
-			}
-			parentLocation = AppStorage.getInstance()
-					.toValidCanonicalPath(prevLogFile.getParentFile().getParentFile().getParentFile().getParent());
-			assertEquals("Saved log file location: " + parentLocation + "/testsave/log", viewState.getStatusMessage());
-			assertEquals(parentLocation + "/testsave/log", AppStorage.getInstance().getLogFileLocation());
-			assertEquals(prevLogFileLines, currLogFileLines);
-			assertFalse(prevLogFile.exists());
-			assertFalse(prevLogFile.equals(currLogFile));
-
-			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
-			prevLogFile = new File(prevLogFileLocation);
-
-			// default storage file location
+			// command content: no log keyword and have location with changes (valid)
+			// location: "default" (valid)
+			// file: does not exist (valid)
 			input = "save default";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
@@ -557,7 +638,9 @@ public class CommandTest {
 			prevStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
 			prevStorageFile = new File(prevStorageFileLocation);
 
-			// default log file location
+			// command content: have log keyword and have location with changes (valid)
+			// location: "default" (valid)
+			// file: does not exist (valid)
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log default";
 			viewState = CommandController.getInstance().executeCommand(input);
@@ -576,7 +659,9 @@ public class CommandTest {
 			prevLogFileLocation = AppStorage.getInstance().getLogFileLocation();
 			prevLogFile = new File(prevLogFileLocation);
 
-			// no changes for default storage file location
+			// command content: no log keyword and have location without changes (invalid)
+			// location: "default" (valid)
+			// file: does not exist (valid)
 			input = "save default";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
@@ -584,7 +669,9 @@ public class CommandTest {
 					viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
 
-			// no changes for default log file location
+			// command content: have log keyword and have location without changes (invalid)
+			// location: "default" (valid)
+			// file: does not exist (valid)
 			prevLogFileLines = Files.readAllLines(currLogFile.toPath());
 			input = "save log default";
 			viewState = CommandController.getInstance().executeCommand(input);
@@ -602,14 +689,18 @@ public class CommandTest {
 				testFile.createNewFile();
 			}
 
-			// storage file already exist
+			// command content: no log keyword and have location with changes (valid)
+			// location: any valid values
+			// file: exist (invalid)
 			input = "save test";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
 			assertEquals("File already exists in specified location: test", viewState.getStatusMessage());
 			assertEquals(prevStorageFileLocation, AppStorage.getInstance().getStorageFileLocation());
 
-			// log file already exist
+			// command content: have log keyword and have location with changes (valid)
+			// location: any valid values
+			// file: exist (invalid)
 			input = "save log test";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currLogFile = new File(AppStorage.getInstance().getLogFileLocation());
