@@ -2,9 +2,11 @@ package app.logic.command;
 
 import app.constants.ViewConstants;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
@@ -19,6 +21,12 @@ import app.model.ViewState;
 public class CommandEdit extends Command {
 
 	private Integer displayId;
+	private ViewState previousViewState;
+	private UUID storeId;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
+	private String content;
+	private Priority priority;	
 	
 	public CommandEdit() {
 		super();
@@ -29,6 +37,8 @@ public class CommandEdit extends Command {
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandEdit object.");
+		this.previousViewState = new ViewState(previousViewState);
+		
 		ViewState viewState = new ViewState();
 		Task task = new Task(this);
 		
@@ -47,7 +57,7 @@ public class CommandEdit extends Command {
 				LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_EDIT_INVALID_TASK_ID);
 				return viewState;
 			}
-
+			
 			boolean isEdited = editTask(display, master, task, taskIndex);
 			if (isEdited == true ) {
 				TaskStorage.getInstance().writeTasks(master);
@@ -55,13 +65,13 @@ public class CommandEdit extends Command {
 				viewState.setTaskList(display);
 				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getName()));
-
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_EDIT, display.getTaskByIndex(taskIndex).getId()));
 
 			} else {
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, displayId));
 				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_EDIT_NO_CHANGES, displayId));
 			}
+			
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_EDIT);
@@ -76,8 +86,30 @@ public class CommandEdit extends Command {
 			return new ViewState();
 		}
 		
-		// TODO: undo code here
-		return new ViewState();
+		try {
+			
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		
+		int id = master.getTaskIndexByUuid(storeId);
+		
+		master.getTaskByIndex(id).setStartDate(startDate);		
+		master.getTaskByIndex(id).setEndDate(endDate);
+		master.getTaskByIndex(id).setName(content);
+		master.getTaskByIndex(id).setPriority(priority);
+
+		
+		TaskStorage.getInstance().writeTasks(master);
+		previousViewState.setTaskList(previousViewState.getTaskList());
+		previousViewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_UNDO));
+		LogHelper.getInstance().getLogger().info(String.format("UNDO_EDIT:" + ViewConstants.MESSAGE_UNDO));
+		setExecuted(true);
+	
+		} 	catch (Exception e) {
+			LogHelper.getInstance().getLogger().severe(e.getMessage() + String.format(ViewConstants.ERROR_UNDO));
+			previousViewState.setStatus(StatusType.ERROR, String.format(ViewConstants.MESSAGE_UNDO));
+		}	
+	
+		return previousViewState;
 	}
 
 	// Base on displayed index, find task in master tasklist and update it.
@@ -85,6 +117,13 @@ public class CommandEdit extends Command {
 	private boolean editTask(TaskList display, TaskList master, Task task, int taskIndex) {
 		UUID uuid = display.getTaskUuidByIndex(taskIndex);
 		int masterListIndex = master.getTaskIndexByUuid(uuid);
+		
+		storeId = uuid; 
+		startDate =  master.getTaskByIndex(masterListIndex).getStartDate();
+		endDate =  master.getTaskByIndex(masterListIndex).getEndDate();
+		priority =  master.getTaskByIndex(masterListIndex).getPriority();
+		content =  master.getTaskByIndex(masterListIndex).getName().toString();
+	
 		return master.updateTask(task, masterListIndex);
 	}
 

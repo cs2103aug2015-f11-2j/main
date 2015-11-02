@@ -1,6 +1,7 @@
 package app.logic.command;
 
 import app.constants.ViewConstants;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
+import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.storage.TaskStorage;
@@ -15,7 +17,10 @@ import app.util.Common;
 import app.util.LogHelper;
 
 public class CommandDelete extends Command {
-
+	
+	private ArrayList<Task> previousTaskList = new ArrayList<Task>();
+	private ViewState previousViewState;
+	
 	public CommandDelete() {
 		super();
 		this.setCommandType(CommandType.DELETE);
@@ -25,12 +30,13 @@ public class CommandDelete extends Command {
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandDelete object.");
 		ViewState viewState = new ViewState();
+		this.previousViewState = new ViewState(previousViewState); 
 
 		if (this.getContent().isEmpty()) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DELETE_NO_TASK);
 			return viewState;
 		}
-
+		
 		try {
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 			TaskList display = previousViewState.getTaskList();
@@ -56,18 +62,18 @@ public class CommandDelete extends Command {
 				display.getTaskList().remove(i - 1);
 			}
 
-			
+		
 			// remove task from master list
 			for (int i : masterIdsList) {
-				master.getTaskList().remove(i);
+				previousTaskList.add(master.getTaskList().remove(i));
 			}
-
-
+			
+			
 			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
 			setExecuted(true);
-
+			
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
@@ -83,8 +89,29 @@ public class CommandDelete extends Command {
 			return new ViewState();
 		}
 		
-		// TODO: undo code here
-		return new ViewState();
+		try {
+		
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList displayed = previousViewState.getTaskList();
+		
+		for (Task i : previousTaskList){
+			master.addTask(i);	
+			displayed.addTask(i);
+		}
+		
+		TaskStorage.getInstance().writeTasks(master);		
+		previousViewState.setTaskList(displayed);
+		previousViewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_UNDO));
+		LogHelper.getInstance().getLogger().info(String.format("UNDO_DELETE:" + ViewConstants.MESSAGE_UNDO));
+		setExecuted(true);
+		
+		} 	catch (Exception e) {
+			LogHelper.getInstance().getLogger().severe(e.getMessage() + String.format(ViewConstants.ERROR_UNDO));
+			previousViewState.setStatus(StatusType.ERROR, String.format(ViewConstants.MESSAGE_UNDO));
+		}	
+	
+		return previousViewState;
+	
 	}
 
 }

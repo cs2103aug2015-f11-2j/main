@@ -17,6 +17,9 @@ import app.util.LogHelper;
 
 public class CommandMark extends Command {
 
+	private  ArrayList<UUID> storePreviousId  = new ArrayList<UUID>(); 
+	private ViewState previousViewState;
+	
 	public CommandMark() {
 		super();
 		this.setCommandType(CommandType.MARK);
@@ -25,6 +28,8 @@ public class CommandMark extends Command {
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandMark object.");
+		this.previousViewState = new ViewState(previousViewState); 
+		
 		ViewState viewState = new ViewState();
 		if (this.getContent().isEmpty()) {
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_NO_TASK);
@@ -33,6 +38,7 @@ public class CommandMark extends Command {
 		}
 
 		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+		
 		
 		try {
 			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
@@ -48,6 +54,14 @@ public class CommandMark extends Command {
 			ArrayList<UUID> markedCompletedUuid = display.getTasksUuidList(markedCompleted);
 			ArrayList<UUID> markedUncompletedUuid = display.getTasksUuidList(markedUncompleted);
 			logUuidByMarkedTaskCompletion(markedCompletedUuid, markedUncompletedUuid);
+			
+			for (UUID i : markedCompletedUuid) {
+				storePreviousId.add(i);				
+			}
+			
+			for (UUID i : markedUncompletedUuid) {
+				storePreviousId.add(i);				
+			}
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
@@ -58,6 +72,7 @@ public class CommandMark extends Command {
 			LogHelper.getInstance().getLogger().severe("NullPointerException:" + e.getMessage() + 
 					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
+
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK);
@@ -156,7 +171,28 @@ public class CommandMark extends Command {
 			return new ViewState();
 		}
 		
-		// TODO: undo code here
-		return new ViewState();
+		try {
+		
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList displayed = previousViewState.getTaskList();
+		
+		int id;
+		for (UUID i : storePreviousId){
+			id = master.getTaskIndexByUuid(i);
+			master.markTaskByIndex(id);
+		}
+
+		TaskStorage.getInstance().writeTasks(master);
+		previousViewState.setTaskList(displayed);
+		previousViewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_UNDO));
+		LogHelper.getInstance().getLogger().info(String.format("UNDO_MARK:" + ViewConstants.MESSAGE_UNDO));
+		setExecuted(true);
+		
+		} 	catch (Exception e) {
+			LogHelper.getInstance().getLogger().severe(e.getMessage() + String.format(ViewConstants.ERROR_UNDO));
+			previousViewState.setStatus(StatusType.ERROR, String.format(ViewConstants.MESSAGE_UNDO));
+		}	
+		
+		return previousViewState;
 	}
 }

@@ -85,13 +85,14 @@ public class CommandController {
 	public ViewState executeCommand(String commandString) {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
+				
 		ViewState newViewState = cmd.execute(currentViewState);
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
 			if (cmd.getCommandType() != CommandType.UNDO) {
-				executedCommands.push(cmd);
+				executedCommands.push(cmd); 
 			}
 		} else {
 			// If not executed, simply update status bar.
@@ -176,9 +177,6 @@ public class CommandController {
 			break;
 		case SEARCH:
 			cmd = new CommandSearch();
-			break;
-		case UNDO:
-			cmd = new CommandUndo();
 			break;
 		case EXIT:
 			cmd = new CommandExit();

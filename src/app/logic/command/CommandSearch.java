@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 
 public class CommandSearch extends Command {
 
+	private ViewState previousViewState;
+	
 	public CommandSearch() {
 		super();
 		this.setCommandType(CommandType.SEARCH);
@@ -28,6 +30,7 @@ public class CommandSearch extends Command {
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandSearch object.");
 
+		this.previousViewState = new ViewState(previousViewState);
 		ViewState viewState = new ViewState();
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList retrievedTaskList = master.getTaskListByCompletion(false);
@@ -84,6 +87,6 @@ public class CommandSearch extends Command {
 		}
 		
 		// TODO: undo code here
-		return new ViewState();
+		return previousViewState;
 	}
 }

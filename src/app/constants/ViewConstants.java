@@ -77,9 +77,14 @@ public class ViewConstants {
 	public static String SEARCH_MESSAGE = "%d match(es)";
 
 	// UNDO command
-	public static String MESSAGE_UNDO = "Undo success. Returning to previous state: ";
-	public static String ERROR_UNDO = "Undo fail: ";
-
+	public static String MESSAGE_UNDO = "Undo success. Returning to previous state";
+	public static String ERROR_UNDO = "Undo fail: No more previous state";
+	public static String NO_MORE_UNDO = "No commands to undo";
+	public static String UNDO_ADD = "Undo previous ADD operation: ";
+	public static String UNDO_DELETE = "Undo previous DELETE operation: ";
+	public static String UNDO_EDIT = "Undo previous EDIT operation: ";
+	public static String UNDO_MARK = "Undo previous MARK operation: ";
+	
 	// INVALID command
 	public static String ERROR_INVALID_CMD = "Invalid command: %1$s";
 	
