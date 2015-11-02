@@ -41,13 +41,13 @@ public class CommandDelete extends Command {
 
 			Collections.sort(ids, Collections.reverseOrder());
 			Collections.sort(masterIdsList, Collections.reverseOrder());
-
 			
-			// check for identical id's 
+			
+			// remove identical id's 
 			for (int i = ids.size() - 1; i > 0; i--) {
 				if (ids.get(i).intValue() == ids.get(i - 1).intValue()) {
-					viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, "Duplicated values detected"));
-					return viewState;
+					ids.remove(i);	
+					masterIdsList.remove(i);
 				}
 			}
 			
@@ -57,14 +57,14 @@ public class CommandDelete extends Command {
 				deletedTask.add(display.getTaskUuidByIndex(i-1));
 				display.getTaskList().remove(i - 1);
 			}
-
+			
 			
 			// remove task from master list
 			for (int i : masterIdsList) {
 				master.getTaskList().remove(i);
 			}
 
-
+			
 			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
