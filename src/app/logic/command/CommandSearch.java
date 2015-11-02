@@ -86,7 +86,7 @@ public class CommandSearch extends Command {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
+
 		// TODO: undo code here
 		return previousViewState;
 	}

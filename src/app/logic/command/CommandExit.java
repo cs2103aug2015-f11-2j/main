@@ -27,7 +27,7 @@ public class CommandExit extends Command {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
+
 		// TODO: undo code here
 		return new ViewState();
 	}

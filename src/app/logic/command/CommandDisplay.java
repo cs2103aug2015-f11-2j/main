@@ -76,7 +76,7 @@ public class CommandDisplay extends Command {
 		
 		return viewState;
 	}
-	
+
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {

@@ -21,16 +21,16 @@ public class CommandInvalid extends Command {
 		}
 		String word = Common.getFirstWord(getCommandString());
 		viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_INVALID_CMD, word));
-		
+
 		return viewState;
 	}
-	
+
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
+
 		// TODO: undo code here
 		return new ViewState();
 	}
