@@ -578,7 +578,7 @@ public class CommandTest {
 			assertEquals("Marked task completed: 1; Marked task uncompleted: 3", viewState.getStatusMessage());
 			assertTrue(tasks.getTaskByIndex(0).isCompleted());
 			assertFalse(tasks.getTaskByIndex(2).isCompleted());
-/*
+
 			// command content: "all" (valid)
 			// id: any valid value
 			input = "mark all";
@@ -588,7 +588,7 @@ public class CommandTest {
 			assertFalse(tasks.getTaskByIndex(0).isCompleted());
 			assertTrue(tasks.getTaskByIndex(1).isCompleted());
 			assertTrue(tasks.getTaskByIndex(2).isCompleted());
-*/
+
 			// command content: any other String (invalid)
 			// id: any valid value
 			input = "mark abc";
