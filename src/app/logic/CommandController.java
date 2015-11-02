@@ -209,6 +209,9 @@ public class CommandController {
 			e.setDisplayId(CommandParser.getTaskDisplayedIdFromContent(cmd.getContent()));
 			e.setContent(CommandParser.getTaskDescFromContent(cmd.getContent()));
 			break;
+		case SAVE:
+			CommandParser.parseSave(cmd);
+			break;
 		case SEARCH:
 			CommandParser.parseSearch(cmd);
 			break;

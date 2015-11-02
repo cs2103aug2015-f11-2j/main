@@ -32,7 +32,7 @@ public class CommandTest {
 	 * no task name and no parameters (invalid), have task name and no parameters (valid),
 	 * have task name and have parameters (valid), no task name and have parameters (invalid)
 	 * 
-	 * Note: parameters includes startDate, endDate and priority.
+	 * Note: parameters include startDate, endDate and priority.
 	 */
 	@Test
 	public void testCommandAdd() throws Exception {
@@ -88,12 +88,12 @@ public class CommandTest {
 	 * 
 	 * Boundary case
 	 * command content:
-	 * no id (invalid), single id (valid), multiple id (valid), duplicate id (valid)
+	 * no id (invalid), single id (valid), multiple id (valid), duplicate id (valid), any other String (invalid)
 	 * 
 	 * id:
 	 * 0 (invalid), 1 (valid), display.getTaskList().size() (valid), display.getTaskList().size() + 1 (invalid)
 	 */
-	//@Test
+	@Test
 	public void testCommandDelete() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testdelete.txt");
@@ -118,28 +118,29 @@ public class CommandTest {
 			String input = "delete";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified", viewState.getStatusMessage());
-
+/*
 			// command content: single id (valid)
 			// id: 0 (invalid)
 			input = "delete 0";
 			viewState = CommandController.getInstance().executeCommand(input);
-			TaskList tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("", viewState.getStatusMessage());
-			
+
+			// command content: single id (valid)
 			// id: display.getTaskList().size() + 1 [6] (invalid)
 			input = "delete 6";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("", viewState.getStatusMessage());
-
+*/
+			// command content: single id (valid)
 			// id: 1 (valid)
 			input = "delete 1";
 			viewState = CommandController.getInstance().executeCommand(input);
-			tasks = TaskStorage.getInstance().readTasks();
+			TaskList tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 1", viewState.getStatusMessage());
 			assertEquals(4, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
-			
+
+			// command content: single id (valid)
 			// id: display.getTaskList().size() [4] (valid)
 			input = "delete 4";
 			viewState = CommandController.getInstance().executeCommand(input);
@@ -147,7 +148,13 @@ public class CommandTest {
 			assertEquals("Deleted task: 4", viewState.getStatusMessage());
 			assertEquals(3, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(3).getId()));
-
+/*
+			// command content: any other String (invalid)
+			// id: any valid value
+			input = "delete abc";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
+*/
 			// command content: multiple id (valid)
 			// id: any valid value
 			input = "delete 1 3";
@@ -157,15 +164,15 @@ public class CommandTest {
 			assertEquals(1, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(2).getId()));
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
-
+/*
 			// command content: duplicate id (valid)
-			// idL any valid value
+			// id: any valid value
 			input = "delete 1 1";
 			viewState = CommandController.getInstance().executeCommand(input);
 			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 1", viewState.getStatusMessage());
 			assertEquals(0, tasks.getTaskList().size());
-			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));*/
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
@@ -180,8 +187,7 @@ public class CommandTest {
 	 * 
 	 * Boundary case
 	 * command content:
-	 * "" (valid), "all" (valid), "completed" (valid), "uncompleted" (valid),
-	 * any other String (invalid)
+	 * "" (valid), "all" (valid), "completed" (valid), "uncompleted" (valid), any other String (invalid)
 	 */
 	@Test
 	public void testCommandDisplay() throws Exception {
@@ -268,7 +274,7 @@ public class CommandTest {
 	 * priority:
 	 * "none" (valid), valid values from CommandParser (valid)
 	 * 
-	 * Note: parameters includes name, startDate, endDate and priority. Invalid values for
+	 * Note: parameters include name, startDate, endDate and priority. Invalid values for
 	 * date and priority are tested in DateParserTest and CommandParserTest respectively.
 	 */
 	@Test
@@ -463,7 +469,7 @@ public class CommandTest {
 	@Test
 	public void testCommandInvalid() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
-		AppStorage.getInstance().setStorageFileLocation("testStorage/testedit.txt");
+		AppStorage.getInstance().setStorageFileLocation("testStorage/testinvalid.txt");
 		File testFile = createTestFile();
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
@@ -481,6 +487,113 @@ public class CommandTest {
 			input = "abc";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid command: abc", viewState.getStatusMessage());
+		} catch (Exception e) {
+			throw e; // JUnit will handle this and report a failed assertion
+		} finally {
+			removeFileAndParentsIfEmpty(testFile.toPath());
+			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
+		}
+	}
+
+	/**
+	 * Equivalence partition
+	 * command content: [single id], [multiple id], [duplicate id], ["all"]
+	 * id: [1 .. display.getTaskList().size()]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no id (invalid), single id (valid), multiple id (valid), duplicate id (valid),
+	 * "all" (valid), any other String (invalid)
+	 * 
+	 * id:
+	 * 0 (invalid), 1 (valid), display.getTaskList().size() (valid), display.getTaskList().size() + 1 (invalid)
+	 */
+	@Test
+	public void testCommandMark() throws Exception {
+		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
+		AppStorage.getInstance().setStorageFileLocation("testStorage/testMark.txt");
+		File testFile = createTestFile();
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
+		master.getTaskList().clear();
+		display.getTaskList().clear();
+		
+		try {
+			// populate tasklist
+			ArrayList<Task> testTasks = new ArrayList<Task>();
+			for (int i = 0; i < 3; i++) {
+				Task task = new Task(CommandController.getInstance().createCommand("add mark" + (i + 1)));
+				testTasks.add(task);
+				master.addTask(task);
+				display.addTask(task);
+			}
+			TaskStorage.getInstance().writeTasks(master);
+			
+			// command content: no id (invalid)
+			String input = "mark";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("No task specified to mark", viewState.getStatusMessage());
+
+			// command content: single id (valid)
+			// id: 0 (invalid)
+			input = "mark 0";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
+
+			// command content: single id (valid)
+			// id: display.getTaskList().size() + 1 [4] (invalid)
+			input = "mark 4";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
+
+			// command content: single id (valid)
+			// id: 1 (valid)
+			input = "mark 1";
+			viewState = CommandController.getInstance().executeCommand(input);
+			TaskList tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Marked task completed: 1", viewState.getStatusMessage());
+			assertTrue(tasks.getTaskByIndex(0).isCompleted());
+
+			// command content: single id (valid)
+			// id: display.getTaskList().size() [3] (valid)
+			input = "mark 3";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Marked task completed: 3", viewState.getStatusMessage());
+			assertTrue(tasks.getTaskByIndex(2).isCompleted());
+
+			// command content: duplicate id (valid)
+			// id: any valid value
+			input = "mark 1 1";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Marked task uncompleted: 1", viewState.getStatusMessage());
+			assertFalse(tasks.getTaskByIndex(0).isCompleted());
+
+			// command content: multiple id (valid)
+			// id: any valid value
+			input = "mark 1 3";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Marked task completed: 1; Marked task uncompleted: 3", viewState.getStatusMessage());
+			assertTrue(tasks.getTaskByIndex(0).isCompleted());
+			assertFalse(tasks.getTaskByIndex(2).isCompleted());
+/*
+			// command content: "all" (valid)
+			// id: any valid value
+			input = "mark all";
+			viewState = CommandController.getInstance().executeCommand(input);
+			tasks = TaskStorage.getInstance().readTasks();
+			assertEquals("Marked tasks completed: 2, 3; Marked task uncompleted: 1", viewState.getStatusMessage());
+			assertFalse(tasks.getTaskByIndex(0).isCompleted());
+			assertTrue(tasks.getTaskByIndex(1).isCompleted());
+			assertTrue(tasks.getTaskByIndex(2).isCompleted());
+*/
+			// command content: any other String (invalid)
+			// id: any valid value
+			input = "mark abc";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
@@ -716,6 +829,179 @@ public class CommandTest {
 			viewState = CommandController.getInstance().executeCommand(input);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	/**
+	 * Equivalence partition
+	 * command content: [have parameters]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * no parameters (invalid), have parameters (valid)
+	 * 
+	 * name:
+	 * whole word match (valid), partial word match (valid),
+	 * multiple whole word match (valid), multiple partial word match
+	 * combination of partial and whole word match
+	 * 
+	 * date:
+	 * "between [startDate] and [endDate]" (valid), "after [date]" (valid), "before [date]" (valid) 
+	 * 
+	 * Note: parameters include name, startDate, endDate, priority and type. Invalid
+	 * values for date and priority are tested in DateParserTest, CommandParserTest and PredicatesTest.
+	 */
+	@Test
+	public void testCommandSearch() throws Exception {
+		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
+		AppStorage.getInstance().setStorageFileLocation("testStorage/testsearch.txt");
+		File testFile = createTestFile();
+		TaskList master = CommandController.getInstance().getMasterTaskList();
+		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
+		master.getTaskList().clear();
+		display.getTaskList().clear();
+		
+		try {
+			// populate tasklist
+			ArrayList<Task> testTasks = new ArrayList<Task>();
+			Task task = new Task(CommandController.getInstance().createCommand("add CS2103 tutorial"));
+			task.setStartDate(LocalDateTime.of(2001, 1, 1, 13, 0));
+			task.setEndDate(LocalDateTime.of(2003, 3, 3, 15, 0));
+			task.setPriority(Priority.HIGH);
+			testTasks.add(task);
+			master.addTask(task);
+			display.addTask(task);
+			task = new Task(CommandController.getInstance().createCommand("add CS2103 lecture"));
+			task.setEndDate(LocalDateTime.of(2002, 2, 2, 14, 0));
+			testTasks.add(task);
+			master.addTask(task);
+			display.addTask(task);
+			task = new Task(CommandController.getInstance().createCommand("add CS2010 lecture"));
+			task.setCompleted(true);
+			testTasks.add(task);
+			master.addTask(task);
+			display.addTask(task);
+			TaskStorage.getInstance().writeTasks(master);
+/*
+			// command content: no parameters (invalid)
+			String input = "search";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("", viewState.getStatusMessage());
+*/
+			// command content: have parameters (valid)
+			// name: whole word match (valid)
+			String input = "search lecture";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// name: partial word match (valid)
+			input = "search cs";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
+
+			// command content: have parameters (valid)
+			// name: multiple whole word match (valid)
+			input = "search cs2103 tutorial";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// date: "between [startDate] and [endDate]" (valid)
+			input = "search between 01/01/01 and 03/03/03";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
+
+			// command content: have parameters (valid)
+			// date: "between [startDate] and [endDate]" (valid)
+			input = "search between 01/01/01 and 03/03/03";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
+
+			// command content: have parameters (valid)
+			// date: "after [date]" (valid)
+			input = "search after 02/02/02";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
+
+			// command content: have parameters (valid)
+			// date: "before [date]" (valid)
+			input = "search before 02/02/02";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// priority
+			input = "search priority high";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// type
+			input = "search type completed";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals("CS2010 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
+		} catch (Exception e) {
+			throw e; // JUnit will handle this and report a failed assertion
+		} finally {
+			removeFileAndParentsIfEmpty(testFile.toPath());
+			AppStorage.getInstance().setStorageFileLocation(prevStorageLocation);
+		}
+	}
+
+	/**
+	 * Equivalence partition
+	 * command content: ["light"], ["dark"]
+	 * 
+	 * Boundary case
+	 * command content:
+	 * "" (invalid), "light" (valid), "dark" (valid), any other String (invalid)
+	 */
+	@Test
+	public void testCommandTheme() throws Exception {
+		String prevSelectedTheme = AppStorage.getInstance().getSelectedTheme();
+
+		try {
+			// command content: "" (invalid)
+			String input = "theme";
+			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Available themes: light, dark", viewState.getStatusMessage());
+
+			// command content: "light" (valid)
+			input = "theme light";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Current theme: light", viewState.getStatusMessage());
+			assertTrue("light", viewState.getTheme().endsWith("theme_light.css"));
+			assertEquals("light", AppStorage.getInstance().getSelectedTheme());
+
+			// command content: "dark" (valid)
+			input = "theme dark";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Current theme: dark", viewState.getStatusMessage());
+			assertTrue("dark", viewState.getTheme().endsWith("theme_dark.css"));
+			assertEquals("dark", AppStorage.getInstance().getSelectedTheme());
+
+			// command content: any other String (invalid)
+			input = "theme abc";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("Available themes: light, dark", viewState.getStatusMessage());
+		} catch (Exception e) {
+			throw e; // JUnit will handle this and report a failed assertion
+		} finally {
+			AppStorage.getInstance().setSelectedTheme(prevSelectedTheme);
 		}
 	}
 
