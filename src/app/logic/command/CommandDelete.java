@@ -41,13 +41,13 @@ public class CommandDelete extends Command {
 
 			Collections.sort(ids, Collections.reverseOrder());
 			Collections.sort(masterIdsList, Collections.reverseOrder());
-
 			
-			// check for identical id's 
+			
+			// remove identical id's 
 			for (int i = ids.size() - 1; i > 0; i--) {
 				if (ids.get(i).intValue() == ids.get(i - 1).intValue()) {
-					viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, "Duplicated values detected"));
-					return viewState;
+					ids.remove(i);	
+					masterIdsList.remove(i);
 				}
 			}
 			
@@ -57,24 +57,32 @@ public class CommandDelete extends Command {
 				deletedTask.add(display.getTaskUuidByIndex(i-1));
 				display.getTaskList().remove(i - 1);
 			}
-
+			
 			
 			// remove task from master list
 			for (int i : masterIdsList) {
 				master.getTaskList().remove(i);
 			}
 
-
+			
 			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
 			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
 			logDeletedTaskUuid(deletedTask);
 			setExecuted(true);
 
+		} catch (IndexOutOfBoundsException e) {
+			LogHelper.getInstance().getLogger().info("IndexOutOfBoundsException:" + e.getMessage() +
+					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DELETE_INVALID_ID);
+		} catch (NullPointerException e) {
+			LogHelper.getInstance().getLogger().info("NullPointerException:" + e.getMessage() + 
+					"; " + ViewConstants.ERROR_DELETE_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DELETE_INVALID_ID);
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
-		}
+		} 
 
 		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
