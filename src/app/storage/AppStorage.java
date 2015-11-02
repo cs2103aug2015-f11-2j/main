@@ -32,7 +32,7 @@ public class AppStorage {
 
 				setToDefaultStorageFileLocation();
 				setToDefaultLogFileLocation();
-				setDefaultSelectedTheme();
+				setToDefaultSelectedTheme();
 			} else {
 				readProperties();
 			}
@@ -91,13 +91,13 @@ public class AppStorage {
 	}
 
 	public void setSelectedTheme(String theme) {
-		assert(theme == ViewConstants.THEME_LIGHT || theme == ViewConstants.THEME_DARK);
+		assert(theme.equalsIgnoreCase(ViewConstants.THEME_LIGHT) || theme.equalsIgnoreCase(ViewConstants.THEME_DARK));
 
 		properties.setProperty(StorageConstants.PROPERTIES_SELECTED_THEME, theme);
 		writeProperties();
 	}
 
-	public void setDefaultSelectedTheme() {
+	public void setToDefaultSelectedTheme() {
 		setSelectedTheme(ViewConstants.THEME_LIGHT);
 	}
 

@@ -58,7 +58,7 @@ public class CommandController {
 
 		if (!(AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
 				|| AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
-			AppStorage.getInstance().setDefaultSelectedTheme();
+			AppStorage.getInstance().setToDefaultSelectedTheme();
 		}
 		
 		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
@@ -212,6 +212,9 @@ public class CommandController {
 			CommandEdit e = (CommandEdit) cmd;
 			e.setDisplayId(CommandParser.getTaskDisplayedIdFromContent(cmd.getContent()));
 			e.setContent(CommandParser.getTaskDescFromContent(cmd.getContent()));
+			break;
+		case SAVE:
+			CommandParser.parseSave(cmd);
 			break;
 		case SEARCH:
 			CommandParser.parseSearch(cmd);

@@ -9,7 +9,9 @@ import app.constants.TaskConstants;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
+import app.constants.ViewConstants;
 import app.logic.command.Command;
+import app.logic.command.CommandSave;
 import app.model.ParserToken;
 import app.util.Common;
 
@@ -160,6 +162,26 @@ public class CommandParser {
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
 		cmd.setDisplayType(type);
+	}
+
+	/**
+	 * Parses and sets save-related parameters for the Command object
+	 * specified. This method should only be used for the save command.
+	 * 
+	 * The following parameters are set:
+	 * 
+	 * - Content and isLog.
+	 * 
+	 * @param cmd The Command object to set parameters for
+	 */
+	public static void parseSave(Command cmd) {
+		boolean hasLogKeyword = Common.getFirstWord(cmd.getContent()).equalsIgnoreCase(ViewConstants.SAVE_LOG);
+		CommandSave cmdSave = (CommandSave)cmd;
+		cmdSave.setLog(hasLogKeyword);
+
+		if (hasLogKeyword) {
+			cmdSave.setContent(Common.removeFirstWord(cmdSave.getContent()));
+		}
 	}
 
 	public static void parseDatesAndPriority(Command cmd) {
