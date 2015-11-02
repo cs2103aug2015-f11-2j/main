@@ -10,6 +10,8 @@ import app.util.LogHelper;
 
 public class CommandHelp extends Command {
 
+	private ViewState previousViewState;
+	
 	public CommandHelp() {
 		super();
 		this.setCommandType(CommandType.HELP);
@@ -17,10 +19,15 @@ public class CommandHelp extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-
 		// LogHelper.getLogger().info("Executing CommandHelp object.");
 
 		LogHelper.getInstance().getLogger().info("Executing CommandHelp object.");
+		
+		this.previousViewState = new ViewState(previousViewState);
+		if (previousViewState.getActiveView()== null){
+			this.previousViewState.setActiveView(ViewType.TASK_LIST);
+		}
+	
 		ViewState viewState = new ViewState();
 
 		viewState.setHeader(String.format(ViewConstants.HEADER_HELP));
@@ -34,8 +41,11 @@ public class CommandHelp extends Command {
 
 	@Override
 	public ViewState undo() {
-		// TODO Auto-generated method stub
-		return null;
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		return previousViewState;
 	}
 
 }
