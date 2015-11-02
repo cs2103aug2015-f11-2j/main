@@ -79,36 +79,35 @@ public class CommandEdit extends Command {
 		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
 	}
-	
+
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
-		try {
-			
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		
-		int id = master.getTaskIndexByUuid(storeId);
-		
-		master.getTaskByIndex(id).setStartDate(startDate);		
-		master.getTaskByIndex(id).setEndDate(endDate);
-		master.getTaskByIndex(id).setName(content);
-		master.getTaskByIndex(id).setPriority(priority);
 
-		
-		TaskStorage.getInstance().writeTasks(master);
-		previousViewState.setTaskList(previousViewState.getTaskList());
-		previousViewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_UNDO));
-		LogHelper.getInstance().getLogger().info(String.format("UNDO_EDIT:" + ViewConstants.MESSAGE_UNDO));
-		setExecuted(true);
-	
-		} 	catch (Exception e) {
+		try {
+
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+
+			int id = master.getTaskIndexByUuid(storeId);
+
+			master.getTaskByIndex(id).setStartDate(startDate);
+			master.getTaskByIndex(id).setEndDate(endDate);
+			master.getTaskByIndex(id).setName(content);
+			master.getTaskByIndex(id).setPriority(priority);
+
+			TaskStorage.getInstance().writeTasks(master);
+			previousViewState.setTaskList(previousViewState.getTaskList());
+			previousViewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_UNDO));
+			LogHelper.getInstance().getLogger().info(String.format("UNDO_EDIT:" + ViewConstants.MESSAGE_UNDO));
+			setExecuted(true);
+
+		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage() + String.format(ViewConstants.ERROR_UNDO));
 			previousViewState.setStatus(StatusType.ERROR, String.format(ViewConstants.MESSAGE_UNDO));
-		}	
-	
+		}
+
 		return previousViewState;
 	}
 
