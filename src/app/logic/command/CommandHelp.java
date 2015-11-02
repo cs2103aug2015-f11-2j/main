@@ -30,26 +30,37 @@ public class CommandHelp extends Command {
 		}
 
 		ViewState viewState = new ViewState();
-		viewState.setHeader(String.format(ViewConstants.HEADER_HELP));
-		
-		
-		String getHelpList = new String(); 
-		
-		if (this.getContent().isEmpty()) {
-			getHelpList = formList();
-		} else {
-			getHelpList = helpList(this.getContent().toUpperCase());
-		}
-		
-		viewState.setTextArea(getHelpList);
-		viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.HEADER_HELP));
 
-		setExecuted(true);
-		viewState.setActiveView(ViewType.TEXT_VIEW);
+		try {
+			
+			String getHelpList = new String();
+
+			if (this.getContent().isEmpty()) {
+				getHelpList = formList();
+			} else {
+				getHelpList = helpList(this.getContent().toUpperCase());
+			}
+			
+			// return to current state if command does not exist.
+			if (getHelpList.equals(this.getContent().toUpperCase())) {
+				viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_HELP, this.getContent()));
+				return viewState;
+			}
+
+			viewState.setTextArea(getHelpList);
+			viewState.setHeader(String.format(ViewConstants.HEADER_HELP));
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.HEADER_HELP));
+			viewState.setActiveView(ViewType.TEXT_VIEW);
+			setExecuted(true);
+
+		} catch (Exception e) {
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_HELP, this.getContent()));
+		}
+
 		return viewState;
 	}
 
-	
 	private String formList() {
 		String formList = new String();
 		formList = formList + helpList(CommandType.ADD.toString());
@@ -64,8 +75,7 @@ public class CommandHelp extends Command {
 		formList = formList + HelpConstants.DOUBLE_LINE + helpList(CommandType.EXIT.toString());
 		return formList;
 	}
-	
-	
+
 	private String helpList(String type) {
 
 		if (type.equals(CommandType.ADD.toString())) {
@@ -105,16 +115,12 @@ public class CommandHelp extends Command {
 
 		} else if (type.equals(CommandType.EXIT.toString())) {
 			type = combineLine(HelpConstants.HELP_EXIT_DESCRIPTION, HelpConstants.HELP_EXIT_OVERVIEW, "");
-		
-		} else {
-			// Show all if no such help command.
-			type = formList();
+			
 		}
-		
+
 		return type;
 	}
 
-	
 	private String combineLine(String description, String overview, String examples) {
 		return (description + HelpConstants.NEW_LINE + overview + HelpConstants.NEW_LINE + examples);
 	}
