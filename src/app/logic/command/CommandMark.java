@@ -169,26 +169,6 @@ public class CommandMark extends Command {
 		}
 		return idList;
 	}
-
-	// converts the ArrayList of id into a String, with each id separated by comma
-	private String getIdListString(ArrayList<Integer> arr) {
-		String idList = "";
-		for (int i = 0; i < arr.size(); i++) {
-			idList += String.valueOf(arr.get(i)) + ", ";
-		}
-		idList = idList.replaceAll(",[ \t]*$", "");
-		return idList;
-	}
-	
-	// converts the ArrayList of UUID into a String, with each UUID separated by comma
-	private String getUuidListString(ArrayList<UUID> arr) {
-		String idList = "";
-		for (int i = 0; i < arr.size(); i++) {
-			idList += String.valueOf(arr.get(i)) + ", ";
-		}
-		idList = idList.replaceAll(",[ \t]*$", "");
-		return idList;
-	}
 	
 	@Override
 	public ViewState undo() {
