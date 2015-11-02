@@ -39,6 +39,7 @@ public class ViewConstants {
 	public static String MESSAGE_DELETE = "Deleted task: %1$s";
 	public static String ERROR_DELETE = "Error deleting task: %1$s";
 	public static String ERROR_DELETE_NO_TASK = "No task specified";
+	public static String ERROR_DELETE_INVALID_ID = "Invalid task ID entered";
 	
 	// MARK command
 	public static String MESSAGE_MARK_COMPLETED = "Marked %s completed: %s";
