@@ -21,7 +21,7 @@ public abstract class Command {
 	private DisplayType displayType;
 	private ArrayList<RemovableField> removeField;
 	private boolean isExecuted;
-
+	
 	public Command() {
 		removeField = new ArrayList<RemovableField>();
 		commandString = "";
@@ -29,7 +29,8 @@ public abstract class Command {
 	}
 	
 	public abstract	ViewState execute(ViewState previousViewState);
-
+	public abstract ViewState undo();
+	
 	public String getContent() {
 		return content;
 	}

@@ -17,6 +17,7 @@ import app.util.LogHelper;
 
 public class CommandSave extends Command {
 	private boolean isLog;
+	private String prevFileLocation;
 
 	public CommandSave() {
 		super();
@@ -41,15 +42,12 @@ public class CommandSave extends Command {
 				return viewState;
 			}
 
-			String prevFileLocation = (isLog) ? AppStorage.getInstance().getLogFileLocation()
-					: AppStorage.getInstance().getStorageFileLocation();
+			prevFileLocation = (isLog) ? AppStorage.getInstance().getLogFileLocation()
+									   : AppStorage.getInstance().getStorageFileLocation();
 
 			String errorMsg = changeFileLocation(prevFileLocation, this.getContent());
 
 			if (errorMsg == null) {
-				File prevFile = new File(prevFileLocation);
-				removeFileAndParentsIfEmpty(prevFile.toPath());
-
 				String successMsg = String.format(ViewConstants.MESSAGE_SAVE,
 						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE,
 						(isLog) ? AppStorage.getInstance().getLogFileLocation()
@@ -61,8 +59,6 @@ public class CommandSave extends Command {
 				viewState.setStatus(StatusType.ERROR, errorMsg);
 				LogHelper.getInstance().getLogger().info(errorMsg);
 			}
-
-			return viewState;
 		} catch (Exception e) {
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_SAVE, this.getContent()));
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
@@ -71,40 +67,83 @@ public class CommandSave extends Command {
 		return viewState;
 	}
 
+	@Override
+	public ViewState undo() {
+		if (!isExecuted()) {
+			return new ViewState();
+		}
+		
+		ViewState viewState = new ViewState();
+
+		try {
+			String errorMsg = changeFileLocation(this.getContent(), prevFileLocation);
+
+			if (errorMsg == null) {
+				String successMsg = String.format(ViewConstants.MESSAGE_SAVE,
+						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE,
+						(isLog) ? AppStorage.getInstance().getLogFileLocation()
+								: AppStorage.getInstance().getStorageFileLocation());
+				viewState.setStatus(ViewConstants.MESSAGE_UNDO + successMsg);
+				LogHelper.getInstance().getLogger().info(ViewConstants.MESSAGE_UNDO + successMsg);
+				setExecuted(false);
+			} else {
+				viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_UNDO + errorMsg);
+				LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_UNDO + errorMsg);
+			}
+		} catch (Exception e) {
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_UNDO + ViewConstants.ERROR_SAVE, this.getContent()));
+			LogHelper.getInstance().getLogger().severe(e.getMessage());
+		}
+
+		return viewState;
+	}
+
 	/**
 	 * Change the storage/log file location in the configuration file after
-	 * successfully copying of the storage/log file to the new file location.
+	 * successfully copying the storage/log file to the new file location and deleting
+	 * the previous storage/log file.
 	 * 
-	 * @param prevFileLocation 	Previous storage/log file location.
-	 * @param newFileLocation 	New storage/log file location.
-	 * @return 					Error messages encountered when copying the file.
+	 * @param prevPath 	Previous storage/log file location.
+	 * @param newPath 	New storage/log file location.
+	 * @return 			Error messages encountered when copying the file.
 	 */
-	private String changeFileLocation(String prevFileLocation, String newFileLocation) {
+	private String changeFileLocation(String prevPath, String newPath) {
 		String errorMsg;
 
-		if (newFileLocation.equalsIgnoreCase(ViewConstants.SAVE_DEFAULT)) {
+		if (newPath.equalsIgnoreCase(ViewConstants.SAVE_DEFAULT)) {
 			if (isLog) {
-				errorMsg = copyFile(prevFileLocation, StorageConstants.FILE_DEFAULT_LOG);
+				errorMsg = copyFile(prevPath, StorageConstants.FILE_DEFAULT_LOG);
 
 				if (errorMsg == null) {
 					AppStorage.getInstance().setToDefaultLogFileLocation();
 				}
 			} else {
-				errorMsg = copyFile(prevFileLocation, StorageConstants.FILE_DEFAULT_STORAGE);
+				errorMsg = copyFile(prevPath, StorageConstants.FILE_DEFAULT_STORAGE);
 
 				if (errorMsg == null) {
 					AppStorage.getInstance().setToDefaultStorageFileLocation();
 				}
 			}
 		} else {
-			errorMsg = copyFile(prevFileLocation, newFileLocation);
+			errorMsg = copyFile(prevPath, newPath);
 
 			if (errorMsg == null) {
 				if (isLog) {
-					AppStorage.getInstance().setLogFileLocation(newFileLocation);
+					AppStorage.getInstance().setLogFileLocation(newPath);
 				} else {
-					AppStorage.getInstance().setStorageFileLocation(newFileLocation);
+					AppStorage.getInstance().setStorageFileLocation(newPath);
 				}
+			}
+		}
+
+		if (errorMsg == null) {
+			File prevFile = new File(prevPath);
+
+			try {
+				removeFileAndParentsIfEmpty(prevFile.toPath());
+			} catch (IOException e) {
+				errorMsg = String.format(ViewConstants.ERROR_SAVE_DELETE_FILE,
+						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE, prevPath);
 			}
 		}
 
@@ -114,15 +153,15 @@ public class CommandSave extends Command {
 	/**
 	 * Copy a file from source to destination.
 	 * 
-	 * @param sourceLocation 	Source file path.
-	 * @param destLocation 		Destination file path.
-	 * @return 					Error messages that occurred when copying the file.
-	 * 							Returns null if it successfully copied the file.
+	 * @param sourcePath 	Source file path.
+	 * @param destPath 		Destination file path.
+	 * @return 				Error messages that occurred when copying the file.
+	 * 						Returns null if it successfully copied the file.
 	 */
-	private String copyFile(String sourceLocation, String destLocation) {
+	private String copyFile(String sourcePath, String destPath) {
 		String errorMsg = null;
-		File sourceFile = new File(sourceLocation);
-		File destFile = new File(AppStorage.getInstance().toValidCanonicalPath(destLocation));
+		File sourceFile = new File(sourcePath);
+		File destFile = new File(AppStorage.getInstance().toValidCanonicalPath(destPath));
 
 		if (destFile.getParentFile() != null) {
 			destFile.getParentFile().mkdirs();
@@ -131,7 +170,7 @@ public class CommandSave extends Command {
 		try {
 			if (destFile.exists() && Files.isSameFile(sourceFile.toPath(), destFile.toPath())) {
 				errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_CHANGES,
-						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE, sourceLocation);
+						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE, sourcePath);
 			} else {
 				Files.copy(sourceFile.toPath(), destFile.toPath());
 			}

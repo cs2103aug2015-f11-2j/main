@@ -1,5 +1,6 @@
 package app.logic;
 
+import java.util.Stack;
 import java.util.ArrayList;
 
 import app.constants.CommandConstants;
@@ -18,6 +19,7 @@ import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
+import app.logic.command.CommandUndo;
 import app.model.Action;
 import app.model.CommandList;
 import app.model.TaskList;
@@ -37,13 +39,14 @@ public class CommandController {
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
-
 	private ViewState currentViewState;
+	private Stack<Command> executedCommands;
 	
 	private CommandList commandHistory;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
+		executedCommands = new Stack<Command>();
 		commandHistory = new CommandList();
 		initializeViewState();
 	}
@@ -90,12 +93,16 @@ public class CommandController {
 	public ViewState executeCommand(String commandString) {
 		commandString = commandString.trim();
 		Command cmd = createCommand(commandString);
+				
 		ViewState newViewState = cmd.execute(currentViewState);
 		commandHistory.add(cmd.getCommandString());
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
 			currentViewState.getTaskList().sort();
+			if (cmd.getCommandType() != CommandType.UNDO) {
+				executedCommands.push(cmd); 
+			}
 		} else {
 			// If not executed, simply update status bar and reset actions.
 			currentViewState.mergeStatus(newViewState);
@@ -131,6 +138,8 @@ public class CommandController {
 			return CommandType.SAVE;
 		} else if (CommandConstants.ALIASES_SEARCH.contains(word)) {
 			return CommandType.SEARCH;
+		} else if (CommandConstants.ALIASES_UNDO.contains(word)) {
+			return CommandType.UNDO;
 		}  else if (CommandConstants.ALIASES_EXIT.contains(word)) {
 			return CommandType.EXIT;
 		}
@@ -172,6 +181,9 @@ public class CommandController {
 			break;
 		case SAVE:
 			cmd = new CommandSave();
+			break;
+		case UNDO:
+			cmd = new CommandUndo();
 			break;
 		case SEARCH:
 			cmd = new CommandSearch();
@@ -239,5 +251,7 @@ public class CommandController {
 		return commandHistory;
 	}
 
-	
+	public Stack<Command> getExecutedCommands() {
+		return executedCommands;
+	}
 }
