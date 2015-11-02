@@ -13,7 +13,6 @@ import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
 import app.model.ViewState;
 import app.storage.AppStorage;
-import app.util.Common;
 import app.util.LogHelper;
 
 public class CommandSave extends Command {
@@ -23,8 +22,10 @@ public class CommandSave extends Command {
 	public CommandSave() {
 		super();
 		this.setCommandType(CommandType.SAVE);
-
-		isLog = false;
+	}
+	
+	public void setLog(boolean hasLogKeyword) {
+		isLog = hasLogKeyword;
 	}
 
 	@Override
@@ -33,20 +34,8 @@ public class CommandSave extends Command {
 
 		try {
 			if (this.getContent().isEmpty()) {
-				String errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_LOCATION, ViewConstants.SAVE_STORAGE);
-				viewState.setStatus(StatusType.ERROR, errorMsg);
-				LogHelper.getInstance().getLogger().info(errorMsg);
-
-				return viewState;
-			}
-
-			if (Common.getFirstWord(this.getContent()).equalsIgnoreCase(ViewConstants.SAVE_LOG)) {
-				isLog = true;
-				this.setContent(Common.removeFirstWord(this.getContent()));
-			}
-
-			if (this.getContent().isEmpty()) {
-				String errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_LOCATION, ViewConstants.SAVE_LOG);
+				String errorMsg = String.format(ViewConstants.ERROR_SAVE_NO_LOCATION,
+						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE);
 				viewState.setStatus(StatusType.ERROR, errorMsg);
 				LogHelper.getInstance().getLogger().info(errorMsg);
 

@@ -4,9 +4,11 @@ import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.DisplayType;
+import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
+import app.model.Action;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.util.LogHelper;
@@ -40,6 +42,7 @@ public class CommandDisplay extends Command {
 						String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS,
 						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO_TOP, null));
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
@@ -48,6 +51,7 @@ public class CommandDisplay extends Command {
 				viewState.setTaskList(retrievedTaskList);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO_TOP, null));
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				
@@ -55,6 +59,7 @@ public class CommandDisplay extends Command {
 				viewState.setTaskList(master);
 				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
 				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO_TOP, null));
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);
 				

@@ -1,22 +1,19 @@
 package app.util;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.UUID;
 import java.util.regex.Pattern;
-
-import app.constants.TaskConstants.Priority;
-import app.model.Task;
 
 public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @return The plural form of the string by adding a "s" behind if given
 	 *         count is more than 1
@@ -28,6 +25,7 @@ public class Common {
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
+	 * @param count The number of element referred to by the string
 	 * @param singular The singular form of the string
 	 * @param plural The plural form of the string
 	 * @return The plural form of the string if given count is more than 1
@@ -72,10 +70,10 @@ public class Common {
 
 	/**
 	 * Builds an Integer ArrayList from the command content containing task
-	 * id(s)
+	 * ID(s)
 	 * 
 	 * @param content The content of the Command object
-	 * @return An integer ArrayList of the content(id) separated by comma
+	 * @return An integer ArrayList of the ID(s)
 	 */
 	public static ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
@@ -136,65 +134,36 @@ public class Common {
 		Set<T> noDuplicates = new LinkedHashSet<T>(listWithDuplicates);
 		return new ArrayList<T>(noDuplicates);
 	}
-
+	
 	/**
-	 * Placeholder
+	 * Builds a string of task ID(s) separated by comma
+	 * from an Integer ArrayList of task ID
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param arr The Integer ArrayList of task ID(s)
+	 * @return A string containing the task ID(s) separated by comma
 	 */
-	public static Predicate<Task> endDateBefore(LocalDateTime i) {
-		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(i) || t.getEndDate().isEqual(i)) : false;
+	public static String getIdListString(ArrayList<Integer> arr) {
+		String idList = "";
+		for (int i = 0; i < arr.size(); i++) {
+			idList += String.valueOf(arr.get(i)) + ", ";
+		}
+		idList = idList.replaceAll(",[ \t]*$", "");
+		return idList;
 	}
-
+	
 	/**
-	 * Placeholder
+	 * Builds a String of UUID(s) separated by comma
+	 * from an ArrayList of task UUID
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param arr The UUID ArrayList of task ID(s)
+	 * @return A String containing the task UUID(s) separated by comma
 	 */
-	public static Predicate<Task> startDateAfter(LocalDateTime i) {
-		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(i) || t.getEndDate().isEqual(i)) : false;
-	}
-
-	/**
-	 * Placeholder
-	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
-	 */
-	public static Predicate<Task> betweenDates(LocalDateTime start, LocalDateTime end) {
-		return t -> (t.getStartDate() != null)
-				? ((t.getStartDate().isAfter(start) || t.getStartDate().isEqual(start))
-						&& (t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end)))
-				: ((t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end))
-						&& (t.getEndDate().isAfter(start) || t.getEndDate().equals(start)));
-	}
-
-	/**
-	 * Placeholder
-	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
-	 */
-	public static Predicate<Task> priorityEquals(Priority priority) {
-		return t -> (t.getPriority() != null)
-				? (t.getPriority().toString().toLowerCase().equalsIgnoreCase(priority.toString().toLowerCase()))
-				: false;
-	}
-
-	/**
-	 * Placeholder
-	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
-	 */
-	public static Predicate<Task> keywordMatches(String keyword) {
-		return t -> t.getName().toLowerCase().matches(".*\\b" + keyword.toLowerCase() + "\\b.*");
+	public static String getUuidListString(ArrayList<UUID> arr) {
+		String idList = "";
+		for (int i = 0; i < arr.size(); i++) {
+			idList += String.valueOf(arr.get(i)) + ", ";
+		}
+		idList = idList.replaceAll(",[ \t]*$", "");
+		return idList;
 	}
 }

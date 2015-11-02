@@ -5,6 +5,7 @@ import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.ViewState;
 import app.util.LogHelper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -39,7 +40,30 @@ public class InputViewManager {
 				viewManager.scrollTaskList(ScrollDirection.UP);
 			} else if (scrollDown.match(event)) {
 				viewManager.scrollTaskList(ScrollDirection.DOWN);
+			} else if (event.getCode() == KeyCode.UP) {
+				prevCommandFromHistory();
+			} else if (event.getCode() == KeyCode.DOWN) {
+				nextCommandFromHistory();
 			}
+		});
+	}
+	
+	private void nextCommandFromHistory() {
+		String text = CommandController.getInstance().getCommandHistory().next();
+		setText(text, true);
+	}
+	
+	private void prevCommandFromHistory() {
+		String text = CommandController.getInstance().getCommandHistory().prev();
+		setText(text, false);
+	}
+	
+	private void setText(String text, boolean allowEmpty) {
+		if (allowEmpty || !text.isEmpty()) {
+			commandInput.setText(text);
+		}		
+		Platform.runLater(() -> {
+			commandInput.positionCaret(commandInput.getLength());
 		});
 	}
 
@@ -59,9 +83,13 @@ public class InputViewManager {
 	 * command input field.
 	 */
 	public void onKeypressEnter() {
-		String commandString = commandInput.getText();
-		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + commandString);
-		ViewState newViewState = CommandController.getInstance().executeCommand(commandString);
+		String input = commandInput.getText();
+		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + input);
+		executeUserInput(input);
+	}
+	
+	public void executeUserInput(String input) {
+		ViewState newViewState = CommandController.getInstance().executeCommand(input);
 		viewManager.updateView(newViewState);
 		commandInput.clear();
 	}

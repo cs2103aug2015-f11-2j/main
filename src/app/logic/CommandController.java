@@ -1,6 +1,7 @@
 package app.logic;
 
 import java.util.Stack;
+import java.util.ArrayList;
 
 import app.constants.CommandConstants;
 import app.constants.ViewConstants;
@@ -12,12 +13,15 @@ import app.logic.command.CommandDelete;
 import app.logic.command.CommandDisplay;
 import app.logic.command.CommandEdit;
 import app.logic.command.CommandExit;
+import app.logic.command.CommandHelp;
 import app.logic.command.CommandInvalid;
 import app.logic.command.CommandMark;
 import app.logic.command.CommandSave;
 import app.logic.command.CommandSearch;
 import app.logic.command.CommandTheme;
 import app.logic.command.CommandUndo;
+import app.model.Action;
+import app.model.CommandList;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.parser.CommandParser;
@@ -37,12 +41,16 @@ public class CommandController {
 	private TaskList masterTaskList;
 	private ViewState currentViewState;
 	private Stack<Command> executedCommands;
+	
+	private CommandList commandHistory;
 
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
 		executedCommands = new Stack<Command>();
+		commandHistory = new CommandList();
 		initializeViewState();
 	}
+	
 
 	private void initializeViewState() {
 		currentViewState = new ViewState();
@@ -53,7 +61,7 @@ public class CommandController {
 
 		if (!(AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
 				|| AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
-			AppStorage.getInstance().setDefaultSelectedTheme();
+			AppStorage.getInstance().setToDefaultSelectedTheme();
 		}
 		
 		if (AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)) {
@@ -87,6 +95,7 @@ public class CommandController {
 		Command cmd = createCommand(commandString);
 				
 		ViewState newViewState = cmd.execute(currentViewState);
+		commandHistory.add(cmd.getCommandString());
 
 		if (cmd.isExecuted()) {
 			currentViewState.mergeWith(newViewState);
@@ -95,10 +104,11 @@ public class CommandController {
 				executedCommands.push(cmd); 
 			}
 		} else {
-			// If not executed, simply update status bar.
+			// If not executed, simply update status bar and reset actions.
 			currentViewState.mergeStatus(newViewState);
+			currentViewState.setActions(new ArrayList<Action>());
 		}
-
+		
 		return currentViewState;
 	}
 
@@ -178,6 +188,9 @@ public class CommandController {
 		case SEARCH:
 			cmd = new CommandSearch();
 			break;
+		case HELP:
+			cmd = new CommandHelp();
+			break;
 		case EXIT:
 			cmd = new CommandExit();
 			break;
@@ -212,8 +225,14 @@ public class CommandController {
 			e.setDisplayId(CommandParser.getTaskDisplayedIdFromContent(cmd.getContent()));
 			e.setContent(CommandParser.getTaskDescFromContent(cmd.getContent()));
 			break;
+		case SAVE:
+			CommandParser.parseSave(cmd);
+			break;
 		case SEARCH:
 			CommandParser.parseSearch(cmd);
+			break;
+		case MARK:
+			cmd.setContent(CommandParser.determineMarkAll(cmd.getContent()).toString());
 			break;
 		default:
 			break;
@@ -226,6 +245,10 @@ public class CommandController {
 
 	public ViewState getCurrentViewState() {
 		return currentViewState;
+	}
+	
+	public CommandList getCommandHistory() {
+		return commandHistory;
 	}
 
 	public Stack<Command> getExecutedCommands() {

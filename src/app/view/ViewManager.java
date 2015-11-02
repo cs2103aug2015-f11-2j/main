@@ -15,6 +15,7 @@ import app.model.Task;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.util.LogHelper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -183,6 +184,13 @@ public class ViewManager {
 			switch (action.getActionType()) {
 			case SCROLL_TASK_LIST_TO:
 				scrollTaskListTo(action.getActionObject());
+				break;
+			case SCROLL_TASK_LIST_TO_TOP:
+				scrollTaskListToTop();
+				break;
+			case EXIT:	// exit the application
+				Platform.exit();
+				break;
 			default:
 				break;
 			}
@@ -223,6 +231,10 @@ public class ViewManager {
 		// TODO: replace the magic string once WJ updates his code to get rid of
 		// magic strings.
 		setHeader(String.format(ViewConstants.HEADER_DISPLAY, "all"));
+	}
+
+	public void scrollTaskListToTop() {
+		taskListViewManager.scrollToTop();
 	}
 
 	/**
@@ -311,6 +323,10 @@ public class ViewManager {
 
 	public void scrollTaskList(ScrollDirection direction) {
 		taskListViewManager.scrollTaskList(direction);
+	}
+	
+	public void sendCommandToInput(String command) {
+		inputViewManager.executeUserInput(command);
 	}
 
 	/**

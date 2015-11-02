@@ -2,6 +2,8 @@ package app.constants;
 
 public class TaskConstants {
 
+	public static final String MARK_ALL_TASK = "ALL";
+	
 	// Enum values for the different priority levels
 	public enum Priority {
 		HIGH, MEDIUM, LOW, NONE;

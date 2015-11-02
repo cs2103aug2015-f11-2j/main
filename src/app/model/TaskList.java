@@ -161,6 +161,10 @@ public class TaskList {
 	public Task getTaskByIndex(int index) {
 		return taskList.get(index);
 	}
+	
+	public Integer getTaskListSize() {
+		return this.taskList.size();
+	}
 
 	public TaskList search(List<Predicate<Task>> predicates) {
 		Predicate<Task> query = compositePredicate(predicates);

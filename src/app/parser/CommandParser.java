@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import app.constants.TaskConstants;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
+import app.constants.ViewConstants;
 import app.logic.command.Command;
+import app.logic.command.CommandSave;
 import app.model.ParserToken;
 import app.util.Common;
 
@@ -25,6 +28,7 @@ public class CommandParser {
 	private static final List<String> DISPLAY_UNCOMPLETED = Common.getUnmodifiableList("pend", "pending", "i", "incomp",
 			"incomplete", "u", "uncomp", "uncompleted");
 	private static final List<String> DISPLAY_ALL = Common.getUnmodifiableList("a", "al", "all");
+	private static final List<String> MARK_ALL = Common.getUnmodifiableList("a", "al", "all");
 	private static final List<String> DISPLAY_TYPE_KEYWORDS = Common.getUnmodifiableList("type");
 
 	private static final List<String> SEARCH_START_DATE_KEYWORDS = Common.getUnmodifiableList("after", "since");
@@ -158,6 +162,26 @@ public class CommandParser {
 		cmd.setStartDate(parsedStart);
 		cmd.setEndDate(parsedEnd);
 		cmd.setDisplayType(type);
+	}
+
+	/**
+	 * Parses and sets save-related parameters for the Command object
+	 * specified. This method should only be used for the save command.
+	 * 
+	 * The following parameters are set:
+	 * 
+	 * - Content and isLog.
+	 * 
+	 * @param cmd The Command object to set parameters for
+	 */
+	public static void parseSave(Command cmd) {
+		boolean hasLogKeyword = Common.getFirstWord(cmd.getContent()).equalsIgnoreCase(ViewConstants.SAVE_LOG);
+		CommandSave cmdSave = (CommandSave)cmd;
+		cmdSave.setLog(hasLogKeyword);
+
+		if (hasLogKeyword) {
+			cmdSave.setContent(Common.removeFirstWord(cmdSave.getContent()));
+		}
 	}
 
 	public static void parseDatesAndPriority(Command cmd) {
@@ -386,15 +410,20 @@ public class CommandParser {
 	 * @return The specified DisplayType parsed from arg
 	 */
 	public static DisplayType determineDisplayType(String arg) {
-		String type = arg.toLowerCase().trim();
-		if (DISPLAY_COMPLETED.contains(type)) {
-			return DisplayType.COMPLETED;
-		} else if (DISPLAY_UNCOMPLETED.contains(type) || type.isEmpty()) {
-			return DisplayType.UNCOMPLETED;
-		} else if (DISPLAY_ALL.contains(type)) {
-			return DisplayType.ALL;
+		try {
+			String type = arg.toLowerCase().trim();
+			if (DISPLAY_COMPLETED.contains(type)) {
+				return DisplayType.COMPLETED;
+			} else if (DISPLAY_UNCOMPLETED.contains(type) || type.isEmpty()) {
+				return DisplayType.UNCOMPLETED;
+			} else if (DISPLAY_ALL.contains(type)) {
+				return DisplayType.ALL;
+			} else {
+				return DisplayType.INVALID;
+			}
+		} catch (Exception e) {
+			return DisplayType.INVALID;
 		}
-		return DisplayType.INVALID;
 	}
 
 	/**
@@ -423,6 +452,25 @@ public class CommandParser {
 	 */
 	public static String getTaskDescFromContent(String content) {
 		return Common.removeFirstWord(content);
+	}
+
+	/**
+	 * Determine the mark argument from the entered string
+	 * 
+	 * @param content The specified mark argument
+	 * @return Either the original content or the task constant MARK_ALL_TASK
+	 */
+	public static String determineMarkAll(String content) {
+		try {
+			String param = content.toLowerCase().trim();
+			if (MARK_ALL.contains(param)) {
+				return TaskConstants.MARK_ALL_TASK;
+			} else {
+				return content;
+			}
+		} catch (Exception e) {
+			return content;
+		}
 	}
 
 }

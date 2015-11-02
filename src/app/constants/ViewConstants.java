@@ -90,7 +90,10 @@ public class ViewConstants {
 	
 	// Header constants
 	public static String HEADER_DISPLAY = "Displaying %1$s tasks";
-
+	
+	// Help Message 
+	public static String HEADER_HELP = " Displaying Help List";
+	
 	// Enum values for the different statusbar statuses
 	public enum StatusType {
 		SUCCESS, ERROR, INFO;
@@ -106,7 +109,7 @@ public class ViewConstants {
 	}
 	
 	public enum ActionType {
-		SCROLL_TASK_LIST_TO;
+		SCROLL_TASK_LIST_TO, SCROLL_TASK_LIST_TO_TOP, EXIT;
 	}
 	
 	public static Queue<String> getItemColorsQueue() {

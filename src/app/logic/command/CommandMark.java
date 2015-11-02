@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.TaskConstants;
+import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.logic.CommandController;
+import app.model.Action;
 import app.model.TaskList;
 import app.model.ViewState;
 import app.storage.TaskStorage;
@@ -36,20 +39,28 @@ public class CommandMark extends Command {
 			LogHelper.getInstance().getLogger().info(ViewConstants.ERROR_MARK_NO_TASK);
 			return viewState;
 		}
-
-		ArrayList<Integer> displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+		
+		ArrayList<Integer> displayIdsToMarkList = new ArrayList<Integer>();
 		
 		
 		try {
-			displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
 			TaskList display = previousViewState.getTaskList();
 			TaskList master = CommandController.getInstance().getMasterTaskList();
+
+			if (this.getContent().equals(TaskConstants.MARK_ALL_TASK)) {
+				displayIdsToMarkList = getAllDisplayedIds(display);
+			} else {
+				displayIdsToMarkList = Common.getIdArrayList(this.getContent());
+				displayIdsToMarkList = Common.removeDuplicatesFromArrayList(displayIdsToMarkList);
+			}
 			markSelectedTasks(displayIdsToMarkList, display, master);
 			viewState.setTaskList(display);
+			Integer taskIndex = getFirstTaskIndex(displayIdsToMarkList);
+			viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO, display.getTaskByIndex(taskIndex)));	
 			
 			ArrayList<Integer> markedCompleted = getIdListByCompletion(displayIdsToMarkList, display, true);
 			ArrayList<Integer> markedUncompleted = getIdListByCompletion(displayIdsToMarkList, display, false);
-			viewState = setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
+			setFeedbackByMarkedTaskCompletion(markedCompleted, markedUncompleted, viewState);
 			
 			ArrayList<UUID> markedCompletedUuid = display.getTasksUuidList(markedCompleted);
 			ArrayList<UUID> markedUncompletedUuid = display.getTasksUuidList(markedUncompleted);
@@ -65,11 +76,11 @@ public class CommandMark extends Command {
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
 		} catch (IndexOutOfBoundsException e) {
-			LogHelper.getInstance().getLogger().severe("IndexOutOfBoundsException:" + e.getMessage() +
+			LogHelper.getInstance().getLogger().info("IndexOutOfBoundsException:" + e.getMessage() +
 					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 		} catch (NullPointerException e) {
-			LogHelper.getInstance().getLogger().severe("NullPointerException:" + e.getMessage() + 
+			LogHelper.getInstance().getLogger().info("NullPointerException:" + e.getMessage() + 
 					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
 			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_MARK_INVALID_ID);
 
@@ -80,30 +91,44 @@ public class CommandMark extends Command {
 		return viewState;
 	}
 
+	// Create a list of IDs containing all the IDs in the displayed taskList
+	private ArrayList<Integer> getAllDisplayedIds(TaskList display) {
+		ArrayList<Integer> allIds = new ArrayList<Integer>();
+		int size = display.getTaskListSize();
+		for (int i = 1; i <= size; i++) {
+			allIds.add(i);
+		}
+		return allIds;
+	}
+
+	// convert the first task ID from an array of displayed IDs to the task index
+	private Integer getFirstTaskIndex(ArrayList<Integer> displayIdsToMarkList) {
+		return displayIdsToMarkList.get(0) - 1;
+	}
+
 	// Set appropriate feedback based on marked tasks' completion
-	private ViewState setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
+	private void setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
 			ArrayList<Integer> markedUncompleted, ViewState viewState) {
 		String feedback = "";
 		assert(markedCompleted.size() > 0 || markedUncompleted.size() > 0);
 		
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted),
-					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getIdListString(markedCompleted),
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getIdListString(markedUncompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getIdListString(markedCompleted));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getIdListString(markedCompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
 			feedback = String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedUncompleted.size(), "task"), getIdListString(markedUncompleted));
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getIdListString(markedUncompleted));
 			viewState.setStatus(StatusType.SUCCESS, feedback);
 			setExecuted(true);
 		}
-		return viewState;
 	}
 
 	private void logUuidByMarkedTaskCompletion(ArrayList<UUID> markedCompleted,
@@ -113,14 +138,14 @@ public class CommandMark extends Command {
 		if (markedCompleted.size() > 0 && markedUncompleted.size() > 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_COMPLETED + "; " + 
 					ViewConstants.MESSAGE_MARK_UNCOMPLETED, Common.pluralize(markedCompleted.size(), "task"), 
-					getUuidListString(markedCompleted), Common.pluralize(markedUncompleted.size(), "task"), 
-					getUuidListString(markedUncompleted)));
+					Common.getUuidListString(markedCompleted), Common.pluralize(markedUncompleted.size(), "task"), 
+					Common.getUuidListString(markedUncompleted)));
 		} else if (markedCompleted.size() > 0 && markedUncompleted.size() == 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_COMPLETED,
-					Common.pluralize(markedCompleted.size(), "task"), getUuidListString(markedCompleted)));
+					Common.pluralize(markedCompleted.size(), "task"), Common.getUuidListString(markedCompleted)));
 		} else if (markedCompleted.size() == 0 && markedUncompleted.size() > 0) {
 			LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_MARK_UNCOMPLETED,
-					Common.pluralize(markedUncompleted.size(), "task"), getUuidListString(markedUncompleted)));
+					Common.pluralize(markedUncompleted.size(), "task"), Common.getUuidListString(markedUncompleted)));
 		}
 	}
 	
