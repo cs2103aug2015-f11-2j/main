@@ -71,10 +71,18 @@ public class CommandDelete extends Command {
 			logDeletedTaskUuid(deletedTask);
 			setExecuted(true);
 
+		} catch (IndexOutOfBoundsException e) {
+			LogHelper.getInstance().getLogger().info("IndexOutOfBoundsException:" + e.getMessage() +
+					"; " + ViewConstants.ERROR_MARK_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DELETE_INVALID_ID);
+		} catch (NullPointerException e) {
+			LogHelper.getInstance().getLogger().info("NullPointerException:" + e.getMessage() + 
+					"; " + ViewConstants.ERROR_DELETE_INVALID_ID);
+			viewState.setStatus(StatusType.ERROR, ViewConstants.ERROR_DELETE_INVALID_ID);
 		} catch (Exception e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
-		}
+		} 
 
 		viewState.setActiveView(ViewType.TASK_LIST);
 		return viewState;
