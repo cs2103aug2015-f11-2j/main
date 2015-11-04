@@ -20,7 +20,7 @@ public class CommandParser {
 	private static final List<String> PRIORITY_KEYWORDS = Common.getUnmodifiableList("priority", "p", "pri");
 	private static final List<String> START_DATE_KEYWORDS = Common.getUnmodifiableList("start", "from", "begin");
 	private static final List<String> END_DATE_KEYWORDS = Common.getUnmodifiableList("by", "due", "end", "to");
-	private static final List<String> PRIORITY_LEVELS = Common.getUnmodifiableList("high", "medium", "low");
+	private static final List<String> PRIORITY_LEVELS = Common.getUnmodifiableList("high", "medium", "low", "none");
 	private static final List<String> PRIORITY_LEVELS_WITH_NONE = Common.getUnmodifiableList("high", "medium", "low", "none");
 
 	private static final List<String> DISPLAY_COMPLETED = Common.getUnmodifiableList("c", "comp", "complete",
@@ -154,7 +154,7 @@ public class CommandParser {
 		String typeString = Common.getStringFromArrayIndexRange(displayToken.getStart() + 1, displayToken.getEnd(),
 				arr);
 		Priority priority = determineSearchPriority(priorityString);
-		DisplayType type = determineDisplayType(typeString);
+		DisplayType type = determineDisplayTypeSearch(typeString);
 
 		// Sets the parsed parameters
 		cmd.setContent(content);
@@ -439,6 +439,31 @@ public class CommandParser {
 			} else if (DISPLAY_ALL.contains(type)) {
 				return DisplayType.ALL;
 			} else {
+				return DisplayType.INVALID;
+			}
+		} catch (Exception e) {
+			return DisplayType.INVALID;
+		}
+	}
+	
+	/**
+	 * Determine the display argument from the entered string (for search)
+	 * 
+	 * @param arg The specified display option
+	 * @return The specified DisplayType parsed from arg
+	 */
+	public static DisplayType determineDisplayTypeSearch(String arg) {
+		try {
+			String type = arg.toLowerCase().trim();
+			if (DISPLAY_COMPLETED.contains(type)) {
+				return DisplayType.COMPLETED;
+			} else if (DISPLAY_UNCOMPLETED.contains(type)) {
+				return DisplayType.UNCOMPLETED;
+			} else if (DISPLAY_ALL.contains(type)) {
+				return DisplayType.ALL;
+			} else if (type.isEmpty()) {
+				return null;
+			}else {
 				return DisplayType.INVALID;
 			}
 		} catch (Exception e) {

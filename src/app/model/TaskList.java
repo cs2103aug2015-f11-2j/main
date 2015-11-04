@@ -174,7 +174,6 @@ public class TaskList {
 		// filter the task list using the predicates
 		// for each result, add it to the results list
 		taskList.stream().filter(query).forEach(t -> results.addTask(t));
-		LogHelper.getInstance().getLogger().info("here ok");
 		return results;
 	}
 

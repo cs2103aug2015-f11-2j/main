@@ -44,7 +44,7 @@ public class CommandSearch extends Command {
 				retrievedTaskList = master;
 			} else if (this.getDisplayType() == DisplayType.COMPLETED) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
-			}
+			} 
 
 			List<Predicate<Task>> predicates = new ArrayList<Predicate<Task>>();
 			if (!this.getContent().isEmpty()) {
@@ -70,7 +70,7 @@ public class CommandSearch extends Command {
 			viewState.setStatus(StatusType.SUCCESS,
 					String.format(ViewConstants.MESSAGE_SEARCH, results.getTaskList().size()));
 			
-			if (predicates.isEmpty()){
+			if (predicates.isEmpty() && this.getDisplayType() == null){
 				viewState.setStatus(StatusType.SUCCESS,ViewConstants.ERROR_SEARCH_NO_PARAMETER);
 			}
 			this.setExecuted(true);

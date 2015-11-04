@@ -21,7 +21,7 @@ public class HelpConstants {
 
 	// SEARCH
 	public static final String HELP_SEARCH_DESCRIPTION = "Search for tasks";
-	public static final String HELP_SEARCH_OVERVIEW = "search [keyword] [between <date> and <date> | after <date> | before <date>] [priority high | medium | low] [type comp | pend]";
+	public static final String HELP_SEARCH_OVERVIEW = "search [keyword] [between <date> and <date> | after <date> | before <date>] [priority high | medium | low | none] [type comp | pend]";
 	public static final String HELP_SEARCH_EXAMPLES = "[example]: search hotdogs before monday priority high type pend";
 
 	// DELETE
