@@ -8,33 +8,31 @@ import app.model.Task;
 
 public class Predicates {
 	/**
-	 * Placeholder
+	 * Predicate<Task> for specified end before date
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param end The end time used for match
+	 * @return Predicate<Task> that ends before specified date
 	 */
-	public static Predicate<Task> endDateBefore(LocalDateTime i) {
+	public static Predicate<Task> endDateBefore(LocalDateTime end) {
 		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(i) || t.getEndDate().isEqual(i)) : false;
 	}
 
 	/**
-	 * Placeholder
+	 * Predicate<Task> for specified start after date
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param start The start time used for match
+	 * @return Predicate<Task> that starts after specified date
 	 */
-	public static Predicate<Task> startDateAfter(LocalDateTime i) {
+	public static Predicate<Task> startDateAfter(LocalDateTime start) {
 		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(i) || t.getEndDate().isEqual(i)) : false;
 	}
 
 	/**
-	 * Placeholder
+	 * Predicate<Task> for specified start and end time
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param start The start time of task 
+	 * @param end The end time of task 
+	 * @return Predicate<Task> that falls between specified start and end dates
 	 */
 	public static Predicate<Task> betweenDates(LocalDateTime start, LocalDateTime end) {
 		return t -> (t.getStartDate() != null
@@ -51,11 +49,10 @@ public class Predicates {
 	}
 
 	/**
-	 * Placeholder
+	 * Predicate<Task> for specified priority
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param priority The Priority used for match
+	 * @return Predicate<Task> with specified priority
 	 */
 	public static Predicate<Task> priorityEquals(Priority priority) {
 		return t -> (t.getPriority() != null)
@@ -64,11 +61,10 @@ public class Predicates {
 	}
 
 	/**
-	 * Placeholder
+	 * Predicate<Task> for keyword matches
 	 * 
-	 * @param Placeholder
-	 * @param Placeholder
-	 * @return Placeholder
+	 * @param keyword The keyword used for match
+	 * @return Predicate<Task> with specified keyword
 	 */
 	public static Predicate<Task> keywordMatches(String keyword) {
 		// return t -> t.getName().toLowerCase().matches(".*\\b" +
