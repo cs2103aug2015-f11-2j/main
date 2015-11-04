@@ -40,44 +40,45 @@ public class CommandSearch extends Command {
 						+ this.getStartDate() + "\nEnd: " + this.getEndDate() + "\nType: " + this.getDisplayType());
 
 		try {
-			LogHelper.getInstance().getLogger().info("HERE: " + this.getDisplayType());
 			if (this.getDisplayType() == DisplayType.ALL) {
 				retrievedTaskList = master;
-				LogHelper.getInstance().getLogger().info("All");
 			} else if (this.getDisplayType() == DisplayType.COMPLETED) {
 				retrievedTaskList = master.getTaskListByCompletion(true);
-				LogHelper.getInstance().getLogger().info("Comp");
 			}
 
 			List<Predicate<Task>> predicates = new ArrayList<Predicate<Task>>();
 			if (!this.getContent().isEmpty()) {
 				predicates.add(Predicates.keywordMatches(this.getContent()));
 			}
-			if (!this.getPriority().equals(Priority.NONE)) {
+			if (this.getPriority() != null) {
 				predicates.add(Predicates.priorityEquals(this.getPriority()));
 			}
-			if (!(this.getStartDate() == null) && !(this.getEndDate() == null)) {
+			if (this.getStartDate() != null && this.getEndDate() != null) {
 				predicates.add(Predicates.betweenDates(this.getStartDate(), this.getEndDate()));
-			} else {
-				if (this.getEndDate() != null) {
+			} else if (this.getEndDate() != null) {
 					predicates.add(Predicates.endDateBefore(this.getEndDate()));
-				}
-				if (this.getStartDate() != null) {
+			} else if (this.getStartDate() != null) {
 					predicates.add(Predicates.startDateAfter(this.getStartDate()));
-				}
 			}
 
+			
 			TaskList results = retrievedTaskList.search(predicates);
+			
 			viewState.setTaskList(results);
 			viewState.setHeader(ViewConstants.HEADER_SEARCH);
+			
 			viewState.setStatus(StatusType.SUCCESS,
-					String.format(ViewConstants.SEARCH_MESSAGE, results.getTaskList().size()));
+					String.format(ViewConstants.MESSAGE_SEARCH, results.getTaskList().size()));
+			
+			if (predicates.isEmpty()){
+				viewState.setStatus(StatusType.SUCCESS,ViewConstants.ERROR_SEARCH_NO_PARAMETER);
+			}
 			this.setExecuted(true);
 		} catch (Exception e) {
-			LogHelper.getInstance().getLogger().severe(e.getMessage());
-			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_DELETE, this.getContent()));
+			LogHelper.getInstance().getLogger().severe("Error: "+e.getMessage());
+			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.ERROR_SEARCH, this.getContent()));
 		}
-		this.setExecuted(true);
+		
 		return viewState;
 	}
 	

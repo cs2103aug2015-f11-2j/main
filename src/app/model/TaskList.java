@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
+import app.util.LogHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -169,9 +170,11 @@ public class TaskList {
 	public TaskList search(List<Predicate<Task>> predicates) {
 		Predicate<Task> query = compositePredicate(predicates);
 		TaskList results = new TaskList();
+		
 		// filter the task list using the predicates
 		// for each result, add it to the results list
 		taskList.stream().filter(query).forEach(t -> results.addTask(t));
+		LogHelper.getInstance().getLogger().info("here ok");
 		return results;
 	}
 

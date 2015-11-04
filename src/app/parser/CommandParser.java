@@ -153,7 +153,7 @@ public class CommandParser {
 				priorityToken.getEnd(), arr);
 		String typeString = Common.getStringFromArrayIndexRange(displayToken.getStart() + 1, displayToken.getEnd(),
 				arr);
-		Priority priority = determinePriority(priorityString);
+		Priority priority = determineSearchPriority(priorityString);
 		DisplayType type = determineDisplayType(typeString);
 
 		// Sets the parsed parameters
@@ -401,6 +401,26 @@ public class CommandParser {
 			return Priority.LOW;
 		}
 		return Priority.NONE;
+	}
+	
+	/**
+	 * Returns the Priority object representing the priority level
+	 * 
+	 * @param priorityString The priority level as a string
+	 * @return The corresponding priority level
+	 */
+	// TODO: remove magic strings
+	private static Priority determineSearchPriority(String priorityString) {
+		if (priorityString.contains("high")) {
+			return Priority.HIGH;
+		} else if (priorityString.contains("medium")) {
+			return Priority.MEDIUM;
+		} else if (priorityString.contains("low")) {
+			return Priority.LOW;
+		} else if (priorityString.contains("none")) {
+			return Priority.NONE;
+		}
+		return null;
 	}
 
 	/**

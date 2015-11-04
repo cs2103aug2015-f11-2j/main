@@ -37,11 +37,17 @@ public class Predicates {
 	 * @return Placeholder
 	 */
 	public static Predicate<Task> betweenDates(LocalDateTime start, LocalDateTime end) {
-		return t -> (t.getStartDate() != null)
-				? ((t.getStartDate().isAfter(start) || t.getStartDate().isEqual(start))
-						&& (t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end)))
-				: ((t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end))
-						&& (t.getEndDate().isAfter(start) || t.getEndDate().equals(start)));
+		return t -> (t.getStartDate() != null
+				|| t.getEndDate() != null)
+						? (((t.getStartDate() != null)
+								? (t.getStartDate().isEqual(start) || t.getStartDate().isAfter(start))
+								: true)
+								&& ((t.getEndDate() != null)
+										? (t.getEndDate().isEqual(end)
+												|| (t.getEndDate().isBefore(end) && t.getEndDate().isAfter(start)))
+										: true))
+						: false;
+
 	}
 
 	/**
@@ -65,7 +71,8 @@ public class Predicates {
 	 * @return Placeholder
 	 */
 	public static Predicate<Task> keywordMatches(String keyword) {
-		//return t -> t.getName().toLowerCase().matches(".*\\b" + keyword.toLowerCase() + "\\b.*");
+		// return t -> t.getName().toLowerCase().matches(".*\\b" +
+		// keyword.toLowerCase() + "\\b.*");
 		return t -> t.getName().toLowerCase().contains(keyword.toLowerCase());
 	}
 }

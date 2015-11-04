@@ -73,9 +73,10 @@ public class ViewConstants {
 	public static String ERROR_SAVE_FILE_ALREADY_EXISTS = "File already exists in specified location: %1$s";
 	
 	// SEARCH command
-	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
+	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified, displaying all uncompleted tasks";
 	public static String HEADER_SEARCH = "Search results";
-	public static String SEARCH_MESSAGE = "%d match(es)";
+	public static String MESSAGE_SEARCH = "%d match(es)";
+	public static String ERROR_SEARCH = "Error";
 
 	// UNDO command
 	public static String MESSAGE_UNDO = "Undo success. Returning to previous state";
