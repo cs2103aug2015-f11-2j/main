@@ -2,19 +2,11 @@ package app.constants;
 
 public class HelpConstants {
 	
-	// GET ENTIRE HELP LIST
-	public static final String LIST_ALL =  
-			HelpConstants.HELP_ADD_DESCRIPTION + "\n" + HelpConstants.HELP_ADD_OVERVIEW + "\n" + HelpConstants.HELP_ADD_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_EDIT_DESCRIPTION + "\n" + HelpConstants.HELP_EDIT_OVERVIEW + "\n" + HelpConstants.HELP_EDIT_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_SEARCH_DESCRIPTION + "\n" + HelpConstants.HELP_SEARCH_OVERVIEW + "\n" + HelpConstants.HELP_SEARCH_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_DELETE_DESCRIPTION + "\n" + HelpConstants.HELP_DELETE_OVERVIEW + "\n" + HelpConstants.HELP_DELETE_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_DISPLAY_DESCRIPTION + "\n" + HelpConstants.HELP_DISPLAY_OVERVIEW + "\n" + HelpConstants.HELP_DISPLAY_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_MARK_DESCRIPTION + "\n" + HelpConstants.HELP_MARK_OVERVIEW + "\n" + HelpConstants.HELP_MARK_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_UNDO_DESCRIPTION + "\n" + HelpConstants.HELP_UNDO_OVERVIEW
-			+ "\n\n" + HelpConstants.HELP_SAVE_DESCRIPTION + "\n" + HelpConstants.HELP_SAVE_OVERVIEW + "\n" + HelpConstants.HELP_SAVE_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_THEME_DESCRIPTION + "\n" + HelpConstants.HELP_THEME_OVERVIEW + "\n" + HelpConstants.HELP_THEME_EXAMPLES
-			+ "\n\n" + HelpConstants.HELP_EXIT_DESCRIPTION + "\n" + HelpConstants.HELP_EXIT_OVERVIEW;
-
+	// NEW LINE
+	public static final String NEW_LINE = "\n";
+	
+	// DOUBLE LINE
+	public static final String DOUBLE_LINE = "\n\n";
 	
 	// ADD
 	public static final String HELP_ADD_DESCRIPTION = "Add a new task";
