@@ -14,7 +14,7 @@ public class Predicates {
 	 * @return Predicate<Task> that ends before specified date
 	 */
 	public static Predicate<Task> endDateBefore(LocalDateTime end) {
-		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(i) || t.getEndDate().isEqual(i)) : false;
+		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end)) : false;
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class Predicates {
 	 * @return Predicate<Task> that starts after specified date
 	 */
 	public static Predicate<Task> startDateAfter(LocalDateTime start) {
-		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(i) || t.getEndDate().isEqual(i)) : false;
+		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(start) || t.getEndDate().isEqual(start)) : false;
 	}
 
 	/**
