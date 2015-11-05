@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.constants.HelpConstants;
+import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
 import app.logic.command.Command;
@@ -30,7 +31,8 @@ public class InfoViewManager {
 	private static final String STYLE_INFOVIEW_PRIORITY = "infoPriority";
 
 	private ViewManager viewManager;
-	DateTimeFormatter dateFormatter;
+	private DateTimeFormatter dateFormatter;
+	private CommandType currentCommandType;
 
 	@FXML
 	private VBox infoViewLayout;
@@ -38,6 +40,7 @@ public class InfoViewManager {
 	@FXML
 	public void initialize() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
+		currentCommandType = CommandType.INVALID;
 
 		infoViewLayout.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> {
 			double difference = newValue.doubleValue() - oldValue.doubleValue();
@@ -46,7 +49,20 @@ public class InfoViewManager {
 	}
 
 	public void updateView(Command cmd) {
+		CommandType type = cmd.getCommandType();
+		// Don't refresh info view if input is a ^substring of an alias for the currently displayed
+		// command type.
+		if (type == CommandType.INVALID && !cmd.getCommandString().isEmpty()) {
+			List<String> aliases = Common.getAliasesForCommandType(currentCommandType);
+			for (String alias : aliases) {
+				if (alias.startsWith(cmd.getCommandString())) {
+					return;
+				}
+			}
+		}
+		
 		clearView();
+		currentCommandType = cmd.getCommandType();
 
 		switch (cmd.getCommandType()) {
 		case ADD:
@@ -250,6 +266,10 @@ public class InfoViewManager {
 			padding = new Insets(5);
 		}
 		infoViewLayout.setPadding(padding);
+	}
+
+	public CommandType getCurrentCommandType() {
+		return currentCommandType;
 	}
 
 	public void setViewManager(ViewManager viewManager) {

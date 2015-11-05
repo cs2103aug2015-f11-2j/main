@@ -122,7 +122,7 @@ public class CommandController {
 		String word = Common.getFirstWord(commandString).toLowerCase();
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
-		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
+		} else if (CommandConstants.ALIASES_DELETE.contains(word)) {
 			return CommandType.DELETE;
 		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
 			return CommandType.THEME;

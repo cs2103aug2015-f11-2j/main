@@ -1,9 +1,13 @@
 package app.view;
 
+import java.util.List;
+
+import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ScrollDirection;
 import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.ViewState;
+import app.util.Common;
 import app.util.LogHelper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -45,8 +49,22 @@ public class InputViewManager {
 				prevCommandFromHistory();
 			} else if (event.getCode() == KeyCode.DOWN) {
 				nextCommandFromHistory();
+			} else if (event.getCode() == KeyCode.SPACE) {
+				completeCommand();
 			}
 		});
+	}
+	
+	private void completeCommand() {
+		String text = commandInput.getText();
+		if (Common.getFirstWord(text).equals(text.trim())) {
+			CommandType type = viewManager.getInfoViewCurrentCommandType();
+			List<String> aliases = Common.getAliasesForCommandType(type);
+			if (!aliases.isEmpty() && !aliases.contains(text)) {
+				setText(text.replaceFirst(Common.getFirstWord(text), aliases.get(0) + " "), true);
+				positionCaretAtEnd();
+			}
+		}
 	}
 	
 	private void nextCommandFromHistory() {
@@ -61,8 +79,14 @@ public class InputViewManager {
 	
 	private void setText(String text, boolean allowEmpty) {
 		if (allowEmpty || !text.isEmpty()) {
-			commandInput.setText(text);
+			Platform.runLater(() -> {
+				commandInput.setText(text);
+			});
 		}		
+		positionCaretAtEnd();
+	}
+	
+	private void positionCaretAtEnd() {
 		Platform.runLater(() -> {
 			commandInput.positionCaret(commandInput.getLength());
 		});
