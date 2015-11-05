@@ -187,12 +187,11 @@ public class CommandParser {
 		}
 	}
 
-	// TODO: collate from ??
+	// @@author A0126120B
 	public static void parseDatesAndPriority(Command cmd) {
 		parseDatesAndPriority(cmd, false);
 	}
 
-	// @@author A0126120B
 	/**
 	 * 
 	 * Parses and sets parameters for the Command object
@@ -434,6 +433,7 @@ public class CommandParser {
 		return null;
 	}
 
+	// TODO: collate from ??
 	/**
 	 * Determine the display argument from the entered string
 	 * 

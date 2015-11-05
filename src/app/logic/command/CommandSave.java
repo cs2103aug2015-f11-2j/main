@@ -19,13 +19,12 @@ public class CommandSave extends Command {
 	private boolean isLog;
 	private String prevFileLocation;
 
-	// TODO: collate from ben?
+	// @@author A0125960E
 	public CommandSave() {
 		super();
 		this.setCommandType(CommandType.SAVE);
 	}
 
-	// @@author A0125960E
 	public void setLog(boolean hasLogKeyword) {
 		isLog = hasLogKeyword;
 	}
