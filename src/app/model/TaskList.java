@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
-import app.util.LogHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -19,7 +18,7 @@ public class TaskList {
 		taskList = FXCollections.observableArrayList();
 	}
 
-	// TODO: collate from fiona?
+	// @@author A0125960E
 	public TaskList(ArrayList<Task> list) {
 		taskList = FXCollections.observableArrayList(list);
 	}

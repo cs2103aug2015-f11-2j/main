@@ -25,9 +25,10 @@ public class TaskStorage extends Observer {
 	private File storageFile;
 	private Gson gson;
 
+	// @@author A0125960E
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
-		
+
 		update();
 
 		if (!storageFile.exists()) {
@@ -45,6 +46,7 @@ public class TaskStorage extends Observer {
 		}
 	}
 
+	// @@author A0126120B
 	public static TaskStorage getInstance() {
 		if (taskStorage == null) {
 			taskStorage = new TaskStorage();
@@ -53,6 +55,7 @@ public class TaskStorage extends Observer {
 		return taskStorage;
 	}
 
+	// @@author A0125960E
 	public void writeTasks(TaskList taskList) {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(storageFile))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
@@ -75,7 +78,7 @@ public class TaskStorage extends Observer {
 
 		return taskList;
 	}
-	
+
 	@Override
 	public void update() {
 		storageFile = new File(AppStorage.getInstance().getStorageFileLocation());

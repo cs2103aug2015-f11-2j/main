@@ -1,14 +1,11 @@
 # generated
 ###### bin\app\view\fxml\InfoView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 
 <VBox fx:id="infoViewLayout" maxWidth="1.7976931348623157E308"
 	minHeight="-Infinity" minWidth="-Infinity" styleClass="infoView"
@@ -18,8 +15,6 @@
 ```
 ###### bin\app\view\fxml\InputView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -47,8 +42,6 @@
 ```
 ###### bin\app\view\fxml\RootView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -88,8 +81,6 @@
 ```
 ###### bin\app\view\fxml\TaskListItemView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -167,8 +158,6 @@
 ```
 ###### bin\app\view\fxml\TaskListView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -269,8 +258,6 @@
 ```
 ###### bin\app\view\fxml\TextView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -514,14 +501,11 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\InfoView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 
 <VBox fx:id="infoViewLayout" maxWidth="1.7976931348623157E308"
 	minHeight="-Infinity" minWidth="-Infinity" styleClass="infoView"
@@ -531,8 +515,6 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\InputView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -560,8 +542,6 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\RootView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -601,8 +581,6 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\TaskListItemView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -680,8 +658,6 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\TaskListView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -782,8 +758,6 @@ public class ParserToken {
 ```
 ###### src\app\view\fxml\TextView.fxml
 ``` fxml
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>

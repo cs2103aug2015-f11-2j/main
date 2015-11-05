@@ -166,7 +166,7 @@ public class CommandParser {
 		cmd.setDisplayType(type);
 	}
 
-	// TODO: collate from fiona?
+	// @@author A0125960E
 	/**
 	 * Parses and sets save-related parameters for the Command object
 	 * specified. This method should only be used for the save command.
@@ -187,6 +187,7 @@ public class CommandParser {
 		}
 	}
 
+	// TODO: collate from ??
 	public static void parseDatesAndPriority(Command cmd) {
 		parseDatesAndPriority(cmd, false);
 	}

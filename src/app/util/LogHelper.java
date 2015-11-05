@@ -46,7 +46,7 @@ public class LogHelper extends Observer {
 			SimpleFormatter formatter = new SimpleFormatter();
 			fileHandler.setFormatter(formatter);
 
-			if (logger.getHandlers().length != 0) {
+			while (logger.getHandlers().length > 0) {
 				FileHandler prevFileHandler = (FileHandler)logger.getHandlers()[0];
 				logger.removeHandler(prevFileHandler);
 				prevFileHandler.close();

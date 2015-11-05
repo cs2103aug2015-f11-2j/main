@@ -21,6 +21,7 @@ public class AppStorage {
 	private Properties properties;
 	private ArrayList<Observer> observerList;
 
+	// @@author A0125960E
 	private AppStorage() {
 		configFile = new File(StorageConstants.FILE_CONFIGURATION);
 		properties = new Properties();

@@ -19,6 +19,7 @@ import app.storage.TaskStorage;
 
 public class StorageTest {
 
+	// @@author A0125960E
 	@Test
 	public void testStorage() throws Exception {
 		String userStorageFileLocation = AppStorage.getInstance().getStorageFileLocation();
@@ -115,6 +116,7 @@ public class StorageTest {
 		return testFile;
 	}
 
+	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {
 			return;

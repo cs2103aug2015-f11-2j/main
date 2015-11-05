@@ -19,11 +19,13 @@ public class CommandSave extends Command {
 	private boolean isLog;
 	private String prevFileLocation;
 
+	// TODO: collate from ben?
 	public CommandSave() {
 		super();
 		this.setCommandType(CommandType.SAVE);
 	}
-	
+
+	// @@author A0125960E
 	public void setLog(boolean hasLogKeyword) {
 		isLog = hasLogKeyword;
 	}
@@ -43,15 +45,15 @@ public class CommandSave extends Command {
 			}
 
 			prevFileLocation = (isLog) ? AppStorage.getInstance().getLogFileLocation()
-									   : AppStorage.getInstance().getStorageFileLocation();
+					: AppStorage.getInstance().getStorageFileLocation();
 
 			String errorMsg = changeFileLocation(prevFileLocation, this.getContent());
 
 			if (errorMsg == null) {
 				String successMsg = String.format(ViewConstants.MESSAGE_SAVE,
 						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE,
-						(isLog) ? AppStorage.getInstance().getLogFileLocation()
-								: AppStorage.getInstance().getStorageFileLocation());
+								(isLog) ? AppStorage.getInstance().getLogFileLocation()
+										: AppStorage.getInstance().getStorageFileLocation());
 				viewState.setStatus(successMsg);
 				LogHelper.getInstance().getLogger().info(successMsg);
 				setExecuted(true);
@@ -72,7 +74,7 @@ public class CommandSave extends Command {
 		if (!isExecuted()) {
 			return new ViewState();
 		}
-		
+
 		ViewState viewState = new ViewState();
 
 		try {
@@ -81,8 +83,8 @@ public class CommandSave extends Command {
 			if (errorMsg == null) {
 				String successMsg = String.format(ViewConstants.MESSAGE_SAVE,
 						(isLog) ? ViewConstants.SAVE_LOG : ViewConstants.SAVE_STORAGE,
-						(isLog) ? AppStorage.getInstance().getLogFileLocation()
-								: AppStorage.getInstance().getStorageFileLocation());
+								(isLog) ? AppStorage.getInstance().getLogFileLocation()
+										: AppStorage.getInstance().getStorageFileLocation());
 				viewState.setStatus(ViewConstants.MESSAGE_UNDO + successMsg);
 				LogHelper.getInstance().getLogger().info(ViewConstants.MESSAGE_UNDO + successMsg);
 				setExecuted(false);
@@ -184,6 +186,7 @@ public class CommandSave extends Command {
 		return errorMsg;
 	}
 
+	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {
 			return;

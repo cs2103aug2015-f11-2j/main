@@ -60,6 +60,7 @@ public class IntegrationTest {
 
 	}
 
+	// @@author A0125960E
 	private File createTestFile() {
 		File testFile = new File(AppStorage.getInstance().getStorageFileLocation());
 		
@@ -80,6 +81,7 @@ public class IntegrationTest {
 		return testFile;
 	}
 
+	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {
 			return;
