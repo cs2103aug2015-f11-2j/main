@@ -70,11 +70,13 @@ public class InputViewManager {
 	private void nextCommandFromHistory() {
 		String text = CommandController.getInstance().getCommandHistory().next();
 		setText(text, true);
+		positionCaretAtEnd();
 	}
 	
 	private void prevCommandFromHistory() {
 		String text = CommandController.getInstance().getCommandHistory().prev();
 		setText(text, false);
+		positionCaretAtEnd();
 	}
 	
 	private void setText(String text, boolean allowEmpty) {
@@ -83,7 +85,6 @@ public class InputViewManager {
 				commandInput.setText(text);
 			});
 		}		
-		positionCaretAtEnd();
 	}
 	
 	private void positionCaretAtEnd() {
