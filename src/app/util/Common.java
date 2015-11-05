@@ -70,6 +70,7 @@ public class Common {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
 
+	// TODO: collate from wj?
 	/**
 	 * Builds an Integer ArrayList from the command content containing task
 	 * ID(s)
@@ -90,6 +91,7 @@ public class Common {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * Compares the subject with a given range and returns true if subject is
 	 * between or equal to lower and upper indexes.
@@ -99,7 +101,6 @@ public class Common {
 	 * @param upper The upper index
 	 * @return True if subject is between or equal to lower and upper
 	 */
-	// @@author A0126120B
 	public static boolean betweenInclusive(int subject, int lower, int upper) {
 		boolean result = (subject >= lower && subject <= upper);
 		return result;
