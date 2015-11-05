@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import app.constants.CommandConstants;
+import app.constants.CommandConstants.CommandType;
+
 public class Common {
 	// @@author A0125360R
 	/**
@@ -174,5 +177,34 @@ public class Common {
 		}
 		idList = idList.replaceAll(",[ \t]*$", "");
 		return idList;
+	}
+	
+	public static List<String> getAliasesForCommandType(CommandType type) {
+		switch (type) {
+		case ADD:
+			return CommandConstants.ALIASES_ADD;
+		case DELETE:
+			return CommandConstants.ALIASES_DELETE;
+		case HELP:
+			return CommandConstants.ALIASES_HELP;
+		case THEME:
+			return CommandConstants.ALIASES_THEME;
+		case EXIT:
+			return CommandConstants.ALIASES_EXIT;
+		case MARK:
+			return CommandConstants.ALIASES_MARK;
+		case DISPLAY:
+			return CommandConstants.ALIASES_DISPLAY;
+		case EDIT:
+			return CommandConstants.ALIASES_EDIT;
+		case SEARCH:
+			return CommandConstants.ALIASES_SEARCH;
+		case SAVE:
+			return CommandConstants.ALIASES_SAVE;
+		case UNDO:
+			return CommandConstants.ALIASES_UNDO;
+		default:
+			return new ArrayList<String>();
+		}
 	}
 }

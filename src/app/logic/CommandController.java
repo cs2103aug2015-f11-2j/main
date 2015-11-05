@@ -57,7 +57,7 @@ public class CommandController {
 		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
 		currentViewState.getTaskList().sort();
 		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
-				DisplayType.UNCOMPLETED.toString().toLowerCase()));
+				DisplayType.UNCOMPLETED.toString()));
 
 		if (!(AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
 				|| AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {
@@ -122,7 +122,7 @@ public class CommandController {
 		String word = Common.getFirstWord(commandString).toLowerCase();
 		if (CommandConstants.ALIASES_ADD.contains(word)) {
 			return CommandType.ADD;
-		} else if (CommandConstants.ALIASES_REMOVE.contains(word)) {
+		} else if (CommandConstants.ALIASES_DELETE.contains(word)) {
 			return CommandType.DELETE;
 		} else if (CommandConstants.ALIASES_THEME.contains(word)) {
 			return CommandType.THEME;
