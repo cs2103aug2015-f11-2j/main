@@ -403,13 +403,12 @@ public class CommandParser {
 	 * @param priorityString The priority level as a string
 	 * @return The corresponding priority level
 	 */
-	// TODO: remove magic strings
 	private static Priority determinePriority(String priorityString) {
-		if (priorityString.contains("high")) {
+		if (priorityString.contains(Priority.HIGH.toString().toLowerCase())) {
 			return Priority.HIGH;
-		} else if (priorityString.contains("medium")) {
+		} else if (priorityString.contains(Priority.MEDIUM.toString().toLowerCase())) {
 			return Priority.MEDIUM;
-		} else if (priorityString.contains("low")) {
+		} else if (priorityString.contains(Priority.LOW.toString().toLowerCase())) {
 			return Priority.LOW;
 		}
 		return Priority.NONE;
@@ -422,15 +421,14 @@ public class CommandParser {
 	 * @param priorityString The priority level as a string
 	 * @return The corresponding priority level
 	 */
-	// TODO: remove magic strings
 	private static Priority determineSearchPriority(String priorityString) {
-		if (priorityString.contains("high")) {
+		if (priorityString.contains(Priority.HIGH.toString().toLowerCase())) {
 			return Priority.HIGH;
-		} else if (priorityString.contains("medium")) {
+		} else if (priorityString.contains(Priority.MEDIUM.toString().toLowerCase())) {
 			return Priority.MEDIUM;
-		} else if (priorityString.contains("low")) {
+		} else if (priorityString.contains(Priority.LOW.toString().toLowerCase())) {
 			return Priority.LOW;
-		} else if (priorityString.contains("none")) {
+		} else if (priorityString.contains(Priority.NONE.toString().toLowerCase())) {
 			return Priority.NONE;
 		}
 		return null;

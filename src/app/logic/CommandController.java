@@ -57,7 +57,7 @@ public class CommandController {
 		currentViewState.setTaskList(masterTaskList.getTaskListByCompletion(false));
 		currentViewState.getTaskList().sort();
 		currentViewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY,
-				DisplayType.UNCOMPLETED.toString().toLowerCase()));
+				DisplayType.UNCOMPLETED.toString()));
 
 		if (!(AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_LIGHT)
 				|| AppStorage.getInstance().getSelectedTheme().equalsIgnoreCase(ViewConstants.THEME_DARK))) {

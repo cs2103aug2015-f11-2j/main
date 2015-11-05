@@ -62,7 +62,6 @@ public class ViewManager {
 	public void initialize(Stage primaryStage, BorderPane rootLayout) {
 		this.primaryStage = primaryStage;
 		this.rootLayout = rootLayout;
-		setDefaultHeader();
 		initializeViews();
 		updateView(CommandController.getInstance().getCurrentViewState());
 		showStage(primaryStage);
@@ -223,16 +222,6 @@ public class ViewManager {
 			header.setPrefHeight(0);
 			header.setMinHeight(0);
 		}
-	}
-
-	/**
-	 * This is called upon initialization of the root view. Sets the default
-	 * text the header should read.
-	 */
-	private void setDefaultHeader() {
-		// TODO: replace the magic string once WJ updates his code to get rid of
-		// magic strings.
-		setHeader(String.format(ViewConstants.HEADER_DISPLAY, "all"));
 	}
 
 	public void scrollTaskListToTop() {
