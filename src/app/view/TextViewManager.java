@@ -3,6 +3,7 @@ package app.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
+//@@author A0126120B
 public class TextViewManager {
 	private ViewManager viewManager;
 	

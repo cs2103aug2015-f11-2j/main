@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+// @@author A0126120B
 public class Main extends Application {
 
 	private Stage primaryStage;

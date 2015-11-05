@@ -40,6 +40,7 @@ public class CommandParser {
 	private static List<String> allSearchKeywords;
 	private static List<String> displayTypes;
 
+	// @@author A0126120B
 	static {
 		allKeywords = new ArrayList<String>();
 		allKeywords.addAll(START_DATE_KEYWORDS);
@@ -59,6 +60,7 @@ public class CommandParser {
 		displayTypes.addAll(DISPLAY_ALL);
 	}
 
+	// @@author A0126120B
 	/**
 	 * Parses and sets search-related parameters for the Command object
 	 * specified. This method should only be used for the search command.
@@ -164,6 +166,7 @@ public class CommandParser {
 		cmd.setDisplayType(type);
 	}
 
+	// TODO: collate from fiona?
 	/**
 	 * Parses and sets save-related parameters for the Command object
 	 * specified. This method should only be used for the save command.
@@ -188,8 +191,8 @@ public class CommandParser {
 		parseDatesAndPriority(cmd, false);
 	}
 
+	// @@author A0126120B
 	/**
-	 * TODO: update params 
 	 * 
 	 * Parses and sets parameters for the Command object
 	 * specified. The commandString of the specified Command object should
@@ -200,6 +203,7 @@ public class CommandParser {
 	 * - Content, and if exists, startDate, endDate, priority.
 	 * 
 	 * @param cmd The Command object to set parameters for
+	 * @param removableParams Specifies if "date none" and "priority none" keywords should be accepted.
 	 */
 	public static void parseDatesAndPriority(Command cmd, boolean removableParams) {
 		assert cmd != null;
@@ -290,6 +294,7 @@ public class CommandParser {
 		cmd.setEndDate(parsedEnd);
 	}
 
+	// @@author A0126120B
 	/**
 	 * @return A token describing a possible date string. The token is indicated
 	 *         by a set of keywords to start searching from and breakpoints at
@@ -310,6 +315,7 @@ public class CommandParser {
 		return token;
 	}
 
+	// @@author A0126120B
 	/**
 	 * @return A token describing the last detected instance of a keyword
 	 *         followed by a single argument.
@@ -328,6 +334,7 @@ public class CommandParser {
 		return token;
 	}
 
+	// @@author A0126120B
 	/**
 	 * Clear the tokens and parsed dates if start date > end date
 	 */
@@ -340,6 +347,7 @@ public class CommandParser {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * Clear token if the token exists yet the date cannot be parsed.
 	 */
@@ -349,6 +357,7 @@ public class CommandParser {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * Clear tokens that appear within the content token
 	 */
@@ -360,6 +369,7 @@ public class CommandParser {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * Merge disjointed content tokens. For example:
 	 * 
@@ -385,6 +395,7 @@ public class CommandParser {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * Returns the Priority object representing the priority level
 	 * 
@@ -403,6 +414,7 @@ public class CommandParser {
 		return Priority.NONE;
 	}
 	
+	// @@author A0126120B
 	/**
 	 * Returns the Priority object representing the priority level
 	 * 

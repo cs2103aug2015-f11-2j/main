@@ -30,6 +30,7 @@ import javafx.stage.Stage;
  * sub-views and provides a references to each of them. This manager this is the
  * only one to interact with its child views.
  */
+// @@author A0126120B
 public class ViewManager {
 
 	private Stage primaryStage;
@@ -163,7 +164,7 @@ public class ViewManager {
 		if (viewState != null) {
 			setHeader(viewState.getHeader());
 			setStatus(viewState.getStatusMessage(), viewState.getStatusType());
-			updateTaskList(viewState.getTaskList()); //TODO: rename method?
+			updateTaskList(viewState.getTaskList());
 			updateTextView(viewState.getTextArea());
 			setTheme(viewState.getTheme());
 			showView(viewState.getActiveView());

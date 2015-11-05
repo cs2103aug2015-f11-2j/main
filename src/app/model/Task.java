@@ -17,6 +17,7 @@ public class Task implements Comparable<Task> {
 	private ArrayList<RemovableField> removeField;
 	private boolean isCompleted;
 
+	// @@author A0126120B
 	public Task(Command cmd) {
 		id = UUID.randomUUID();
 		name = cmd.getContent();
@@ -27,6 +28,7 @@ public class Task implements Comparable<Task> {
 		isCompleted = false;
 	}
 
+	// @@author generated
 	public UUID getId() {
 		return id;
 	}
@@ -70,7 +72,12 @@ public class Task implements Comparable<Task> {
 	public void setCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
 	}
+	
+	public ArrayList<RemovableField> getRemoveField() {
+		return removeField;
+	}
 
+	// @@author A0126120B
 	public boolean isFloating() {
 		return (getStartDate() == null && getEndDate() == null);
 	}
@@ -81,10 +88,6 @@ public class Task implements Comparable<Task> {
 
 	public boolean isEvent() {
 		return (getStartDate() != null && getEndDate() != null);
-	}
-	
-	public ArrayList<RemovableField> getRemoveField() {
-		return removeField;
 	}
 
 	public LocalDateTime getSortKey() {

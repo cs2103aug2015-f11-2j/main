@@ -12,6 +12,7 @@ public class TaskCell {
 	private static final String DATE_PATTERN = "d MMMM, EEEE";
 	private static final String DATE_PATTERN_WITH_YEAR = "d MMMM yyyy, EEEE";
 
+	// @@author generated
 	public TaskCell(LocalDate labelDate, String style) {
 		this.labelDate = labelDate;
 		this.style = style;
@@ -58,6 +59,7 @@ public class TaskCell {
 		this.style = style;
 	}
 
+	// @@author A0126120B
 	public String getLabel() {
 		// if date is today or tomorrow, append the relevant string
 		String relativeText = "";

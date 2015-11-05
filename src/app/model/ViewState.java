@@ -16,6 +16,7 @@ public class ViewState {
 	private String theme;
 	private List<Action> actions;
 	
+	// @@author A0126120B
 	// Clone state
 	public ViewState(ViewState state) {
 		header = state.getHeader();
@@ -28,10 +29,12 @@ public class ViewState {
 		actions = state.getActions();
 	}
 
+	// @@author A0126120B
 	public ViewState() {
 		actions = new ArrayList<Action>();
 	}
 
+	// @@author A0126120B
 	public void mergeWith(ViewState newState) {
 		if (newState.getHeader() != null) {
 			header = newState.getHeader();
@@ -54,6 +57,7 @@ public class ViewState {
 		actions = newState.getActions();
 	}
 	
+	// @@author A0126120B
 	public void mergeStatus(ViewState newState) {
 		if (newState.getStatusMessage() != null) {
 			statusMessage = newState.getStatusMessage();
@@ -63,16 +67,19 @@ public class ViewState {
 		}
 	}
 
+	// @@author A0126120B
 	public void setStatus(String message) {
 		statusMessage = message;
 		statusType = StatusType.INFO;
 	}
 
+	// @@author A0126120B
 	public void setStatus(StatusType type, String message) {
 		statusMessage = message;
 		statusType = type;
 	}
 
+	// @@author generated
 	public String getStatusMessage() {
 		return statusMessage;
 	}

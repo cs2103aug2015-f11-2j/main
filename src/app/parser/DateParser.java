@@ -10,6 +10,7 @@ import java.util.List;
 
 import app.util.Common;
 
+// @@author A0126120B
 public class DateParser {
 	private static final List<String> DATE_PATTERNS = Common.getUnmodifiableList("dd/MM/yy", "d/MM/yy", "dd/M/yy", "d/M/yy",
 			"dd/MM/yyyy", "d/MM/yyyy", "dd/M/yyyy", "d/M/yyyy", "dd-MM-yy", "d-MM-yy", "dd-M-yy", "d-M-yy",

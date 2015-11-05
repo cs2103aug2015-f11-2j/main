@@ -1,5 +1,6 @@
 package app.model;
 
+//@@author generated
 public class ParserToken {
 	private int start = -1;
 	private int end = -1;

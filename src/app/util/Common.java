@@ -50,6 +50,7 @@ public class Common {
 	 * @param array The array of strings
 	 * @return The constructed string
 	 */
+	// @@author A0126120B
 	public static String getStringFromArrayIndexRange(int start, int end, String[] array) {
 		String result = "";
 		for (int i = start; i < array.length && i >= 0 && i <= end; i++) {
@@ -64,6 +65,7 @@ public class Common {
 	 * @param args Elements used to create the list
 	 * @return A read-only list with the specified elements
 	 */
+	// @@author A0126120B
 	public static List<String> getUnmodifiableList(String... args) {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
@@ -97,6 +99,7 @@ public class Common {
 	 * @param upper The upper index
 	 * @return True if subject is between or equal to lower and upper
 	 */
+	// @@author A0126120B
 	public static boolean betweenInclusive(int subject, int lower, int upper) {
 		boolean result = (subject >= lower && subject <= upper);
 		return result;

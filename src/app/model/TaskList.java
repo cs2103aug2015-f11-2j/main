@@ -14,14 +14,17 @@ import javafx.collections.ObservableList;
 public class TaskList {
 	ObservableList<Task> taskList;
 
+	// @@author A0126120B
 	public TaskList() {
 		taskList = FXCollections.observableArrayList();
 	}
 
+	// TODO: collate from fiona?
 	public TaskList(ArrayList<Task> list) {
 		taskList = FXCollections.observableArrayList(list);
 	}
 
+	// @@author A0126120B
 	// Constructor to make a copy from another TaskList
 	public TaskList(TaskList taskList) {
 		this.taskList = FXCollections.observableArrayList(taskList.getTaskList());
@@ -46,6 +49,7 @@ public class TaskList {
 		taskList.sort((t1, t2) -> t1.compareTo(t2));
 	}
 
+	// TODO: collate from ??
 	// toggle isCompleted for the task at index location
 	public void markTaskByIndex(Integer index) {
 		Task specifiedTask = taskList.get(index);

@@ -2,6 +2,7 @@ package app.model;
 
 import app.constants.ViewConstants.ActionType;
 
+//@@author generated
 public class Action {
 	private ActionType actionType;
 	private Object actionObject;

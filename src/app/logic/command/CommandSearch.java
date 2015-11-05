@@ -88,7 +88,6 @@ public class CommandSearch extends Command {
 			return new ViewState();
 		}
 
-		// TODO: undo code here
 		return previousViewState;
 	}
 }

@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+//@@author A0126120B
 public class TaskListItemViewManager extends ListCell<TaskCell> {
 
 	private Task task;

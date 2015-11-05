@@ -17,6 +17,7 @@ import javafx.scene.input.KeyCombination;
  * 
  * Listeners for user input (eg. ENTER, UP, DOWN) will be defined here.
  */
+//@@author A0126120B
 public class InputViewManager {
 
 	private ViewManager viewManager;

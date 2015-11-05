@@ -15,6 +15,7 @@ import app.parser.CommandParser;
 
 public class CommandParserTest {
 	
+	// @@author A0126120B
 	@Test
 	public void testParseDueDate() {
 		String input = "add buy milk due 15/11/15 0959";
@@ -25,6 +26,7 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseRangeOfDates() {
 		String input = "add buy milk from 15/11/2015 to 21/11/2015";
@@ -36,6 +38,7 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseStartDateOnlyTime() {
 		// start date only has time
@@ -48,6 +51,7 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseEndDateRelatedToStartDate() {
 		// end date only has time, related to start date
@@ -60,6 +64,7 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseMultipleStartKeywords() {
 		// multiple `from` keywords, but first `from` is part of content
@@ -72,6 +77,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from store", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseStartDateActuallyContent() {
 		/*
@@ -86,6 +92,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from store", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseOnlyStartKeywordInContent() {
 		// Has a `from` keyword but no corresponding `to` keyword
@@ -96,6 +103,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from store", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseContentEndingWithStartKeyword() {
 		// Content ending with `from` keyword
@@ -106,6 +114,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseInvalidDateRange() {
 		// from store to 5pm is invalid because 'store' is not a date,
@@ -118,6 +127,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from store", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseValidStartDateWithNoEndKeyword() {
 		// Has a `from <date>` sequence without end date.
@@ -128,6 +138,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from 25/12/15", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseEmptyContentWithKeywords() {
 		// after parsing keywords, content will be empty ("").
@@ -141,6 +152,7 @@ public class CommandParserTest {
 		assertEquals("", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParsePriority() {
 		// high priority
@@ -160,6 +172,7 @@ public class CommandParserTest {
 		assertEquals(Priority.LOW, cmd.getPriority());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParsePriorityWithDueDate() {
 		String input = "add buy milk priority high due 25/12/2015 5pm";
@@ -170,6 +183,7 @@ public class CommandParserTest {
 		assertEquals("buy milk", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParsePriorityWithRangeOfDates() {
 		String input = "add buy milk from store priority high start 21/12/15 6:30am due 25/12/2015 5pm";
@@ -182,6 +196,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from store", cmd.getContent());
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseSupportedDateFormats() {
 		String input = "add buy milk due 9/5/16";
@@ -215,6 +230,7 @@ public class CommandParserTest {
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseRangeOfDaysWithTime() {
 		String input = "add buy milk from monday 5:30pm to 14/5/2050";
@@ -225,6 +241,7 @@ public class CommandParserTest {
 		assertTrue(areDatesSame(expectedEndDate, cmd.getEndDate()));
 	}
 
+	// @@author A0126120B
 	@Test
 	public void testParseStartAfterEndDate() {
 		String input = "add buy milk from 5pm to 3pm";
@@ -234,6 +251,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
 	}
 	
+	// TODO: collate from wj
 	@Test
 	public void testParseRemovePriority() {
 		String input = "edit 4 drink milk priority none";
@@ -349,22 +367,26 @@ public class CommandParserTest {
 		assertEquals(CommandParser.determineMarkAll(content), expected);
 	}
 
+	// @@author A0126120B
 	private boolean areDatesSame(LocalDateTime date1, LocalDateTime date2) {
 		int difference = date1.compareTo(date2);
 		return (difference < 1000 || difference > -1000);
 	}
 
+	// @@author A0126120B
 	private LocalDateTime buildDate(int daysOffsetFromNow, int hours, int minutes) {
 		LocalDateTime date = LocalDateTime.now();
 		date = date.plusDays(daysOffsetFromNow).withHour(hours).withMinute(minutes).withSecond(0).withNano(0);
 		return date;
 	}
 
+	// @@author A0126120B
 	private LocalDateTime buildDate(int year, int month, int day, int hours, int minutes) {
 		LocalDateTime date = LocalDateTime.of(year, month, day, hours, minutes).withSecond(0).withNano(0);
 		return date;
 	}
 
+	// @@author A0126120B
 	// day: 0 -> sunday, 1 -> monday, ..., 6 -> saturday
 	private LocalDateTime buildDateWithNextDay(int day, int hours, int minutes) {
 		LocalDateTime date = LocalDateTime.now();

@@ -26,6 +26,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
+//@@author A0126120B
 public class TaskListViewManager {
 	private ViewManager viewManager;
 

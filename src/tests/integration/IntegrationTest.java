@@ -20,6 +20,7 @@ import app.storage.TaskStorage;
 
 public class IntegrationTest {
 
+	// @@author A0126120B
 	@Test
 	public void testAddTasks() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();

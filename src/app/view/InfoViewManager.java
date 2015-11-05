@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+//@@author A0126120B
 public class InfoViewManager {
 
 	private static final String STYLE_INFOVIEW_DESCRIPTION = "infoDescription";

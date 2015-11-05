@@ -28,7 +28,6 @@ public class CommandExit extends Command {
 			return new ViewState();
 		}
 
-		// TODO: undo code here
 		return new ViewState();
 	}
 }
