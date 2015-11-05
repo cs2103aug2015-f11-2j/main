@@ -179,6 +179,7 @@ public class Common {
 		return idList;
 	}
 	
+	// @@author A0126120B
 	public static List<String> getAliasesForCommandType(CommandType type) {
 		switch (type) {
 		case ADD:

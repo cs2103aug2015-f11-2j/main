@@ -28,12 +28,14 @@ public class CommandEdit extends Command {
 	private String content;
 	private Priority priority;	
 	
+	// @@author A0125360R
 	public CommandEdit() {
 		super();
 		this.setCommandType(CommandType.EDIT);
 		displayId = null;
 	}
 	
+	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandEdit object.");
@@ -80,6 +82,7 @@ public class CommandEdit extends Command {
 		return viewState;
 	}
 
+	//TODO: collate from kenny?
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
@@ -111,6 +114,7 @@ public class CommandEdit extends Command {
 		return previousViewState;
 	}
 
+	// @@author A0125360R
 	// Base on displayed index, find task in master tasklist and update it.
 	// Returns an integer which is more than 0 if something has been edited
 	private boolean editTask(TaskList display, TaskList master, Task task, int taskIndex) {
