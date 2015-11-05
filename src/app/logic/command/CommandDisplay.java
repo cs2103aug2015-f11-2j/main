@@ -17,11 +17,13 @@ public class CommandDisplay extends Command {
 	
 	private ViewState previousViewState;
 
+	// @@author A0125360R
 	public CommandDisplay() {
 		super();
 		this.setCommandType(CommandType.DISPLAY);
 	}
 
+	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandDisplay object.");
@@ -77,6 +79,7 @@ public class CommandDisplay extends Command {
 		return viewState;
 	}
 
+	//TODO: collate from kenny?
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {

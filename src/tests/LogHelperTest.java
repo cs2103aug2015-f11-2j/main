@@ -14,7 +14,7 @@ import app.storage.AppStorage;
 import app.util.LogHelper;
 
 public class LogHelperTest {
-
+	// @@author A0125360R
 	@Test
 	public void testLogHelper() {		
 		// check if file exist before logging

@@ -23,11 +23,13 @@ public class CommandMark extends Command {
 	private  ArrayList<UUID> storePreviousId  = new ArrayList<UUID>(); 
 	private ViewState previousViewState;
 	
+	// @@author A0125360R
 	public CommandMark() {
 		super();
 		this.setCommandType(CommandType.MARK);
 	}
 
+	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandMark object.");
@@ -91,6 +93,7 @@ public class CommandMark extends Command {
 		return viewState;
 	}
 
+	// @@author A0125360R
 	// Create a list of IDs containing all the IDs in the displayed taskList
 	private ArrayList<Integer> getAllDisplayedIds(TaskList display) {
 		ArrayList<Integer> allIds = new ArrayList<Integer>();
@@ -101,11 +104,13 @@ public class CommandMark extends Command {
 		return allIds;
 	}
 
+	// @@author A0125360R
 	// convert the first task ID from an array of displayed IDs to the task index
 	private Integer getFirstTaskIndex(ArrayList<Integer> displayIdsToMarkList) {
 		return displayIdsToMarkList.get(0) - 1;
 	}
 
+	// @@author A0125360R
 	// Set appropriate feedback based on marked tasks' completion
 	private void setFeedbackByMarkedTaskCompletion(ArrayList<Integer> markedCompleted,
 			ArrayList<Integer> markedUncompleted, ViewState viewState) {
@@ -131,6 +136,7 @@ public class CommandMark extends Command {
 		}
 	}
 
+	// @@author A0125360R
 	private void logUuidByMarkedTaskCompletion(ArrayList<UUID> markedCompleted,
 			ArrayList<UUID> markedUncompleted) {
 		assert(markedCompleted.size() > 0 || markedUncompleted.size() > 0);
@@ -149,6 +155,7 @@ public class CommandMark extends Command {
 		}
 	}
 	
+	// @@author A0125360R
 	// Locate the specific tasks based on displayed id and mark them
 	private void markSelectedTasks(ArrayList<Integer> displayIdsToMarkList, TaskList display, TaskList master) {
 		ArrayList<UUID> tasksUuidList = display.getTasksUuidList(displayIdsToMarkList);
@@ -159,6 +166,7 @@ public class CommandMark extends Command {
 		TaskStorage.getInstance().writeTasks(master);
 	}
 
+	// @@author A0125360R
 	// Filter the ArrayList of task Ids to get an ArrayList of only completed or uncompleted tasks IDs
 	private ArrayList<Integer> getIdListByCompletion(ArrayList<Integer> arr, TaskList taskList, boolean isCompleted) {
 		ArrayList<Integer> idList = new ArrayList<Integer>();
@@ -170,6 +178,7 @@ public class CommandMark extends Command {
 		return idList;
 	}
 	
+	//TODO: collate from kenny?
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {

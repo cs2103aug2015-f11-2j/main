@@ -251,7 +251,7 @@ public class CommandParserTest {
 		assertEquals("buy milk from 5pm to 3pm", cmd.getContent());
 	}
 	
-	// TODO: collate from wj
+	// @@author A0125360R
 	@Test
 	public void testParseRemovePriority() {
 		String input = "edit 4 drink milk priority none";
@@ -265,6 +265,7 @@ public class CommandParserTest {
 		assertTrue(cmd.getRemoveField().isEmpty());
 	}
 	
+	// @@author A0125360R
 	@Test
 	public void testParseRemoveDate() {
 		String input = "edit 7 destroy milk date none";
@@ -278,6 +279,7 @@ public class CommandParserTest {
 		assertTrue(cmd.getRemoveField().isEmpty());
 	}
 	
+	// @@author A0125360R
 	@Test
 	public void testParseRemoveDateAndPriority() {
 		String input = "edit 7 destroy milk date none priority none";
@@ -287,6 +289,7 @@ public class CommandParserTest {
 		assertEquals(RemovableField.PRIORITY, cmd.getRemoveField().get(1));
 	}
 
+	// @@author A0125360R
 	@Test
 	public void testDetermineDisplayType() {
 		// Split into partitions, input is not case sensitive and leading/trailing spaces do not matter
@@ -315,6 +318,7 @@ public class CommandParserTest {
 		}
 	}
 
+	// @@author A0125360R
 	@Test
 	public void testGetTaskDisplayedIdFromContent() {
 		// With number, positive
@@ -337,6 +341,7 @@ public class CommandParserTest {
 		assertNull(CommandParser.getTaskDisplayedIdFromContent(input));
 	}
 	
+	// @@author A0125360R
 	@Test
 	public void testGetTaskDescFromContent() {
 		// normal input
@@ -350,6 +355,7 @@ public class CommandParserTest {
 		assertEquals(CommandParser.getTaskDescFromContent(input), expected);
 	}
 	
+	// @@author A0125360R
 	@Test
 	public void testDetermineMarkAll() {
 		String content = "a";

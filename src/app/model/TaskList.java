@@ -48,13 +48,14 @@ public class TaskList {
 		taskList.sort((t1, t2) -> t1.compareTo(t2));
 	}
 
-	// TODO: collate from ??
+	// @@author A0125360R
 	// toggle isCompleted for the task at index location
 	public void markTaskByIndex(Integer index) {
 		Task specifiedTask = taskList.get(index);
 		specifiedTask.setCompleted(!specifiedTask.isCompleted());
 	}
 
+	// @@author A0125360R
 	// Build a TaskList containing either only completed or uncompleted tasks
 	public TaskList getTaskListByCompletion(boolean isCompleted) {
 		TaskList tasks = new TaskList();
@@ -66,6 +67,7 @@ public class TaskList {
 		return tasks;
 	}
 
+	// @@author A0125360R
 	// Build an ArrayList of UUID of the tasks in the displayedTaskIdList
 	public ArrayList<UUID> getTasksUuidList(ArrayList<Integer> displayedTaskIdList) {
 		ArrayList<UUID> uuidList = new ArrayList<UUID>();
@@ -75,6 +77,7 @@ public class TaskList {
 		return uuidList;
 	}
 
+	// @@author A0125360R
 	// Build an ArrayList of Integers which are the exact index of tasksUuidList
 	// tasks in taskList
 	public ArrayList<Integer> getTasksIdList(ArrayList<UUID> tasksUuidList) {
@@ -89,16 +92,19 @@ public class TaskList {
 		return idList;
 	}
 
+	// @@author A0125360R
 	// Takes in the index of a specific task and return its isCompleted value
 	public boolean isTaskCompleted(int i) {
 		return taskList.get(i).isCompleted();
 	}
 
+	// @@author A0125360R
 	// Takes in the index of a task and returns its uuid
 	public UUID getTaskUuidByIndex(int index) {
 		return taskList.get(index).getId();
 	}
 
+	// @@author A0125360R
 	// Takes in the uuid of a task and returns its index in the taskList
 	public Integer getTaskIndexByUuid(UUID uuid) {
 		for (int i = 0; i < taskList.size(); i++) {
@@ -109,6 +115,7 @@ public class TaskList {
 		return null;
 	}
 
+	// @@author A0125360R
 	// Takes in a task to compare with the old task at specified index,
 	// and updates the old task with respect to the new one
 	public boolean updateTask(Task task, int index) {
@@ -150,26 +157,31 @@ public class TaskList {
 		return isEdited;
 	}
 	
+	// @@author A0125360R
 	private boolean isEndDateDiff(Task task, int index) {
 		assert(task.getEndDate() != null);
 		return (taskList.get(index).getEndDate() == null || 
 				taskList.get(index).getEndDate().compareTo(task.getEndDate()) != 0);
 	}
 	
+	// @@author A0125360R
 	private boolean isStartDateDiff(Task task, int index) {
 		return ((task.getStartDate() == null && taskList.get(index).getStartDate() != null) || 
 				(task.getStartDate() != null && (taskList.get(index).getStartDate() == null || 
 				taskList.get(index).getStartDate().compareTo(task.getStartDate()) != 0)));
 	}
 
+	// @@author A0125360R
 	public Task getTaskByIndex(int index) {
 		return taskList.get(index);
 	}
 	
+	// @@author A0125360R
 	public Integer getTaskListSize() {
 		return this.taskList.size();
 	}
 
+	//TODO: collate from mx?
 	public TaskList search(List<Predicate<Task>> predicates) {
 		Predicate<Task> query = compositePredicate(predicates);
 		TaskList results = new TaskList();

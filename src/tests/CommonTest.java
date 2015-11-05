@@ -13,7 +13,7 @@ import org.junit.Test;
 import app.util.Common;
 
 public class CommonTest {
-	
+	// @@author A0125360R
 	@Test
 	public void testPluralize() {
 		String singular = "glass";

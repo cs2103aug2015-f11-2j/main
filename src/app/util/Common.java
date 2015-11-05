@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Common {
+	// @@author A0125360R
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
@@ -22,6 +23,7 @@ public class Common {
 		return pluralize(count, singular, null);
 	}
 
+	// @@author A0125360R
 	/**
 	 * Pluralize a string if given count is more than 1
 	 * 
@@ -70,13 +72,13 @@ public class Common {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
 
-	// TODO: collate from wj?
+	// @@author A0125360R
 	/**
 	 * Builds an Integer ArrayList from the command content containing task
 	 * ID(s)
 	 * 
 	 * @param content The content of the Command object
-	 * @return An integer ArrayList of the ID(s)
+	 * @return An integer ArrayList of the ID(s) or null 
 	 */
 	public static ArrayList<Integer> getIdArrayList(String content) {
 		ArrayList<Integer> idArray = new ArrayList<Integer>();
@@ -127,6 +129,7 @@ public class Common {
 		return commandString.replaceFirst(word, "").trim();
 	}
 
+	// @@author A0125360R
 	/**
 	 * Removes the duplicated elements in the ArrayList
 	 * 
@@ -139,6 +142,7 @@ public class Common {
 		return new ArrayList<T>(noDuplicates);
 	}
 	
+	// @@author A0125360R
 	/**
 	 * Builds a string of task ID(s) separated by comma
 	 * from an Integer ArrayList of task ID
@@ -155,6 +159,7 @@ public class Common {
 		return idList;
 	}
 	
+	// @@author A0125360R
 	/**
 	 * Builds a String of UUID(s) separated by comma
 	 * from an ArrayList of task UUID
