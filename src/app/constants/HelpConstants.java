@@ -37,7 +37,7 @@ public class HelpConstants {
 
 	// MARK
 	public static final String HELP_MARK_DESCRIPTION = "Mark tasks as completed or uncompleted";
-	public static final String HELP_MARK_OVERVIEW = "mark <id>";
+	public static final String HELP_MARK_OVERVIEW = "mark <id | all>";
 	public static final String HELP_MARK_EXAMPLES = "[example]: mark 1 2 3";
 
 	// UNDO
