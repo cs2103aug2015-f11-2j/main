@@ -178,7 +178,7 @@ public class CommandMark extends Command {
 		return idList;
 	}
 	
-	//TODO: collate from kenny?
+	// @@author A0125990Y
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
