@@ -838,15 +838,19 @@ public class CommandTest {
 	 * 
 	 * Boundary case
 	 * command content:
-	 * no parameters (invalid), have parameters (valid)
+	 * no parameters (valid), have parameters (valid)
 	 * 
 	 * name:
 	 * whole word match (valid), partial word match (valid),
-	 * multiple whole word match (valid), multiple partial word match
-	 * combination of partial and whole word match
+	 * multiple whole word match (valid), multiple partial word match (invalid)
+	 * partial and whole word match (invalid), whole and partial word match (valid)
 	 * 
 	 * date:
-	 * "between [startDate] and [endDate]" (valid), "after [date]" (valid), "before [date]" (valid) 
+	 * "date none" (valid), "between [startDate] and [endDate]" (valid),
+	 * "after [date]" (valid), "before [date]" (valid)
+	 * 
+	 * priority:
+	 * "none" (valid), valid values from CommandParser (valid)
 	 * 
 	 * Note: parameters include name, startDate, endDate, priority and type. Invalid
 	 * values for date and priority are tested in DateParserTest, CommandParserTest and PredicatesTest.
@@ -882,17 +886,19 @@ public class CommandTest {
 			master.addTask(task);
 			display.addTask(task);
 			TaskStorage.getInstance().writeTasks(master);
-/*
+
 			// command content: no parameters (invalid)
 			String input = "search";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("", viewState.getStatusMessage());
-*/
+			assertEquals("No search parameters specified, displaying all uncompleted tasks", viewState.getStatusMessage());
+			assertEquals(2, viewState.getTaskList().getTaskList().size());
+
 			// command content: have parameters (valid)
 			// name: whole word match (valid)
-			String input = "search lecture";
-			ViewState viewState = CommandController.getInstance().executeCommand(input);
+			input = "search lecture";
+			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
 
 			// command content: have parameters (valid)
@@ -900,6 +906,7 @@ public class CommandTest {
 			input = "search cs";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals(2, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
 			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
 
@@ -908,6 +915,29 @@ public class CommandTest {
 			input = "search cs2103 tutorial";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
+			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// name: multiple partial word match (invalid)
+			input = "search cs tut";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("0 match(es)", viewState.getStatusMessage());
+			assertEquals(0, viewState.getTaskList().getTaskList().size());
+
+			// command content: have parameters (valid)
+			// name: partial and whole word match (invalid)
+			input = "search cs tutorial";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("0 match(es)", viewState.getStatusMessage());
+			assertEquals(0, viewState.getTaskList().getTaskList().size());
+
+			// command content: have parameters (valid)
+			// name: whole and partial word match (valid)
+			input = "search cs2103 tut";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
 
 			// command content: have parameters (valid)
@@ -915,14 +945,7 @@ public class CommandTest {
 			input = "search between 01/01/01 and 03/03/03";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("2 match(es)", viewState.getStatusMessage());
-			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
-			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
-
-			// command content: have parameters (valid)
-			// date: "between [startDate] and [endDate]" (valid)
-			input = "search between 01/01/01 and 03/03/03";
-			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals(2, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
 			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
 
@@ -931,6 +954,7 @@ public class CommandTest {
 			input = "search after 02/02/02";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("2 match(es)", viewState.getStatusMessage());
+			assertEquals(2, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
 			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(1).getName());
 
@@ -939,13 +963,23 @@ public class CommandTest {
 			input = "search before 02/02/02";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
 
 			// command content: have parameters (valid)
-			// priority
+			// priority: "none" (valid)
+			input = "search priority none";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
+			assertEquals("CS2103 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
+
+			// command content: have parameters (valid)
+			// priority: valid values from CommandParser (valid)
 			input = "search priority high";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2103 tutorial", viewState.getTaskList().getTaskByIndex(0).getName());
 
 			// command content: have parameters (valid)
@@ -953,8 +987,17 @@ public class CommandTest {
 			input = "search type completed";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2010 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
-		} catch (Exception e) {
+/*
+			// command content: have parameters (valid)
+			// date: "date none" (valid)
+			input = "search date none type completed";
+			viewState = CommandController.getInstance().executeCommand(input);
+			assertEquals("1 match(es)", viewState.getStatusMessage());
+			assertEquals(1, viewState.getTaskList().getTaskList().size());
+			assertEquals("CS2010 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
+*/		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
 			removeFileAndParentsIfEmpty(testFile.toPath());

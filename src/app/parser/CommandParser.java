@@ -9,7 +9,6 @@ import app.constants.TaskConstants;
 import app.constants.TaskConstants.DisplayType;
 import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
-import app.constants.ViewConstants;
 import app.logic.command.Command;
 import app.logic.command.CommandSave;
 import app.model.ParserToken;
@@ -35,6 +34,8 @@ public class CommandParser {
 	private static final List<String> SEARCH_END_DATE_KEYWORDS = Common.getUnmodifiableList("before");
 	private static final List<String> SEARCH_START_DATERANGE_KEYWORDS = Common.getUnmodifiableList("between");
 	private static final List<String> SEARCH_END_DATERANGE_KEYWORDS = Common.getUnmodifiableList("and");
+
+	private static final String SAVE_LOG = "log";
 
 	private static List<String> allKeywords;
 	private static List<String> allSearchKeywords;
@@ -178,7 +179,7 @@ public class CommandParser {
 	 * @param cmd The Command object to set parameters for
 	 */
 	public static void parseSave(Command cmd) {
-		boolean hasLogKeyword = Common.getFirstWord(cmd.getContent()).equalsIgnoreCase(ViewConstants.SAVE_LOG);
+		boolean hasLogKeyword = Common.getFirstWord(cmd.getContent()).equalsIgnoreCase(SAVE_LOG);
 		CommandSave cmdSave = (CommandSave)cmd;
 		cmdSave.setLog(hasLogKeyword);
 

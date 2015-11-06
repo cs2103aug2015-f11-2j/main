@@ -59,7 +59,8 @@ public class ViewConstants {
 	public static String ERROR_EDIT_NO_TASK = "No task specified to edit";
 	public static String ERROR_EDIT_INVALID_TASK_ID = "Invalid task ID entered";
 	public static String ERROR_EDIT_NO_CHANGES = "No changes made for task %1$s";
-	
+
+	// @@author A0125960E
 	// SAVE command
 	public static String SAVE_STORAGE = "storage";
 	public static String SAVE_LOG = "log";
@@ -71,7 +72,8 @@ public class ViewConstants {
 	public static String ERROR_SAVE_COPY_FILE = "IOException while copying %1$s file to specified location: %2$s";
 	public static String ERROR_SAVE_DELETE_FILE = "IOException while deleting previous %1$ss file: %2$s";
 	public static String ERROR_SAVE_FILE_ALREADY_EXISTS = "File already exists in specified location: %1$s";
-	
+
+	// TODO: collate from mx?
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified, displaying all uncompleted tasks";
 	public static String HEADER_SEARCH = "Search results";

@@ -15,11 +15,11 @@ import app.model.ViewState;
 import app.storage.AppStorage;
 import app.util.LogHelper;
 
+// @@author A0125960E
 public class CommandSave extends Command {
 	private boolean isLog;
 	private String prevFileLocation;
 
-	// @@author A0125960E
 	public CommandSave() {
 		super();
 		this.setCommandType(CommandType.SAVE);

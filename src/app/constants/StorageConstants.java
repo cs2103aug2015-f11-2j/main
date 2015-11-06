@@ -1,5 +1,6 @@
 package app.constants;
 
+// @@author A0125960E
 public class StorageConstants {
 	// file locations
 	public static String FILE_CONFIGURATION = "config.properties";
