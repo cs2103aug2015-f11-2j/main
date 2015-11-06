@@ -7,6 +7,7 @@ import app.constants.TaskConstants.Priority;
 import app.model.Task;
 
 public class Predicates {
+	// @@author A0132764E
 	/**
 	 * Predicate<Task> for specified end before date
 	 * 
@@ -16,7 +17,8 @@ public class Predicates {
 	public static Predicate<Task> endDateBefore(LocalDateTime end) {
 		return t -> (t.getEndDate() != null) ? (t.getEndDate().isBefore(end) || t.getEndDate().isEqual(end)) : false;
 	}
-
+	
+	// @@author A0132764E
 	/**
 	 * Predicate<Task> for specified start after date
 	 * 
@@ -27,6 +29,7 @@ public class Predicates {
 		return t -> (t.getEndDate() != null) ? (t.getEndDate().isAfter(start) || t.getEndDate().isEqual(start)) : false;
 	}
 
+	// @@author A0132764E
 	/**
 	 * Predicate<Task> for specified start and end time
 	 * 
@@ -48,6 +51,7 @@ public class Predicates {
 
 	}
 
+	// @@author A0132764E
 	/**
 	 * Predicate<Task> for specified priority
 	 * 
@@ -60,6 +64,7 @@ public class Predicates {
 				: false;
 	}
 
+	// @@author A0132764E
 	/**
 	 * Predicate<Task> for keyword matches
 	 * 

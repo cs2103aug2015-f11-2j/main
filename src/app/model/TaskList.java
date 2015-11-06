@@ -181,7 +181,7 @@ public class TaskList {
 		return this.taskList.size();
 	}
 
-	//TODO: collate from mx?
+	// @@author A0132764E
 	public TaskList search(List<Predicate<Task>> predicates) {
 		Predicate<Task> query = compositePredicate(predicates);
 		TaskList results = new TaskList();
@@ -192,7 +192,7 @@ public class TaskList {
 		return results;
 	}
 
-	// combine all predicates with AND
+	// @@author A0132764E
 	private Predicate<Task> compositePredicate(List<Predicate<Task>> predicates) {
 		return predicates.stream().reduce(t -> true, Predicate::and);
 	}

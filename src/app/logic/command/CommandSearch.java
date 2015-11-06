@@ -21,11 +21,13 @@ public class CommandSearch extends Command {
 
 	private ViewState previousViewState;
 	
+	// @@author A0132764E
 	public CommandSearch() {
 		super();
 		this.setCommandType(CommandType.SEARCH);
 	}
-
+	
+	// @@author A0132764E
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info("Executing CommandSearch object.");
@@ -82,6 +84,7 @@ public class CommandSearch extends Command {
 		return viewState;
 	}
 	
+	//TODO: Kenny/Benjamin?
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
