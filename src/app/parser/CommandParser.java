@@ -13,6 +13,7 @@ import app.logic.command.Command;
 import app.logic.command.CommandSave;
 import app.model.ParserToken;
 import app.util.Common;
+import app.util.LogHelper;
 
 public class CommandParser {
 
@@ -34,6 +35,7 @@ public class CommandParser {
 	private static final List<String> SEARCH_END_DATE_KEYWORDS = Common.getUnmodifiableList("before");
 	private static final List<String> SEARCH_START_DATERANGE_KEYWORDS = Common.getUnmodifiableList("between");
 	private static final List<String> SEARCH_END_DATERANGE_KEYWORDS = Common.getUnmodifiableList("and");
+	private static final List<String> SEARCH_DATE_KEYWORDS = Common.getUnmodifiableList("date");
 
 	private static final String SAVE_LOG = "log";
 
@@ -82,6 +84,7 @@ public class CommandParser {
 		ParserToken endToken = dateToken(arr, SEARCH_END_DATE_KEYWORDS, allSearchKeywords);
 		ParserToken priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
 		ParserToken displayToken = singleArgToken(arr, DISPLAY_TYPE_KEYWORDS, displayTypes);
+		ParserToken nilDateToken = singleArgToken(arr, Arrays.asList("date"), Arrays.asList("none"));
 
 		// Daterange keywords for search: BETWEEN <date> AND <date>
 		List<String> inclusiveEndKeywords = new ArrayList<String>(allSearchKeywords);
@@ -140,8 +143,15 @@ public class CommandParser {
 		clearIfStartAfterEnd(startToken, endToken, parsedStart, parsedEnd);
 
 		// Merge disjointed content tokens.
-		updateContentEnd(contentToken, arr, priorityToken, displayToken, startToken, endToken);
+		updateContentEnd(contentToken, arr, priorityToken, displayToken, startToken, endToken, nilDateToken);
 
+		
+		if (!nilDateToken.isEmpty() && parsedStart == null && parsedEnd == null) {
+			cmd.setFloatSearch(true);
+		} else {
+			nilDateToken.clear();
+		}
+		
 		// Remove any tokens we merged over.
 		clearTokensBeforeContent(contentToken, startToken, endToken, priorityToken, displayToken);
 		if (startToken.isEmpty()) {
@@ -150,6 +160,8 @@ public class CommandParser {
 		if (endToken.isEmpty()) {
 			parsedEnd = null;
 		}
+		
+
 
 		String content = Common.getStringFromArrayIndexRange(contentToken.getStart(), contentToken.getEnd(), arr);
 		String priorityString = Common.getStringFromArrayIndexRange(priorityToken.getStart() + 1,

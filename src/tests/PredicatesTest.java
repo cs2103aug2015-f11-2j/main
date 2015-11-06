@@ -114,7 +114,9 @@ public class PredicatesTest {
 		assertEquals(3, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
-		//multiple paramter search test cases
+		
+		//multiple parameter search test cases
+		
 		input = "search eat before 4/11/15";
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.keywordMatches(cmd.getContent()));

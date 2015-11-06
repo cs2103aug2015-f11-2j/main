@@ -21,6 +21,7 @@ public abstract class Command {
 	private DisplayType displayType;
 	private ArrayList<RemovableField> removeField;
 	private boolean isExecuted;
+	private boolean isFloatSearch;
 	
 	public Command() {
 		removeField = new ArrayList<RemovableField>();
@@ -101,5 +102,13 @@ public abstract class Command {
 
 	public ArrayList<RemovableField> getRemoveField() {
 		return removeField;
+	}
+	
+	public boolean floatSearch() {
+		return isFloatSearch;
+	}
+
+	public void setFloatSearch(boolean isFloatSearch) {
+		this.isFloatSearch = isFloatSearch;
 	}
 }

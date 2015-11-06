@@ -76,4 +76,15 @@ public class Predicates {
 		// keyword.toLowerCase() + "\\b.*");
 		return t -> t.getName().toLowerCase().contains(keyword.toLowerCase());
 	}
+	
+	// @@author A0132764E
+	/**
+	 * Predicate<Task> for nil start date and end date
+	 * 
+	 * @param nil
+	 * @return Predicate<Task> with no start and end dates (floating tasks)
+	 */
+	public static Predicate<Task> floatingTask() {
+		return t -> t.isFloating();
+	}
 }

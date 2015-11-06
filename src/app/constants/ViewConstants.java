@@ -75,7 +75,7 @@ public class ViewConstants {
 
 	// TODO: collate from mx?
 	// SEARCH command
-	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified, displaying all uncompleted tasks";
+	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
 	public static String HEADER_SEARCH = "Search results";
 	public static String MESSAGE_SEARCH = "%d match(es)";
 	public static String ERROR_SEARCH = "Error";

@@ -57,15 +57,18 @@ public class CommandSearch extends Command {
 			}
 			if (this.getStartDate() != null && this.getEndDate() != null) {
 				predicates.add(Predicates.betweenDates(this.getStartDate(), this.getEndDate()));
-			} else if (this.getEndDate() != null) {
+			} 
+			else if (this.getEndDate() != null) {
 					predicates.add(Predicates.endDateBefore(this.getEndDate()));
-			} else if (this.getStartDate() != null) {
+			} 
+			else if (this.getStartDate() != null) {
 					predicates.add(Predicates.startDateAfter(this.getStartDate()));
 			}
+			if (this.floatSearch()) {
+				predicates.add(Predicates.floatingTask());
+			}
 
-			
 			TaskList results = retrievedTaskList.search(predicates);
-			
 			viewState.setTaskList(results);
 			viewState.setHeader(ViewConstants.HEADER_SEARCH);
 			
@@ -74,6 +77,7 @@ public class CommandSearch extends Command {
 			
 			if (predicates.isEmpty() && this.getDisplayType() == null){
 				viewState.setStatus(StatusType.SUCCESS,ViewConstants.ERROR_SEARCH_NO_PARAMETER);
+				return viewState;
 			}
 			this.setExecuted(true);
 		} catch (Exception e) {
@@ -84,7 +88,7 @@ public class CommandSearch extends Command {
 		return viewState;
 	}
 	
-	//TODO: Kenny/Benjamin?
+	// @@author A0125990Y
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
