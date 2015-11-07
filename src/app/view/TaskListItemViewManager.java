@@ -127,7 +127,7 @@ public class TaskListItemViewManager extends ListCell<TaskCell> {
 	/**
 	 * Sets the dates of this task cell.
 	 */
-	public void setDates() {
+	private void setDates() {
 		// Duration
 		if (task.getStartDate() != null && task.getEndDate() != null) {
 			Label startTime = buildTimeLabel(task.getStartDate());
