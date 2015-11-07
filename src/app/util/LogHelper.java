@@ -9,7 +9,7 @@ import java.util.logging.SimpleFormatter;
 import app.storage.AppStorage;
 
 //@@author A0125960E
-public class LogHelper extends Observer {
+public class LogHelper implements Observer {
 
 	private static LogHelper logHelper;
 	private Logger logger;

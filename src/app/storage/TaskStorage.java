@@ -20,7 +20,7 @@ import app.util.LogHelper;
 import app.util.Observer;
 
 // @@author A0125960E
-public class TaskStorage extends Observer {
+public class TaskStorage implements Observer {
 	private static TaskStorage taskStorage;
 
 	private File storageFile;
