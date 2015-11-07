@@ -136,7 +136,6 @@ public class ViewManager {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/TextView.fxml");
 			textViewLayout = loader.load();
 			textViewManager = loader.getController();
-			textViewManager.setViewManager(this);
 		} catch (IOException e) {
 			LogHelper.getInstance().getLogger().severe(e.getMessage());
 		}

@@ -4,7 +4,6 @@ import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.TaskConstants.DisplayType;
-import app.constants.TaskConstants.Priority;
 import app.constants.ViewConstants.StatusType;
 import app.logic.CommandController;
 import app.model.Task;
