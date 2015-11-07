@@ -12,9 +12,9 @@ public class StorageConstants {
 	public static String PROPERTIES_LOG_FILE_LOCATION = "logFileLocation";
 	public static String PROPERTIES_SELECTED_THEME = "selectedTheme";
 	
-	// location of parameters
-	public static int PARAM_POSITION_STORAGE = 0;
-	public static int PARAM_POSITION_LOG = 1;
+	// index of observers in the observer list
+	public static int OBSERVER_INDEX_STORAGE = 0;
+	public static int OBSERVER_INDEX_LOG = 1;
 
 	// error messages
 	public static String ERROR_INITIALIZE_TASKSTORAGE = "IOException while initializing TaskStorage";

@@ -8,6 +8,7 @@ import java.util.logging.SimpleFormatter;
 
 import app.storage.AppStorage;
 
+//@@author A0125960E
 public class LogHelper extends Observer {
 
 	private static LogHelper logHelper;
@@ -23,7 +24,7 @@ public class LogHelper extends Observer {
 	}
 
 	/**
-	 * @return The Logger instance
+	 * @return The LogHelper instance
 	 */
 	public static LogHelper getInstance() {
 		if (logHelper == null) {
@@ -32,10 +33,16 @@ public class LogHelper extends Observer {
 		return logHelper;
 	}
 
+	/**
+	 * @return The Logger instance
+	 */
 	public Logger getLogger() {
 		return logger;
 	}
 
+	/**
+	 * Updates the log file location.
+	 */
 	@Override
 	public void update() {
 		File logFile = new File(AppStorage.getInstance().getLogFileLocation());

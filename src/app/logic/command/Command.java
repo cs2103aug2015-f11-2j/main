@@ -9,7 +9,7 @@ import app.constants.TaskConstants.Priority;
 import app.constants.TaskConstants.RemovableField;
 import app.model.ViewState;
 
-
+// @@author generated
 public abstract class Command {
 
 	private String commandString;

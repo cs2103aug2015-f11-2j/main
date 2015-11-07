@@ -92,14 +92,6 @@ public class PredicatesTest {
 		assertEquals(1, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
-		input = "search before 5/11/15";
-		cmd = CommandController.getInstance().createCommand(input);
-		predicates.add(Predicates.endDateBefore(cmd.getEndDate()));
-		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
-		assertEquals(1, results.getTaskList().size());
-		predicates = new ArrayList<Predicate<Task>>();
-		
 		input = "search priority high";
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.priorityEquals(cmd.getPriority()));

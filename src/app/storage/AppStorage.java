@@ -14,6 +14,7 @@ import app.constants.ViewConstants;
 import app.util.LogHelper;
 import app.util.Observer;
 
+// @@author A0125960E
 public class AppStorage {
 	private static AppStorage appStorage;
 
@@ -21,7 +22,9 @@ public class AppStorage {
 	private Properties properties;
 	private ArrayList<Observer> observerList;
 
-	// @@author A0125960E
+	/**
+	 * Initializes AppStorage.
+	 */
 	private AppStorage() {
 		configFile = new File(StorageConstants.FILE_CONFIGURATION);
 		properties = new Properties();
@@ -42,6 +45,9 @@ public class AppStorage {
 		}
 	}
 
+	/**
+	 * @return AppStorage instance.
+	 */
 	public static AppStorage getInstance() {
 		if (appStorage == null) {
 			appStorage = new AppStorage();
@@ -51,17 +57,18 @@ public class AppStorage {
 		return appStorage;
 	}
 
+	/* Accessors and mutators */
 	public String getStorageFileLocation() {
 		return properties.getProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION);
 	}
 
 	public void setStorageFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION,
-							   toValidCanonicalPath(path));
+							   toAcceptableCanonicalPath(path));
 		writeProperties();
 
 		if (!observerList.isEmpty()) {
-			notifyObserver(StorageConstants.PARAM_POSITION_STORAGE);
+			notifyObserver(StorageConstants.OBSERVER_INDEX_STORAGE);
 		}
 	}
 
@@ -75,11 +82,11 @@ public class AppStorage {
 
 	public void setLogFileLocation(String path) {
 		properties.setProperty(StorageConstants.PROPERTIES_LOG_FILE_LOCATION,
-							   toValidCanonicalPath(path));
+							   toAcceptableCanonicalPath(path));
 		writeProperties();
 
 		if (!observerList.isEmpty()) {
-			notifyObserver(StorageConstants.PARAM_POSITION_LOG);
+			notifyObserver(StorageConstants.OBSERVER_INDEX_LOG);
 		}
 	}
 
@@ -102,6 +109,9 @@ public class AppStorage {
 		setSelectedTheme(ViewConstants.THEME_LIGHT);
 	}
 
+	/**
+	 * Write properties to the configuration file.
+	 */
 	private void writeProperties() {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
 			bufferedWriter.write(StorageConstants.PROPERTIES_STORAGE_FILE_LOCATION + "="
@@ -118,7 +128,7 @@ public class AppStorage {
 	}
 
 	/**
-	 * Read properties from the file. If the selected theme is invalid, the
+	 * Read properties from the configuration file. If the selected theme is invalid, the
 	 * selected theme will be set to default.
 	 */
 	private void readProperties() {
@@ -129,6 +139,12 @@ public class AppStorage {
 		}
 	}
 
+	/**
+	 * Converts the path into a canonical path.
+	 * 
+	 * @param path	File path.
+	 * @return		Canonical path of the given path.
+	 */
 	private String toCanonicalPath(String path) {
 		File file = new File(path);
 		String canonicalPath = path;
@@ -143,28 +159,36 @@ public class AppStorage {
 	}
 
 	/**
-	 * Convert path to a valid canonical path by removing whitespace before slashes and
-	 * replace backslashes to forward slashes. This is used to avoid using escape
+	 * Convert path to an acceptable canonical path by removing whitespace before slashes
+	 * and replace backslashes to forward slashes. This is used to avoid using escape
 	 * characters in the configuration file.
 	 * 
 	 * Note: The path returned may not be valid since the file system does not allow
 	 * certain characters and combinations.
 	 * 
 	 * @param path 			File path.
-	 * @return 				Valid file path with backslash replaced with forward
+	 * @return 				File path with backslash replaced with forward
 	 * 						slash and removed whitespace before slash.
 	 */
-	public String toValidCanonicalPath(String path) {
+	public String toAcceptableCanonicalPath(String path) {
 		String validPath = toCanonicalPath(path).replace("\\", "/").replaceAll("\\s*/\\s*", "/");
 
 		return validPath;
 	}
 
+	/**
+	 * Add the TaskStorage and LogHelper instances to the observerList.
+	 */
 	private void addObservers() {
 		observerList.add(TaskStorage.getInstance());
 		observerList.add(LogHelper.getInstance());
 	}
 
+	/**
+	 * Updates the observer in the observerList at the specified index.
+	 * 
+	 * @param i	Index of the observer in the observerList.
+	 */
 	private void notifyObserver(int i) {
 		observerList.get(i).update();
 	}

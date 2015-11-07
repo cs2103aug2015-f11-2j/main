@@ -20,15 +20,24 @@ public class CommandSave extends Command {
 	private boolean isLog;
 	private String prevFileLocation;
 
+	/* Constructor */
 	public CommandSave() {
 		super();
 		this.setCommandType(CommandType.SAVE);
 	}
 
+	/* Mutator */
 	public void setLog(boolean hasLogKeyword) {
 		isLog = hasLogKeyword;
 	}
 
+	/**
+	 * Executes the save command. If successful, it moves the storage/log file to the
+	 * new location and updates the configuration file.
+	 * 
+	 * @param previousViewState	Previous view state.
+	 * @return					New view state.
+	 */
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		ViewState viewState = new ViewState();
@@ -68,6 +77,12 @@ public class CommandSave extends Command {
 		return viewState;
 	}
 
+	/**
+	 * Undo the save command. If successful, it moves the storage/log file to the
+	 * previous location and updates the configuration file.
+	 * 
+	 * @return	Previous view state.
+	 */
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
@@ -162,7 +177,7 @@ public class CommandSave extends Command {
 	private String copyFile(String sourcePath, String destPath) {
 		String errorMsg = null;
 		File sourceFile = new File(sourcePath);
-		File destFile = new File(AppStorage.getInstance().toValidCanonicalPath(destPath));
+		File destFile = new File(AppStorage.getInstance().toAcceptableCanonicalPath(destPath));
 
 		if (destFile.getParentFile() != null) {
 			destFile.getParentFile().mkdirs();
@@ -185,6 +200,12 @@ public class CommandSave extends Command {
 		return errorMsg;
 	}
 
+	/**
+	 * Removes specified file if exist and empty parent directories.
+	 *  
+	 * @param path			Path of specified file.
+	 * @throws IOException
+	 */
 	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {
