@@ -36,14 +36,11 @@ public class CommandDisplay extends Command {
 		try {
 			String arg = this.getContent();
 
-			// default display argument is uncompleted
 			if (arg.equals(DisplayType.UNCOMPLETED.toString())) {
 				retrievedTaskList = master.getTaskListByCompletion(false);
 				viewState.setTaskList(retrievedTaskList);
-				viewState.setHeader(
-						String.format(ViewConstants.HEADER_DISPLAY, arg));
-				viewState.setStatus(StatusType.SUCCESS,
-						String.format(ViewConstants.MESSAGE_DISPLAY, arg));
+				viewState.setHeader(String.format(ViewConstants.HEADER_DISPLAY, arg));
+				viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				viewState.addAction(new Action(ActionType.SCROLL_TASK_LIST_TO_TOP, null));
 				LogHelper.getInstance().getLogger().info(String.format(ViewConstants.MESSAGE_DISPLAY, arg));
 				setExecuted(true);

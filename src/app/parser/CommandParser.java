@@ -474,7 +474,7 @@ public class CommandParser {
 		}
 	}
 	
-	// @@author A0125360R
+	// @@author A0132764E-reused
 	/**
 	 * Determine the display argument from the entered string (for search)
 	 * 

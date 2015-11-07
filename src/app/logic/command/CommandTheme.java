@@ -1,6 +1,5 @@
 package app.logic.command;
 
-// @@author A0125990Y
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
@@ -9,7 +8,7 @@ import app.storage.AppStorage;
 import app.util.LogHelper;
 
 public class CommandTheme extends Command {
-
+	// @@author A0125990Y
 	private ViewState previousViewState;
 	
 	public CommandTheme() {

@@ -137,6 +137,7 @@ public class CommandMark extends Command {
 	}
 
 	// @@author A0125360R
+	// Log the marked tasks's UUID formatted based on tasks' completion
 	private void logUuidByMarkedTaskCompletion(ArrayList<UUID> markedCompleted,
 			ArrayList<UUID> markedUncompleted) {
 		assert(markedCompleted.size() > 0 || markedUncompleted.size() > 0);

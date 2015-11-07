@@ -1,6 +1,5 @@
 package app.logic.command;
 
-// @@author A0125990Y
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ActionType;
 import app.model.Action;
@@ -8,7 +7,7 @@ import app.model.ViewState;
 import app.util.LogHelper;
 
 public class CommandExit extends Command {
-
+	// @@author A0125990Y
 	public CommandExit() {
 		super();
 		this.setCommandType(CommandType.EXIT);

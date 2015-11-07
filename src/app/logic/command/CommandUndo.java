@@ -10,7 +10,7 @@ import app.model.ViewState;
 import app.util.LogHelper;
 
 public class CommandUndo extends Command {
-
+	// @@author A0125990Y
 	public CommandUndo() {
 		super();
 		this.setCommandType(CommandType.UNDO);
@@ -22,7 +22,6 @@ public class CommandUndo extends Command {
 
 		Stack<Command> executedCommands = CommandController.getInstance().getExecutedCommands();
 		
-		// @@author A0125990Y
 		if (executedCommands.empty()) {
 			ViewState viewState = new ViewState();
 			viewState.setStatus(StatusType.ERROR, String.format(ViewConstants.NO_MORE_UNDO));

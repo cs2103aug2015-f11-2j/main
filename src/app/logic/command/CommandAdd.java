@@ -1,6 +1,5 @@
 package app.logic.command;
 
-// @@author A0125990Y
 import app.constants.ViewConstants;
 
 import java.util.UUID;
@@ -18,7 +17,7 @@ import app.storage.TaskStorage;
 import app.util.LogHelper;
 
 public class CommandAdd extends Command {
-	
+	// @@author A0125990Y
 	private Task task;
 	private UUID storeId;
 	private ViewState previousViewState;

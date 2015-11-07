@@ -1,6 +1,5 @@
 package app.logic.command;
 
-// @@author A0125990Y
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
@@ -8,7 +7,7 @@ import app.model.ViewState;
 import app.util.Common;
 
 public class CommandInvalid extends Command {
-
+	// @@author A0125990Y
 	public CommandInvalid() {
 		super();
 		this.setCommandType(CommandType.INVALID);

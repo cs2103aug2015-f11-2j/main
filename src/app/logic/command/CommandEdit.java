@@ -61,7 +61,7 @@ public class CommandEdit extends Command {
 			}
 			
 			boolean isEdited = editTask(display, master, task, taskIndex);
-			if (isEdited == true ) {
+			if (isEdited == true) {
 				TaskStorage.getInstance().writeTasks(master);
 				setExecuted(true);
 				viewState.setTaskList(display);
@@ -116,11 +116,12 @@ public class CommandEdit extends Command {
 
 	// @@author A0125360R
 	// Base on displayed index, find task in master tasklist and update it.
-	// Returns an integer which is more than 0 if something has been edited
+	// Returns true if something has been edited
 	private boolean editTask(TaskList display, TaskList master, Task task, int taskIndex) {
 		UUID uuid = display.getTaskUuidByIndex(taskIndex);
 		int masterListIndex = master.getTaskIndexByUuid(uuid);
 		
+		//store the task's values before it gets edited
 		this.uuid = uuid; 
 		startDate =  master.getTaskByIndex(masterListIndex).getStartDate();
 		endDate =  master.getTaskByIndex(masterListIndex).getEndDate();
