@@ -22,7 +22,7 @@ public class IntegrationTest {
 
 	// @@author A0126120B
 	@Test
-	public void testAddTasks() throws Exception {
+	public void integrationTest() throws Exception {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/integration1.txt");
 		File testFile = createTestFile();
