@@ -7,11 +7,13 @@ import app.Main;
 
 public class ViewConstants {
 
+	// @@author A0126120B
 	// Style classes for the different statusbar statuses
 	public static String STATUS_STYLE_SUCCESS = "success";
 	public static String STATUS_STYLE_ERROR = "error";
 	public static String STATUS_STYLE_INFO = "info";
 	
+	// @@author A0126120B
 	// Style classes for task item colors
 	public static String ITEM_PURPLE = "purple";
 	public static String ITEM_BLUE = "blue";
@@ -21,6 +23,7 @@ public class ViewConstants {
 	public static String ITEM_RED = "red";
 	public static String ITEM_PINK = "pink";
 
+	// @@author A0126120B
 	// THEME command
 	// Resource locations for the theme CSS files.
 	public static String THEME_LIGHT_CSS = Main.class.getResource("view/css/theme_light.css").toExternalForm();
@@ -30,6 +33,7 @@ public class ViewConstants {
 	public static String MESSAGE_AVAILABLE_THEMES = "Available themes: light, dark";
 	public static String MESSAGE_CURRENT_THEME = "Current theme: %1$s";
 	
+	// @@author A0126120B
 	// ADD command
 	public static String MESSAGE_ADD = "Added task: %1$s";
 	public static String ERROR_ADD = "Error adding task: %1$s";
@@ -99,25 +103,29 @@ public class ViewConstants {
 	public static String HEADER_HELP = " Displaying Help List";
 	public static String ERROR_HELP = " No such Help List";
 
-	
+	// @@author A0126120B
 	// Enum values for the different statusbar statuses
 	public enum StatusType {
 		SUCCESS, ERROR, INFO;
 	}
 	
+	// @@author A0126120B
 	// Enum values for the different primary views
 	public enum ViewType {
 		TASK_LIST, TEXT_VIEW;
 	}
 	
+	// @@author A0126120B
 	public enum ScrollDirection {
 		UP, DOWN;
 	}
 	
+	// @@author A0126120B
 	public enum ActionType {
 		SCROLL_TASK_LIST_TO, SCROLL_TASK_LIST_TO_TOP, EXIT;
 	}
 	
+	// @@author A0126120B
 	public static Queue<String> getItemColorsQueue() {
 		Queue<String> queue = new LinkedList<String>();
 		queue.add(ITEM_PURPLE);
