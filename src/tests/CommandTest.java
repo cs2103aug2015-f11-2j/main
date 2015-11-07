@@ -21,8 +21,8 @@ import app.model.ViewState;
 import app.storage.AppStorage;
 import app.storage.TaskStorage;
 
+// @@author A0125960E
 public class CommandTest {
-	// @@author A0125960E
 	/**
 	 * Equivalence partition
 	 * command content: [have task name and no parameters], [have task name and have parameters]
@@ -118,19 +118,19 @@ public class CommandTest {
 			String input = "delete";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("No task specified", viewState.getStatusMessage());
-/*
+
 			// command content: single id (valid)
 			// id: 0 (invalid)
 			input = "delete 0";
 			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("", viewState.getStatusMessage());
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
 
 			// command content: single id (valid)
 			// id: display.getTaskList().size() + 1 [6] (invalid)
 			input = "delete 6";
 			viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("", viewState.getStatusMessage());
-*/
+			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
+
 			// command content: single id (valid)
 			// id: 1 (valid)
 			input = "delete 1";
@@ -148,13 +148,13 @@ public class CommandTest {
 			assertEquals("Deleted task: 4", viewState.getStatusMessage());
 			assertEquals(3, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(3).getId()));
-/*
+
 			// command content: any other String (invalid)
 			// id: any valid value
 			input = "delete abc";
 			viewState = CommandController.getInstance().executeCommand(input);
 			assertEquals("Invalid task ID entered", viewState.getStatusMessage());
-*/
+
 			// command content: multiple id (valid)
 			// id: any valid value
 			input = "delete 1 3";
@@ -164,7 +164,7 @@ public class CommandTest {
 			assertEquals(1, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(2).getId()));
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
-/*
+
 			// command content: duplicate id (valid)
 			// id: any valid value
 			input = "delete 1 1";
@@ -172,7 +172,7 @@ public class CommandTest {
 			tasks = TaskStorage.getInstance().readTasks();
 			assertEquals("Deleted task: 1", viewState.getStatusMessage());
 			assertEquals(0, tasks.getTaskList().size());
-			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));*/
+			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));
 		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
@@ -252,6 +252,7 @@ public class CommandTest {
 		}
 	}
 
+	// @@author A0125990Y
 	/**
 	 * Equivalence partition
 	 * command content: [""]
