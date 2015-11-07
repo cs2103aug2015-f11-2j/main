@@ -39,6 +39,7 @@ public class ViewConstants {
 	public static String ERROR_ADD = "Error adding task: %1$s";
 	public static String ERROR_ADD_NO_TASK = "No task specified";
 	
+	// @@author A0125990Y
 	// DELETE command
 	public static String MESSAGE_DELETE = "Deleted task: %1$s";
 	public static String ERROR_DELETE = "Error deleting task: %1$s";
@@ -87,6 +88,7 @@ public class ViewConstants {
 	public static String MESSAGE_SEARCH = "%d match(es)";
 	public static String ERROR_SEARCH = "Error";
 
+	// @@author A0125990Y
 	// UNDO command
 	public static String MESSAGE_UNDO = "Undo success. Returning to previous state";
 	public static String ERROR_UNDO = "Undo fail: No more previous state";
@@ -102,6 +104,7 @@ public class ViewConstants {
 	// Header constants
 	public static String HEADER_DISPLAY = "Displaying %1$s tasks";
 	
+	// @@author A0125990Y
 	// Help Message 
 	public static String HEADER_HELP = " Displaying Help List";
 	public static String ERROR_HELP = " No such Help List";
