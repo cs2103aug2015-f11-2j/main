@@ -46,6 +46,7 @@ public class Common {
 		return singular;
 	}
 
+	// @@author A0126120B
 	/**
 	 * Builds a string from a string array using specified start/end indexes.
 	 * The start and end indexes are both inclusive.
@@ -55,7 +56,6 @@ public class Common {
 	 * @param array The array of strings
 	 * @return The constructed string
 	 */
-	// @@author A0126120B
 	public static String getStringFromArrayIndexRange(int start, int end, String[] array) {
 		String result = "";
 		for (int i = start; i < array.length && i >= 0 && i <= end; i++) {
@@ -64,13 +64,13 @@ public class Common {
 		return result.trim();
 	}
 
+	// @@author A0126120B
 	/**
 	 * Builds a read-only list from the given arguments.
 	 * 
 	 * @param args Elements used to create the list
 	 * @return A read-only list with the specified elements
 	 */
-	// @@author A0126120B
 	public static List<String> getUnmodifiableList(String... args) {
 		return Collections.unmodifiableList(Arrays.asList(args));
 	}
