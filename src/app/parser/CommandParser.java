@@ -200,6 +200,15 @@ public class CommandParser {
 	}
 
 	// @@author A0126120B
+	/**
+	 * Parses and sets parameters for the Command object
+	 * specified. The commandString of the specified Command object should
+	 * already be set before calling this method.
+	 * 
+	 * By default, this method does not detect "date none" and "priority none" keywords
+	 * 
+	 * @param cmd The Command object to set parameters for
+	 */
 	public static void parseDatesAndPriority(Command cmd) {
 		parseDatesAndPriority(cmd, false);
 	}

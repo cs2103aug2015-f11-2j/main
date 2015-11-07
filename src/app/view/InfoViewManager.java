@@ -37,6 +37,11 @@ public class InfoViewManager {
 	@FXML
 	private VBox infoViewLayout;
 
+	/**
+	 * This method is implicitly called when loaded from the FXMLLoader. A
+	 * listener is bound to the height property of the layout and updates the size
+	 * of the window accordingly.
+	 */
 	@FXML
 	public void initialize() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy hh:mma");
@@ -48,6 +53,11 @@ public class InfoViewManager {
 		});
 	}
 
+	/**
+	 * Updates the info view
+	 * 
+	 * @param cmd The command object to specify info for
+	 */
 	public void updateView(Command cmd) {
 		CommandType type = cmd.getCommandType();
 		// Don't refresh info view if input is a ^substring of an alias for the currently displayed
@@ -67,7 +77,7 @@ public class InfoViewManager {
 		switch (cmd.getCommandType()) {
 		case ADD:
 			setHelpText(HelpConstants.HELP_ADD_OVERVIEW, HelpConstants.HELP_ADD_DESCRIPTION);
-			setCommandAddLabels(cmd);
+			setCommandLabels(cmd);
 			break;
 		case EDIT:
 			setHelpText(HelpConstants.HELP_EDIT_OVERVIEW, HelpConstants.HELP_EDIT_DESCRIPTION);
@@ -75,11 +85,10 @@ public class InfoViewManager {
 			break;
 		case SEARCH:
 			setHelpText(HelpConstants.HELP_SEARCH_OVERVIEW, HelpConstants.HELP_SEARCH_DESCRIPTION);
-			setCommandSearchLabels(cmd);
+			setCommandLabels(cmd);
 			break;
 		case DELETE:
 			setHelpText(HelpConstants.HELP_DELETE_OVERVIEW, HelpConstants.HELP_DELETE_DESCRIPTION);
-			setCommandDeleteLabels(cmd);
 			break;
 		case DISPLAY:
 			setHelpText(HelpConstants.HELP_DISPLAY_OVERVIEW, HelpConstants.HELP_DISPLAY_DESCRIPTION);
@@ -103,11 +112,22 @@ public class InfoViewManager {
 		setPaddingIfHasChildren();
 	}
 
+	/**
+	 * Sets the help text in the info view.
+	 * 
+	 * @param overview The command overview
+	 * @param description The command description
+	 */
 	private void setHelpText(String overview, String description) {
 		setHelpOverview(overview);
 		setHelpDescription(description);
 	}
 
+	/**
+	 * Sets the command overview in the info view.
+	 * 
+	 * @param overview The command overview
+	 */
 	private void setHelpOverview(String overview) {
 		String commandWord = Common.getFirstWord(overview);
 		overview = Common.removeFirstWord(overview);
@@ -128,12 +148,22 @@ public class InfoViewManager {
 		addInfoRow(texts);
 	}
 
+	/**
+	 * Sets the command description in the info view.
+	 * 
+	 * @param description The command overview
+	 */
 	private void setHelpDescription(String description) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		texts.add(buildText(description, STYLE_INFOVIEW_DESCRIPTION));
 		addInfoRow(texts);
 	}
 
+	/**
+	 * Sets labels specific to the edit command.
+	 * 
+	 * @param cmd The edit command
+	 */
 	private void setCommandEditLabels(Command cmd) {
 		CommandEdit editCmd = (CommandEdit) cmd;
 		Integer id = editCmd.getDisplayId();
@@ -145,24 +175,22 @@ public class InfoViewManager {
 		addSeparator();
 	}
 
-	private void setCommandAddLabels(Command cmd) {
+	/**
+	 * Sets labels for the specified command object. This method is command-agnostic.
+	 * 
+	 * @param cmd The command object
+	 */
+	private void setCommandLabels(Command cmd) {
 		setContentText(cmd.getContent());
 		setDateAndPriorityTexts(cmd);
 		addSeparator();
 	}
-
-	private void setCommandSearchLabels(Command cmd) {
-		setContentText(cmd.getContent());
-		setDateAndPriorityTexts(cmd);
-		addSeparator();
-	}
-
-	private void setCommandDeleteLabels(Command cmd) {
-		setContentText(cmd.getContent());
-		setDateAndPriorityTexts(cmd);
-		addSeparator();
-	}
-
+	
+	/**
+	 * Sets the edit text for the edit command.
+	 * 
+	 * @param id ID of the task to be edited.
+	 */
 	private void setEditText(String id) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (!id.isEmpty()) {
@@ -173,6 +201,9 @@ public class InfoViewManager {
 		}
 	}
 
+	/**
+	 * Adds a separator between the command overview/description and the rest of the command labels.
+	 */
 	private void addSeparator() {
 		Separator separator = new Separator();
 		Insets padding = new Insets(5, 0, 2, 0);
@@ -182,6 +213,11 @@ public class InfoViewManager {
 		}
 	}
 
+	/**
+	 * Sets the content text for the command.
+	 * 
+	 * @param content The content of the command
+	 */
 	private void setContentText(String content) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 		if (content != null && !content.isEmpty()) {
@@ -193,6 +229,11 @@ public class InfoViewManager {
 		}
 	}
 
+	/**
+	 * Sets the labels for parsed date and priority level of the specified command.
+	 * 
+	 * @param cmd The command to set date and priority labels for
+	 */
 	private void setDateAndPriorityTexts(Command cmd) {
 		ArrayList<Text> texts = new ArrayList<Text>();
 
@@ -226,16 +267,30 @@ public class InfoViewManager {
 		}
 	}
 
+	/**
+	 * Utility method to add a series of text objects to a list.
+	 * 
+	 * @param list The list to add to
+	 * @param texts The texts
+	 */
 	private void addTextsToList(List<Text> list, Text... texts) {
 		for (Text text : texts) {
 			list.add(text);
 		}
 	}
 
+	/**
+	 * Clears the info view.
+	 */
 	public void clearView() {
 		infoViewLayout.getChildren().clear();
 	}
 
+	/**
+	 * Builds and adds a row in the info view.
+	 * 
+	 * @param list A list of Text objects to construct the row with
+	 */
 	private void addInfoRow(List<Text> list) {
 		TextFlow textFlow = new TextFlow();
 		Insets padding = new Insets(0, 5, 0, 5);
@@ -247,10 +302,20 @@ public class InfoViewManager {
 		infoViewLayout.getChildren().add(textFlow);
 	}
 
+	/**
+	 * Builds a Text object from a String object.
+	 * @param content The content of the text object
+	 * @return A Text object
+	 */
 	private Text buildText(String content) {
 		return buildText(content, null);
 	}
 
+	/**
+	 * Builds a Text object from a String object. A style class can be specified.
+	 * @param content The content of the text object
+	 * @return A Text object
+	 */
 	private Text buildText(String content, String styleClass) {
 		Text text = new Text(content);
 		text.getStyleClass().add("text");
@@ -260,6 +325,9 @@ public class InfoViewManager {
 		return text;
 	}
 
+	/**
+	 * Sets the padding of the info view if not empty.
+	 */
 	private void setPaddingIfHasChildren() {
 		Insets padding = new Insets(0);
 		if (!infoViewLayout.getChildren().isEmpty()) {

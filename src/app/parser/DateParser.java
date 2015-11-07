@@ -233,7 +233,7 @@ public class DateParser {
 				return toLocalDateTime(date);
 			}
 		} catch (ParseException e) {
-			// nothing
+			// cannot be parsed
 		}
 
 		return null;
