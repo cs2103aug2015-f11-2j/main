@@ -12,6 +12,7 @@ import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.Task;
 import app.model.TaskList;
+import app.storage.TaskStorage;
 import app.util.Predicates;
 
 public class PredicatesTest {
@@ -42,6 +43,7 @@ public class PredicatesTest {
 		task = new Task(cmd);
 		list.addTask(task);
 		
+		TaskStorage.getInstance().writeTasks(list);
 		TaskList master = CommandController.getInstance().getMasterTaskList();
 		TaskList retrievedTaskList = master.getTaskListByCompletion(false);
 		
