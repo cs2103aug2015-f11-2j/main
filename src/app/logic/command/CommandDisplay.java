@@ -79,7 +79,6 @@ public class CommandDisplay extends Command {
 		return viewState;
 	}
 
-	//TODO: collate from kenny?
 	@Override
 	public ViewState undo() {
 		if (!isExecuted()) {
