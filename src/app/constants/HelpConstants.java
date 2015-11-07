@@ -13,12 +13,12 @@ public class HelpConstants {
 	public static final String HELP_ADD_DESCRIPTION = "Add a new task";
 	public static final String HELP_ADD_OVERVIEW = "add <task> [from <date> to <date>] [by <date>] [priority high | medium | low]";
 	public static final String HELP_ADD_EXAMPLES = "[example]: add do tutorials by sunday 10pm\n"
-			+ "add math exam from 26/11/15 1pm to 3pm priority high";
+			+ "[example]: add math exam from 26/11/15 1pm to 3pm priority high";
 
 	// EDIT
 	public static final String HELP_EDIT_DESCRIPTION = "Edit a task";
 	public static final String HELP_EDIT_OVERVIEW = "edit <id> [task] [from <date> to <date>] [by <date>] [priority high | medium | low]";
-	public static final String HELP_EDIT_EXAMPLES = "[example]: ";
+	public static final String HELP_EDIT_EXAMPLES = "[example]: edit 1 do CS2103 tutorials priority high";
 
 	// SEARCH
 	public static final String HELP_SEARCH_DESCRIPTION = "Search for tasks";
