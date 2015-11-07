@@ -13,7 +13,6 @@ import app.logic.command.Command;
 import app.logic.command.CommandSave;
 import app.model.ParserToken;
 import app.util.Common;
-import app.util.LogHelper;
 
 public class CommandParser {
 
@@ -21,7 +20,6 @@ public class CommandParser {
 	private static final List<String> START_DATE_KEYWORDS = Common.getUnmodifiableList("start", "from", "begin");
 	private static final List<String> END_DATE_KEYWORDS = Common.getUnmodifiableList("by", "due", "end", "to");
 	private static final List<String> PRIORITY_LEVELS = Common.getUnmodifiableList("high", "medium", "low", "none");
-	private static final List<String> PRIORITY_LEVELS_WITH_NONE = Common.getUnmodifiableList("high", "medium", "low", "none");
 
 	private static final List<String> DISPLAY_COMPLETED = Common.getUnmodifiableList("c", "comp", "complete",
 			"completed");
@@ -36,7 +34,8 @@ public class CommandParser {
 	private static final List<String> SEARCH_START_DATERANGE_KEYWORDS = Common.getUnmodifiableList("between");
 	private static final List<String> SEARCH_END_DATERANGE_KEYWORDS = Common.getUnmodifiableList("and");
 	private static final List<String> SEARCH_DATE_KEYWORDS = Common.getUnmodifiableList("date");
-
+	
+	private static final String NONE_KEYWORD = "none";
 	private static final String SAVE_LOG = "log";
 
 	private static List<String> allKeywords;
@@ -84,7 +83,7 @@ public class CommandParser {
 		ParserToken endToken = dateToken(arr, SEARCH_END_DATE_KEYWORDS, allSearchKeywords);
 		ParserToken priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
 		ParserToken displayToken = singleArgToken(arr, DISPLAY_TYPE_KEYWORDS, displayTypes);
-		ParserToken nilDateToken = singleArgToken(arr, Arrays.asList("date"), Arrays.asList("none"));
+		ParserToken nilDateToken = singleArgToken(arr, SEARCH_DATE_KEYWORDS, Arrays.asList(NONE_KEYWORD));
 
 		// Daterange keywords for search: BETWEEN <date> AND <date>
 		List<String> inclusiveEndKeywords = new ArrayList<String>(allSearchKeywords);
@@ -227,11 +226,7 @@ public class CommandParser {
 		ParserToken startToken = dateToken(arr, START_DATE_KEYWORDS, allKeywords);
 		ParserToken endToken = dateToken(arr, END_DATE_KEYWORDS, allKeywords);
 		ParserToken priorityToken = new ParserToken();
-		if (removableParams) {
-			priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS_WITH_NONE);
-		} else {
-			priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
-		}
+		priorityToken = singleArgToken(arr, PRIORITY_KEYWORDS, PRIORITY_LEVELS);
 
 		// Try to parse the dates detected.
 		String startDateString = Common.getStringFromArrayIndexRange(startToken.getStart() + 1, startToken.getEnd(),
@@ -262,7 +257,7 @@ public class CommandParser {
 		// to see if the user wants to remove a date. Used for edit command.
 		ParserToken removeDateToken = new ParserToken();
 		if (removableParams) {
-			removeDateToken = singleArgToken(arr, Arrays.asList("date"), Arrays.asList("none"));
+			removeDateToken = singleArgToken(arr, SEARCH_DATE_KEYWORDS, Arrays.asList(NONE_KEYWORD));
 			if (!removeDateToken.isEmpty() && removeDateToken.getStart() > startToken.getEnd()
 					&& removeDateToken.getStart() > endToken.getEnd()) {
 				startToken.clear();
@@ -295,7 +290,7 @@ public class CommandParser {
 			if (!removeDateToken.isEmpty()) {
 				cmd.addFieldToRemove(RemovableField.DATE);
 			}
-			if (priorityString.equalsIgnoreCase("none")) {
+			if (priorityString.equalsIgnoreCase(NONE_KEYWORD)) {
 				cmd.addFieldToRemove(RemovableField.PRIORITY);
 			}
 		}
