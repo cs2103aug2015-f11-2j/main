@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import app.constants.TaskConstants.Priority;
@@ -22,6 +24,15 @@ import app.storage.AppStorage;
 import app.storage.TaskStorage;
 
 public class CommandTest {
+	
+	// @@author A0126120B-reused
+	@Before
+	public void resetSingleton() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	   Field instance = CommandController.class.getDeclaredField("commandController");
+	   instance.setAccessible(true);
+	   instance.set(null, null);
+	}
+	
 	// @@author A0125960E
 	/**
 	 * Equivalence partition
