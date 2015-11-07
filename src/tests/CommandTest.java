@@ -663,7 +663,7 @@ public class CommandTest {
 			input = "save testsave/storage";
 			viewState = CommandController.getInstance().executeCommand(input);
 			File currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
-			String parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParent());
+			String parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(prevStorageFile.getParent());
 			assertEquals("Saved storage file location: " + parentLocation + "/testsave/storage",
 						 viewState.getStatusMessage());
 			assertEquals(parentLocation + "/testsave/storage", AppStorage.getInstance().getStorageFileLocation());
@@ -685,7 +685,7 @@ public class CommandTest {
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
-			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevLogFile.getParentFile().getParent());
+			parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(prevLogFile.getParentFile().getParent());
 			assertEquals("Saved log file location: " + parentLocation + "/testsave/log", viewState.getStatusMessage());
 			assertEquals(parentLocation + "/testsave/log", AppStorage.getInstance().getLogFileLocation());
 			assertEquals(prevLogFileLines, currLogFileLines);
@@ -701,7 +701,7 @@ public class CommandTest {
 			input = "save test  save  /  storage  test";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
-			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevStorageFile.getParentFile().getParent());
+			parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(prevStorageFile.getParentFile().getParent());
 			assertEquals("Saved storage file location: " + parentLocation + "/test  save/storage  test",
 					viewState.getStatusMessage());
 			assertEquals(parentLocation + "/test  save/storage  test",
@@ -724,7 +724,7 @@ public class CommandTest {
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
-			parentLocation = AppStorage.getInstance().toValidCanonicalPath(prevLogFile.getParentFile().getParent());
+			parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(prevLogFile.getParentFile().getParent());
 			assertEquals("Saved log file location: " + parentLocation + "/test  save/log  test",
 					viewState.getStatusMessage());
 			assertEquals(parentLocation + "/test  save/log  test", AppStorage.getInstance().getLogFileLocation());
@@ -741,7 +741,7 @@ public class CommandTest {
 			input = "save default";
 			viewState = CommandController.getInstance().executeCommand(input);
 			currStorageFile = new File(AppStorage.getInstance().getStorageFileLocation());
-			parentLocation = AppStorage.getInstance().toValidCanonicalPath(".");
+			parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(".");
 			assertEquals("Saved storage file location: " + parentLocation + "/next.txt", viewState.getStatusMessage());
 			assertEquals(parentLocation + "/next.txt", AppStorage.getInstance().getStorageFileLocation());
 			assertEquals(prevStorageFileLines, Files.readAllLines(currStorageFile.toPath()));
@@ -762,7 +762,7 @@ public class CommandTest {
 			for (int i = currLogFileLines.size(); i > prevLogFileLines.size(); i--) {
 				currLogFileLines.remove(i - 1);
 			}
-			parentLocation = AppStorage.getInstance().toValidCanonicalPath(".");
+			parentLocation = AppStorage.getInstance().toAcceptableCanonicalPath(".");
 			assertEquals("Saved log file location: " + parentLocation + "/logs/next.log", viewState.getStatusMessage());
 			assertEquals(parentLocation + "/logs/next.log", AppStorage.getInstance().getLogFileLocation());
 			assertEquals(prevLogFileLines, currLogFileLines);
@@ -890,8 +890,8 @@ public class CommandTest {
 			// command content: no parameters (invalid)
 			String input = "search";
 			ViewState viewState = CommandController.getInstance().executeCommand(input);
-			assertEquals("No search parameters specified, displaying all uncompleted tasks", viewState.getStatusMessage());
-			assertEquals(2, viewState.getTaskList().getTaskList().size());
+			assertEquals("No search parameters specified", viewState.getStatusMessage());
+			assertEquals(3, viewState.getTaskList().getTaskList().size());
 
 			// command content: have parameters (valid)
 			// name: whole word match (valid)
@@ -989,7 +989,7 @@ public class CommandTest {
 			assertEquals("1 match(es)", viewState.getStatusMessage());
 			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2010 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
-/*
+
 			// command content: have parameters (valid)
 			// date: "date none" (valid)
 			input = "search date none type completed";
@@ -997,7 +997,7 @@ public class CommandTest {
 			assertEquals("1 match(es)", viewState.getStatusMessage());
 			assertEquals(1, viewState.getTaskList().getTaskList().size());
 			assertEquals("CS2010 lecture", viewState.getTaskList().getTaskByIndex(0).getName());
-*/		} catch (Exception e) {
+		} catch (Exception e) {
 			throw e; // JUnit will handle this and report a failed assertion
 		} finally {
 			removeFileAndParentsIfEmpty(testFile.toPath());
@@ -1048,6 +1048,12 @@ public class CommandTest {
 		}
 	}
 
+	/**
+	 * Create the test file. Only use when storage file location of the configuration
+	 * file is changed to the test file location.
+	 * 
+	 * @return	Test file.
+	 */
 	private File createTestFile() {
 		File testFile = new File(AppStorage.getInstance().getStorageFileLocation());
 		
@@ -1068,6 +1074,12 @@ public class CommandTest {
 		return testFile;
 	}
 
+	/**
+	 * Removes specified file if exist and empty parent directories.
+	 *  
+	 * @param path			Path of specified file.
+	 * @throws IOException
+	 */
 	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {

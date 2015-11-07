@@ -70,10 +70,10 @@ public class ViewConstants {
 	public static String ERROR_SAVE_NO_LOCATION = "No %1$s file location specified";
 	public static String ERROR_SAVE_NO_CHANGES = "Same %1$s file location. No changes to %1$s file location: %2$s";
 	public static String ERROR_SAVE_COPY_FILE = "IOException while copying %1$s file to specified location: %2$s";
-	public static String ERROR_SAVE_DELETE_FILE = "IOException while deleting previous %1$ss file: %2$s";
+	public static String ERROR_SAVE_DELETE_FILE = "IOException while deleting previous %1$s file: %2$s";
 	public static String ERROR_SAVE_FILE_ALREADY_EXISTS = "File already exists in specified location: %1$s";
 
-	// TODO: collate from mx?
+	// @@author A0132764E
 	// SEARCH command
 	public static String ERROR_SEARCH_NO_PARAMETER = "No search parameters specified";
 	public static String HEADER_SEARCH = "Search results";

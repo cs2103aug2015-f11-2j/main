@@ -19,13 +19,16 @@ import app.model.TaskList;
 import app.util.LogHelper;
 import app.util.Observer;
 
+// @@author A0125960E
 public class TaskStorage extends Observer {
 	private static TaskStorage taskStorage;
 
 	private File storageFile;
 	private Gson gson;
 
-	// @@author A0125960E
+	/**
+	 * Initializes TaskStorage.
+	 */
 	private TaskStorage() {
 		gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -47,6 +50,9 @@ public class TaskStorage extends Observer {
 	}
 
 	// @@author A0126120B
+	/**
+	 * @return	TaskStorage instance.
+	 */
 	public static TaskStorage getInstance() {
 		if (taskStorage == null) {
 			taskStorage = new TaskStorage();
@@ -56,6 +62,11 @@ public class TaskStorage extends Observer {
 	}
 
 	// @@author A0125960E
+	/**
+	 * Write tasks in JSON strings to the storage file.
+	 * 
+	 * @param taskList	List of tasks to be stored.
+	 */
 	public void writeTasks(TaskList taskList) {
 		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(storageFile))) {
 			gson.toJson(taskList.getTaskList(), bufferedWriter);
@@ -64,6 +75,11 @@ public class TaskStorage extends Observer {
 		}
 	}
 
+	/**
+	 * Read tasks from the storage file.
+	 * 
+	 * @return	TaskList of the stored tasks.
+	 */
 	public TaskList readTasks() {
 		TaskList taskList = null;
 
@@ -79,6 +95,9 @@ public class TaskStorage extends Observer {
 		return taskList;
 	}
 
+	/**
+	 * Updates the storage file location.
+	 */
 	@Override
 	public void update() {
 		storageFile = new File(AppStorage.getInstance().getStorageFileLocation());

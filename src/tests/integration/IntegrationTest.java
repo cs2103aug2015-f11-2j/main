@@ -61,6 +61,12 @@ public class IntegrationTest {
 	}
 
 	// @@author A0125960E
+	/**
+	 * Create the test file. Only use when storage file location of the configuration
+	 * file is changed to the test file location.
+	 * 
+	 * @return	Test file.
+	 */
 	private File createTestFile() {
 		File testFile = new File(AppStorage.getInstance().getStorageFileLocation());
 		
@@ -81,6 +87,12 @@ public class IntegrationTest {
 		return testFile;
 	}
 
+	/**
+	 * Removes specified file if exist and empty parent directories.
+	 *  
+	 * @param path			Path of specified file.
+	 * @throws IOException
+	 */
 	// @@author A0125960E-reused
 	private void removeFileAndParentsIfEmpty(Path path) throws IOException {
 		if (path == null) {

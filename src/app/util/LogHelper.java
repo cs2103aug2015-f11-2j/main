@@ -13,6 +13,7 @@ public class LogHelper extends Observer {
 	private static LogHelper logHelper;
 	private Logger logger;
 
+	// @@author A0125960E
 	/**
 	 * Initializes the Logger.
 	 */
@@ -23,7 +24,7 @@ public class LogHelper extends Observer {
 	}
 
 	/**
-	 * @return The Logger instance
+	 * @return The LogHelper instance
 	 */
 	public static LogHelper getInstance() {
 		if (logHelper == null) {
@@ -32,10 +33,17 @@ public class LogHelper extends Observer {
 		return logHelper;
 	}
 
+	/**
+	 * @return The Logger instance
+	 */
 	public Logger getLogger() {
 		return logger;
 	}
 
+	// @@author A0126120B
+	/**
+	 * Updates the log file location.
+	 */
 	@Override
 	public void update() {
 		File logFile = new File(AppStorage.getInstance().getLogFileLocation());

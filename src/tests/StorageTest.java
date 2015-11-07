@@ -33,7 +33,7 @@ public class StorageTest {
 		AppStorage.getInstance().setSelectedTheme("dark");
 
 		// get properties
-		String currentDirectoryLocation = AppStorage.getInstance().toValidCanonicalPath(new File(".").getCanonicalPath());
+		String currentDirectoryLocation = AppStorage.getInstance().toAcceptableCanonicalPath(new File(".").getCanonicalPath());
 		assertEquals(currentDirectoryLocation + "/testStorage/next.txt",
 				AppStorage.getInstance().getStorageFileLocation());
 		assertEquals(currentDirectoryLocation+ "/testLog/next.log",
