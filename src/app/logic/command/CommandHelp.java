@@ -20,8 +20,6 @@ public class CommandHelp extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		// LogHelper.getLogger().info("Executing CommandHelp object.");
-
 		LogHelper.getInstance().getLogger().info("Executing CommandHelp object.");
 
 		// store previous state for undo command

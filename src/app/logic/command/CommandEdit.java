@@ -22,7 +22,7 @@ public class CommandEdit extends Command {
 
 	private Integer displayId;
 	private ViewState previousViewState;
-	private UUID storeId;
+	private UUID uuid;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private String content;
@@ -93,7 +93,7 @@ public class CommandEdit extends Command {
 
 			TaskList master = CommandController.getInstance().getMasterTaskList();
 
-			int id = master.getTaskIndexByUuid(storeId);
+			int id = master.getTaskIndexByUuid(this.uuid);
 
 			master.getTaskByIndex(id).setStartDate(startDate);
 			master.getTaskByIndex(id).setEndDate(endDate);
@@ -121,7 +121,7 @@ public class CommandEdit extends Command {
 		UUID uuid = display.getTaskUuidByIndex(taskIndex);
 		int masterListIndex = master.getTaskIndexByUuid(uuid);
 		
-		storeId = uuid; 
+		this.uuid = uuid; 
 		startDate =  master.getTaskByIndex(masterListIndex).getStartDate();
 		endDate =  master.getTaskByIndex(masterListIndex).getEndDate();
 		priority =  master.getTaskByIndex(masterListIndex).getPriority();
@@ -130,6 +130,7 @@ public class CommandEdit extends Command {
 		return master.updateTask(task, masterListIndex);
 	}
 
+	// @@author generated
 	public void setDisplayId(Integer id) {
 		this.displayId = id;
 	}

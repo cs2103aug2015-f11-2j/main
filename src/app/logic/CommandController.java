@@ -1,6 +1,5 @@
 package app.logic;
 
-//@@author A0125990Y
 import java.util.Stack;
 import java.util.ArrayList;
 
@@ -37,6 +36,7 @@ import app.util.Common;
  */
 public class CommandController {
 
+	//@@author A0132764E
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;

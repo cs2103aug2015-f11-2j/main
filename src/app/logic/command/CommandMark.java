@@ -20,7 +20,7 @@ import app.util.LogHelper;
 
 public class CommandMark extends Command {
 
-	private  ArrayList<UUID> storePreviousId  = new ArrayList<UUID>(); 
+	private  ArrayList<UUID> markedUuidList  = new ArrayList<UUID>(); 
 	private ViewState previousViewState;
 	
 	// @@author A0125360R
@@ -69,11 +69,11 @@ public class CommandMark extends Command {
 			logUuidByMarkedTaskCompletion(markedCompletedUuid, markedUncompletedUuid);
 			
 			for (UUID i : markedCompletedUuid) {
-				storePreviousId.add(i);				
+				markedUuidList.add(i);				
 			}
 			
 			for (UUID i : markedUncompletedUuid) {
-				storePreviousId.add(i);				
+				markedUuidList.add(i);				
 			}
 					
 			viewState.setActiveView(ViewType.TASK_LIST);
@@ -191,7 +191,7 @@ public class CommandMark extends Command {
 		TaskList displayed = previousViewState.getTaskList();
 		
 		int id;
-		for (UUID i : storePreviousId){
+		for (UUID i : markedUuidList){
 			id = master.getTaskIndexByUuid(i);
 			master.markTaskByIndex(id);
 		}

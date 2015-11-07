@@ -379,6 +379,19 @@ public abstract class Command {
 	}
 }
 ```
+###### src\app\logic\command\CommandEdit.java
+``` java
+	public void setDisplayId(Integer id) {
+		this.displayId = id;
+	}
+
+	public Integer getDisplayId() {
+		return displayId;
+	}
+}
+	
+
+```
 ###### src\app\model\Action.java
 ``` java
 public class Action {

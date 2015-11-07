@@ -132,7 +132,7 @@ public class Common {
 		return commandString.replaceFirst(word, "").trim();
 	}
 
-	// @@author A0125360R
+	// @@author A0125360R-reused
 	/**
 	 * Removes the duplicated elements in the ArrayList
 	 * 
