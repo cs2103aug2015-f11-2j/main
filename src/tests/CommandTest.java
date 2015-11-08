@@ -23,7 +23,6 @@ import app.model.ViewState;
 import app.storage.AppStorage;
 import app.storage.TaskStorage;
 
-// @@author A0125960E
 public class CommandTest {
 	
 	// @@author A0126120B-reused
@@ -51,10 +50,6 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testadd.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 
 		try {
 			// command content: no task name and no parameters (invalid)
@@ -110,13 +105,10 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testdelete.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
-		
 		try {
 			// populate tasklist
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+			TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
 			ArrayList<Task> testTasks = new ArrayList<Task>();
 			for (int i = 0; i < 5; i++) {
 				Task task = new Task(CommandController.getInstance().createCommand("add delete" + (i + 1)));
@@ -206,13 +198,10 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testdisplay.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 
 		try {
 			// populate tasklist
+			TaskList master = CommandController.getInstance().getMasterTaskList();
 			Task task = new Task(CommandController.getInstance().createCommand("add completed task"));
 			master.addTask(task);
 			task = new Task(CommandController.getInstance().createCommand("add uncompleted task"));
@@ -427,13 +416,11 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testedit.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 
 		try {
 			// populate tasklist
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+			TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
 			ArrayList<Task> testTasks = new ArrayList<Task>();
 			for (int i = 0; i < 3; i++) {
 				Task task = new Task(CommandController.getInstance().createCommand("add edit" + (i + 1)));
@@ -616,10 +603,6 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testinvalid.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 
 		try {
 			// command content: "" (valid)
@@ -658,13 +641,11 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testMark.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 		
 		try {
 			// populate tasklist
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+			TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
 			ArrayList<Task> testTasks = new ArrayList<Task>();
 			for (int i = 0; i < 3; i++) {
 				Task task = new Task(CommandController.getInstance().createCommand("add mark" + (i + 1)));
@@ -1005,13 +986,11 @@ public class CommandTest {
 		String prevStorageLocation = AppStorage.getInstance().getStorageFileLocation();
 		AppStorage.getInstance().setStorageFileLocation("testStorage/testsearch.txt");
 		File testFile = createTestFile();
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
-		master.getTaskList().clear();
-		display.getTaskList().clear();
 		
 		try {
 			// populate tasklist
+			TaskList master = CommandController.getInstance().getMasterTaskList();
+			TaskList display = CommandController.getInstance().getCurrentViewState().getTaskList();
 			ArrayList<Task> testTasks = new ArrayList<Task>();
 			Task task = new Task(CommandController.getInstance().createCommand("add CS2103 tutorial"));
 			task.setStartDate(LocalDateTime.of(2001, 1, 1, 13, 0));
