@@ -24,6 +24,7 @@ public class StorageConstants {
 	public static final String ERROR_READ_TASKS = "IOException while reading tasks from storage file";
 	public static final String ERROR_TO_CANONICAL_PATH = "IOException while converting path to canonical";
 	
+	// logging messages
 	public static final String LOG_USER_INPUT = "User pressed enter key with input: %1$s";
 	public static final String LOG_INITIALIZE_VIEW = "Initializing view: %1$s";
 	public static final String LOG_EXECUTE_COMMAND = "Executing %1$s object";
