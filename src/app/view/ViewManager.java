@@ -307,12 +307,20 @@ public class ViewManager {
 	 * 
 	 * @param cmd The Command object parsed from user input
 	 */
-	public void updateInfoView(Command cmd) {
-		infoViewManager.updateView(cmd);
+	public void updateInfoView(String commandString) {
+		Command cmd = CommandController.getInstance().createCommand(commandString);
+		if (cmd != null) {
+			infoViewManager.updateView(cmd);
+		}
 	}
 	
 	public CommandType getInfoViewCurrentCommandType() {
 		return infoViewManager.getCurrentCommandType();
+	}
+	
+	public void executeUserInput(String input) {
+		ViewState newViewState = CommandController.getInstance().executeCommand(input);
+		updateView(newViewState);
 	}
 
 	public void scrollTaskList(ScrollDirection direction) {
@@ -320,7 +328,16 @@ public class ViewManager {
 	}
 	
 	public void sendCommandToInput(String command) {
-		inputViewManager.executeUserInput(command);
+		executeUserInput(command);
+	}
+	
+	public String getCommandHistoryNext() {
+		String text = CommandController.getInstance().getCommandHistory().next();
+		return text;
+	}
+	public String getCommandHistoryPrev() {
+		String text = CommandController.getInstance().getCommandHistory().prev();
+		return text;
 	}
 
 	/**

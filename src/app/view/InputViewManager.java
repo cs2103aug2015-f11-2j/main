@@ -4,9 +4,6 @@ import java.util.List;
 
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ScrollDirection;
-import app.logic.CommandController;
-import app.logic.command.Command;
-import app.model.ViewState;
 import app.util.Common;
 import app.util.LogHelper;
 import javafx.application.Platform;
@@ -68,13 +65,13 @@ public class InputViewManager {
 	}
 	
 	private void nextCommandFromHistory() {
-		String text = CommandController.getInstance().getCommandHistory().next();
+		String text = viewManager.getCommandHistoryNext();
 		setText(text, true);
 		positionCaretAtEnd();
 	}
 	
 	private void prevCommandFromHistory() {
-		String text = CommandController.getInstance().getCommandHistory().prev();
+		String text = viewManager.getCommandHistoryPrev();
 		setText(text, false);
 		positionCaretAtEnd();
 	}
@@ -98,10 +95,7 @@ public class InputViewManager {
 	 */
 	private void updateInfoView() {
 		String commandString = commandInput.getText();
-		Command cmd = CommandController.getInstance().createCommand(commandString);
-		if (cmd != null) {
-			viewManager.updateInfoView(cmd);
-		}
+		viewManager.updateInfoView(commandString);
 	}
 
 	/**
@@ -111,12 +105,7 @@ public class InputViewManager {
 	public void onKeypressEnter() {
 		String input = commandInput.getText();
 		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + input);
-		executeUserInput(input);
-	}
-	
-	public void executeUserInput(String input) {
-		ViewState newViewState = CommandController.getInstance().executeCommand(input);
-		viewManager.updateView(newViewState);
+		viewManager.executeUserInput(input);
 		commandInput.clear();
 	}
 
