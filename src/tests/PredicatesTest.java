@@ -12,7 +12,6 @@ import app.logic.CommandController;
 import app.logic.command.Command;
 import app.model.Task;
 import app.model.TaskList;
-import app.storage.TaskStorage;
 import app.util.Predicates;
 
 public class PredicatesTest {
@@ -43,10 +42,6 @@ public class PredicatesTest {
 		task = new Task(cmd);
 		list.addTask(task);
 		
-		TaskStorage.getInstance().writeTasks(list);
-		TaskList master = CommandController.getInstance().getMasterTaskList();
-		TaskList retrievedTaskList = master.getTaskListByCompletion(false);
-		
 		//Start test on search function
 		List<Predicate<Task>> predicates = new ArrayList<Predicate<Task>>();
 		assertTrue(predicates.isEmpty());
@@ -56,7 +51,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.keywordMatches(cmd.getContent()));
 		assertFalse(predicates.isEmpty());
-		TaskList results = retrievedTaskList.search(predicates);
+		TaskList results = list.search(predicates);
 		assertEquals(3, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -64,7 +59,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.keywordMatches(cmd.getContent()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(0, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -72,7 +67,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.betweenDates(cmd.getStartDate(), cmd.getEndDate()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(2, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -80,7 +75,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.startDateAfter(cmd.getStartDate()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(1, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -88,7 +83,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.endDateBefore(cmd.getEndDate()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(1, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -96,7 +91,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.priorityEquals(cmd.getPriority()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(1, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -104,7 +99,7 @@ public class PredicatesTest {
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.priorityEquals(cmd.getPriority()));
 		assertFalse(predicates.isEmpty());
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(3, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -114,12 +109,12 @@ public class PredicatesTest {
 		input = "search eat before 4/11/15";
 		cmd = CommandController.getInstance().createCommand(input);
 		predicates.add(Predicates.keywordMatches(cmd.getContent()));
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertFalse(results.getTaskList().size() == 1);
 		predicates.add(Predicates.endDateBefore(cmd.getEndDate()));
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertTrue(results.getTaskList().size() == 1);
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertEquals(1, results.getTaskList().size());
 		predicates = new ArrayList<Predicate<Task>>();
 		
@@ -128,7 +123,7 @@ public class PredicatesTest {
 		predicates.add(Predicates.keywordMatches(cmd.getContent()));
 		predicates.add(Predicates.priorityEquals(cmd.getPriority()));
 		predicates.add(Predicates.startDateAfter(cmd.getStartDate()));
-		results = retrievedTaskList.search(predicates);
+		results = list.search(predicates);
 		assertTrue(results.getTaskList().size() == 2);
 		
 	}
