@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
@@ -29,7 +30,7 @@ public class CommandSearch extends Command {
 	// @@author A0132764E
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandSearch object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandSearch"));
 
 		this.previousViewState = new ViewState(previousViewState);
 		ViewState viewState = new ViewState();

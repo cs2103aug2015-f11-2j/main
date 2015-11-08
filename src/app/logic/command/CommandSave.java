@@ -40,6 +40,7 @@ public class CommandSave extends Command {
 	 */
 	@Override
 	public ViewState execute(ViewState previousViewState) {
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandSave"));
 		ViewState viewState = new ViewState();
 
 		try {

@@ -2,6 +2,7 @@ package app.logic.command;
 
 import java.util.Stack;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.StatusType;
@@ -18,7 +19,7 @@ public class CommandUndo extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandUndo object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandUndo"));
 
 		Stack<Command> executedCommands = CommandController.getInstance().getExecutedCommands();
 		

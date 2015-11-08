@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class CommandDelete extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandDelete object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandDelete"));
 		ViewState viewState = new ViewState();
 		this.previousViewState = new ViewState(previousViewState); 
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import app.Main;
 import app.constants.CommandConstants.CommandType;
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.ScrollDirection;
 import app.constants.ViewConstants.StatusType;
@@ -96,7 +97,7 @@ public class ViewManager {
 	 * Initializes the TaskListView.
 	 */
 	private void initializeTaskListView() {
-		LogHelper.getInstance().getLogger().info("Initializing tasklist view");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_INITIALIZE_VIEW, "tasklist view"));
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/TaskListView.fxml");
 			taskListViewLayout = loader.load();
@@ -113,7 +114,7 @@ public class ViewManager {
 	 * the user.
 	 */
 	private void initializeInputView() {
-		LogHelper.getInstance().getLogger().info("Initializing input view");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_INITIALIZE_VIEW, "input view"));
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/InputView.fxml");
 			inputViewLayout = loader.load();
@@ -131,7 +132,7 @@ public class ViewManager {
 	 * (such as help).
 	 */
 	private void initializeTextView() {
-		LogHelper.getInstance().getLogger().info("Initializing text view");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_INITIALIZE_VIEW, "text view"));
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/TextView.fxml");
 			textViewLayout = loader.load();
@@ -146,7 +147,7 @@ public class ViewManager {
 	 * user input.
 	 */
 	private void initializeInfoView() {
-		LogHelper.getInstance().getLogger().info("Initializing text view");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_INITIALIZE_VIEW, "info view"));
 		try {
 			FXMLLoader loader = buildFxmlLoader("view/fxml/InfoView.fxml");
 			infoViewLayout = loader.load();

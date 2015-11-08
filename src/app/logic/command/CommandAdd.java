@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class CommandAdd extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandAdd object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandAdd"));
 		ViewState viewState = new ViewState();
 		
 		if (this.getContent().isEmpty()) {

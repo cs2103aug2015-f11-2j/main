@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ActionType;
 import app.model.Action;
@@ -15,7 +16,7 @@ public class CommandExit extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandExit object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandExit"));
 		ViewState state = new ViewState();
 		state.addAction(new Action(ActionType.EXIT, null));
 		setExecuted(true);

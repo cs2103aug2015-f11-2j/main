@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 
 import app.constants.CommandConstants.CommandType;
@@ -26,7 +27,7 @@ public class CommandDisplay extends Command {
 	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandDisplay object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandDisplay"));
 		this.previousViewState = new ViewState(previousViewState);
 		ViewState viewState = new ViewState();
 

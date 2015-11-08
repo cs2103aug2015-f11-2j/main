@@ -4,6 +4,7 @@ import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.StatusType;
 import app.constants.ViewConstants.ViewType;
 import app.constants.HelpConstants;
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 import app.model.ViewState;
 import app.util.LogHelper;
@@ -19,7 +20,7 @@ public class CommandHelp extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandHelp object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandHelp"));
 
 		// store previous state for undo command
 		this.previousViewState = new ViewState(previousViewState);

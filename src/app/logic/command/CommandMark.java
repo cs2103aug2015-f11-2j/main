@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.StorageConstants;
 import app.constants.TaskConstants;
 import app.constants.ViewConstants.ActionType;
 import app.constants.ViewConstants.StatusType;
@@ -32,7 +33,7 @@ public class CommandMark extends Command {
 	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandMark object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandMark"));
 		this.previousViewState = new ViewState(previousViewState); 
 		
 		ViewState viewState = new ViewState();

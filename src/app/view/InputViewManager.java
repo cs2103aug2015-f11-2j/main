@@ -2,6 +2,7 @@ package app.view;
 
 import java.util.List;
 
+import app.constants.StorageConstants;
 import app.constants.CommandConstants.CommandType;
 import app.constants.ViewConstants.ScrollDirection;
 import app.util.Common;
@@ -104,7 +105,7 @@ public class InputViewManager {
 	 */
 	public void onKeypressEnter() {
 		String input = commandInput.getText();
-		LogHelper.getInstance().getLogger().info("User pressed enter key with input: " + input);
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_USER_INPUT, input));
 		viewManager.executeUserInput(input);
 		commandInput.clear();
 	}

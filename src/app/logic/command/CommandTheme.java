@@ -1,6 +1,7 @@
 package app.logic.command;
 
 import app.constants.CommandConstants.CommandType;
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 import app.constants.ViewConstants.StatusType;
 import app.model.ViewState;
@@ -18,6 +19,7 @@ public class CommandTheme extends Command {
 
 	@Override
 	public ViewState execute(ViewState previousViewState) {
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandTheme"));
 		ViewState viewState = new ViewState();
 		this.previousViewState = new ViewState(previousViewState);
 		

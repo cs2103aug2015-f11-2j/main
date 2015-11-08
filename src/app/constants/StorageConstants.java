@@ -23,4 +23,8 @@ public class StorageConstants {
 	public static String ERROR_READ_PROPERTIES = "IOException while reading properties from configuration file";
 	public static String ERROR_READ_TASKS = "IOException while reading tasks from storage file";
 	public static String ERROR_TO_CANONICAL_PATH = "IOException while converting path to canonical";
+	
+	public static String LOG_USER_INPUT = "User pressed enter key with input: %1$s";
+	public static String LOG_INITIALIZE_VIEW = "Initializing view: %1$s";
+	public static String LOG_EXECUTE_COMMAND = "Executing %1$s object";
 }

@@ -1,5 +1,6 @@
 package app.logic.command;
 
+import app.constants.StorageConstants;
 import app.constants.ViewConstants;
 
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class CommandEdit extends Command {
 	// @@author A0125360R
 	@Override
 	public ViewState execute(ViewState previousViewState) {
-		LogHelper.getInstance().getLogger().info("Executing CommandEdit object.");
+		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandEdit"));
 		this.previousViewState = new ViewState(previousViewState);
 		
 		ViewState viewState = new ViewState();
