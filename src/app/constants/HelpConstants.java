@@ -17,7 +17,7 @@ public class HelpConstants {
 
 	// EDIT
 	public static final String HELP_EDIT_DESCRIPTION = "Edit a task";
-	public static final String HELP_EDIT_OVERVIEW = "edit <id> [task] [from <date> to <date>] [by <date> | date none] [priority high | medium | low | none]";
+	public static final String HELP_EDIT_OVERVIEW = "edit <id> [task] [from <date> to <date> | by <date> | date none] [priority high | medium | low | none]";
 	public static final String HELP_EDIT_EXAMPLES = "[example]: edit 1 do CS2103 tutorials priority high";
 
 	// SEARCH
