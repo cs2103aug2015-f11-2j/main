@@ -164,7 +164,7 @@ public class CommandTest {
 			input = "delete 1 3";
 			viewState = CommandController.getInstance().executeCommand(input);
 			tasks = TaskStorage.getInstance().readTasks();
-			assertEquals("Deleted task: 1 3", viewState.getStatusMessage());
+			assertEquals("Deleted task: 1, 3", viewState.getStatusMessage());
 			assertEquals(1, tasks.getTaskList().size());
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(2).getId()));
 			assertEquals(null, tasks.getTaskIndexByUuid(testTasks.remove(0).getId()));

@@ -43,20 +43,13 @@ public class CommandDelete extends Command {
 			TaskList display = previousViewState.getTaskList();
 			
 			ArrayList<Integer> ids = Common.getIdArrayList(this.getContent()); 
+			ids = Common.removeDuplicatesFromArrayList(ids);
+			String deletedIds = Common.getIdListString(ids);
 			ArrayList<UUID> tasksUuidList = display.getTasksUuidList(ids);
 			ArrayList<Integer> masterIdsList = master.getTasksIdList(tasksUuidList);
 
 			Collections.sort(ids, Collections.reverseOrder());
 			Collections.sort(masterIdsList, Collections.reverseOrder());
-			
-			
-			// remove identical id's 
-			for (int i = ids.size() - 1; i > 0; i--) {
-				if (ids.get(i).intValue() == ids.get(i - 1).intValue()) {
-					ids.remove(i);	
-					masterIdsList.remove(i);
-				}
-			}
 			
 			ArrayList<UUID> deletedTask = new ArrayList<UUID>();
 			// remove task from display list
@@ -64,17 +57,15 @@ public class CommandDelete extends Command {
 				deletedTask.add(display.getTaskUuidByIndex(i-1));
 				display.getTaskList().remove(i - 1);
 			}
-
 		
 			// remove task from master list
 			for (int i : masterIdsList) {
 				previousTaskList.add(master.getTaskList().remove(i));
 			}
 			
-			
 			TaskStorage.getInstance().writeTasks(master);
 			viewState.setTaskList(display);
-			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, this.getContent()));
+			viewState.setStatus(StatusType.SUCCESS, String.format(ViewConstants.MESSAGE_DELETE, deletedIds));
 			logDeletedTaskUuid(deletedTask);
 			setExecuted(true);
 
