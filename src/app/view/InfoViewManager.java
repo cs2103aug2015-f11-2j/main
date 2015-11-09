@@ -108,6 +108,9 @@ public class InfoViewManager {
 		case HELP:
 			setHelpText(HelpConstants.HELP_HELP_OVERVIEW, HelpConstants.HELP_HELP_DESCRIPTION);
 			break;
+		case UNDO:
+			setHelpText(HelpConstants.HELP_UNDO_OVERVIEW, HelpConstants.HELP_UNDO_DESCRIPTION);
+			break;
 		default:
 			break;
 		}
