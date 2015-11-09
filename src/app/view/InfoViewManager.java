@@ -244,7 +244,7 @@ public class InfoViewManager {
 		ArrayList<Text> texts = new ArrayList<Text>();
 
 		// Add parsed dates
-		if (cmd.getRemoveField().contains(RemovableField.DATE)) {
+		if (cmd.getRemoveField().contains(RemovableField.DATE) || cmd.isFloatSearch()) {
 			Text withDate = buildText(" with date ");
 			Text dateNone = buildText("NONE", STYLE_INFOVIEW_DATE);
 			addTextsToList(texts, withDate, dateNone);

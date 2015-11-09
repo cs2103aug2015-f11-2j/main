@@ -104,7 +104,7 @@ public abstract class Command {
 		return removeField;
 	}
 	
-	public boolean floatSearch() {
+	public boolean isFloatSearch() {
 		return isFloatSearch;
 	}
 

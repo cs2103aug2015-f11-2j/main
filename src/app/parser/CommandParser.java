@@ -430,7 +430,7 @@ public class CommandParser {
 		return Priority.NONE;
 	}
 	
-	// @@author A0126120B
+	// @@author A0132764E
 	/**
 	 * Returns the Priority object representing the priority level
 	 * 

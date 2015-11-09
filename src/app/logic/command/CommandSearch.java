@@ -64,7 +64,7 @@ public class CommandSearch extends Command {
 			else if (this.getStartDate() != null) {
 					predicates.add(Predicates.startDateAfter(this.getStartDate()));
 			}
-			if (this.floatSearch()) {
+			if (this.isFloatSearch()) {
 				predicates.add(Predicates.floatingTask());
 			}
 
