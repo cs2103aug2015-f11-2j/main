@@ -65,4 +65,4 @@ search by 09/11/2015 10pm priority high
 
 #### More options
 
-For information on all of Next's supported commands, use the `help` command.
+For information on all of Next's supported commands, use the `help` command or visit the [**User Guide**](docs/user_guide.md)!
