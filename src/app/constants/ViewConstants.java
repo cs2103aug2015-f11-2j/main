@@ -6,6 +6,11 @@ import java.util.Queue;
 import app.Main;
 
 public class ViewConstants {
+	
+	// @@author A0126120B
+	public static final String PROGRAM_TITLE = "Next :: your next-gen todo list";
+	public static final int PROGRAM_MIN_WIDTH = 600;
+	public static final int PROGRAM_MIN_HEIGHT = 400;
 
 	// @@author A0126120B
 	// Style classes for the different statusbar statuses

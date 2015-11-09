@@ -3,6 +3,7 @@ package app;
 import java.io.IOException;
 import java.util.List;
 
+import app.constants.ViewConstants;
 import app.storage.AppStorage;
 import app.util.LogHelper;
 import app.view.ViewManager;
@@ -16,9 +17,6 @@ public class Main extends Application {
 
 	private Stage primaryStage;
 	private ViewManager viewManager;
-	
-	private final int MIN_WIDTH = 600;
-	private final int MIN_HEIGHT = 300;
 
 	@Override
 	public void start(Stage stage) {
@@ -60,8 +58,8 @@ public class Main extends Application {
 	 */
 	private void initializeStage(Stage stage) {
 		primaryStage = stage;
-		primaryStage.setTitle("Next :: your next-gen todo list");
-		primaryStage.setMinWidth(MIN_WIDTH);
-		primaryStage.setMinHeight(MIN_HEIGHT);
+		primaryStage.setTitle(ViewConstants.PROGRAM_TITLE);
+		primaryStage.setMinWidth(ViewConstants.PROGRAM_MIN_WIDTH);
+		primaryStage.setMinHeight(ViewConstants.PROGRAM_MIN_HEIGHT);
 	}
 }
