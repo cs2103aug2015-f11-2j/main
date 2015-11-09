@@ -348,33 +348,33 @@ public class CommandTest {
 			
 			// test help (valid)
 			ViewState viewState = CommandController.getInstance().executeCommand("help");	
-			assertEquals(" Displaying Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" Displaying help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 	
 			// test help add (valid)
 			viewState = CommandController.getInstance().executeCommand("h add");	
-			assertEquals(" Displaying Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" Displaying help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 
 			// test help delete (valid)
 			viewState = CommandController.getInstance().executeCommand("h delete");	
-			assertEquals(" Displaying Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" Displaying help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 
 			// test help edit (valid)
 			viewState = CommandController.getInstance().executeCommand("h edit");	
-			assertEquals(" Displaying Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" Displaying help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 
 			// test help search (valid)
 			viewState = CommandController.getInstance().executeCommand("h search");	
-			assertEquals(" Displaying Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" Displaying help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 			
 			// test help all (invalid)
 			viewState = CommandController.getInstance().executeCommand("h all");	
-			assertEquals(" No such Help List", viewState.getStatusMessage());
-			assertEquals(" Displaying Help List", viewState.getHeader());
+			assertEquals(" No such help list", viewState.getStatusMessage());
+			assertEquals(" Displaying help list", viewState.getHeader());
 			
 			
 		} catch (Exception e) {
