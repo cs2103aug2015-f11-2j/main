@@ -216,6 +216,7 @@ public class DateParser {
 		return date;
 	}
 
+	// @@author A0126120B-reused
 	/**
 	 * Tries to parse a string representation of a date using the given pattern.
 	 * 

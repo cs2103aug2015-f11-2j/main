@@ -9,7 +9,6 @@ import app.storage.AppStorage;
 import app.util.LogHelper;
 
 public class CommandTheme extends Command {
-	// @@author A0125990Y
 	private ViewState previousViewState;
 	
 	public CommandTheme() {
@@ -17,6 +16,7 @@ public class CommandTheme extends Command {
 		this.setCommandType(CommandType.THEME);
 	}
 
+	// @@author A0126120B
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandTheme"));

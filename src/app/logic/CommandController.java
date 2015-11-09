@@ -36,7 +36,7 @@ import app.util.Common;
  */
 public class CommandController {
 
-	//@@author A0132764E
+	// @@author A0126120B
 	private static CommandController commandController;
 
 	private TaskList masterTaskList;
@@ -45,6 +45,7 @@ public class CommandController {
 	
 	private CommandList commandHistory;
 
+	// @@author A0125960E
 	private CommandController() {
 		masterTaskList = TaskStorage.getInstance().readTasks();
 		executedCommands = new Stack<Command>();
@@ -72,6 +73,7 @@ public class CommandController {
 		}
 	}
 
+	// @@author A0126120B
 	/**
 	 * This method implements the Singleton design pattern.
 	 * 

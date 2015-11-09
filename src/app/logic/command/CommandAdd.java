@@ -18,7 +18,6 @@ import app.storage.TaskStorage;
 import app.util.LogHelper;
 
 public class CommandAdd extends Command {
-	// @@author A0125990Y
 	private Task task;
 	private UUID storeId;
 	private ViewState previousViewState;
@@ -28,6 +27,7 @@ public class CommandAdd extends Command {
 		this.setCommandType(CommandType.ADD);
 	}
 
+	// @@author A0126120B
 	@Override
 	public ViewState execute(ViewState previousViewState) {
 		LogHelper.getInstance().getLogger().info(String.format(StorageConstants.LOG_EXECUTE_COMMAND, "CommandAdd"));
