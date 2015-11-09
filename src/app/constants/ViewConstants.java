@@ -111,8 +111,8 @@ public class ViewConstants {
 	
 	// @@author A0125990Y
 	// Help Message 
-	public static final String HEADER_HELP = " Displaying Help List";
-	public static final String ERROR_HELP = " No such Help List";
+	public static final String HEADER_HELP = " Displaying help list";
+	public static final String ERROR_HELP = " No such help list";
 
 	// @@author A0126120B
 	// Enum values for the different statusbar statuses

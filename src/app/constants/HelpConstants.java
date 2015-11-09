@@ -52,7 +52,7 @@ public class HelpConstants {
 	
 	// HELP
 	public static final String HELP_HELP_DESCRIPTION = "Show help list";
-	public static final String HELP_HELP_OVERVIEW = "help [command]";
+	public static final String HELP_HELP_OVERVIEW = "help [<command>]";
 	
 	// SAVE
 	public static final String HELP_SAVE_DESCRIPTION = "Change the location of storage files";
