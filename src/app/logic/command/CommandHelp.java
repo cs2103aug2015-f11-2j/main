@@ -72,6 +72,7 @@ public class CommandHelp extends Command {
 		formList = formList + HelpConstants.DOUBLE_LINE + helpList(CommandType.SAVE.toString());
 		formList = formList + HelpConstants.DOUBLE_LINE + helpList(CommandType.THEME.toString());
 		formList = formList + HelpConstants.DOUBLE_LINE + helpList(CommandType.EXIT.toString());
+		formList = formList + HelpConstants.DOUBLE_LINE + helpList(CommandType.HELP.toString());
 		return formList;
 	}
 
@@ -115,12 +116,18 @@ public class CommandHelp extends Command {
 		} else if (type.equals(CommandType.EXIT.toString())) {
 			type = combineLine(HelpConstants.HELP_EXIT_DESCRIPTION, HelpConstants.HELP_EXIT_OVERVIEW, "");
 			
+		} else if (type.equals(CommandType.HELP.toString())) {
+			type = combineLine(HelpConstants.HELP_HELP_DESCRIPTION, HelpConstants.HELP_HELP_OVERVIEW, "");
+			
 		}
 
 		return type;
 	}
 
 	private String combineLine(String description, String overview, String examples) {
+		if (examples.isEmpty()) {
+			return (description + HelpConstants.NEW_LINE + overview);
+		}
 		return (description + HelpConstants.NEW_LINE + overview + HelpConstants.NEW_LINE + examples);
 	}
 

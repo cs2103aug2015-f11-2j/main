@@ -105,6 +105,9 @@ public class InfoViewManager {
 		case SAVE:
 			setHelpText(HelpConstants.HELP_SAVE_OVERVIEW, HelpConstants.HELP_SAVE_DESCRIPTION);
 			break;
+		case HELP:
+			setHelpText(HelpConstants.HELP_HELP_OVERVIEW, HelpConstants.HELP_HELP_DESCRIPTION);
+			break;
 		default:
 			break;
 		}

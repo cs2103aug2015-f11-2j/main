@@ -50,6 +50,10 @@ public class HelpConstants {
 	public static final String HELP_THEME_OVERVIEW = "theme [light | dark]";
 	public static final String HELP_THEME_EXAMPLES = "[example]: theme light";
 	
+	// HELP
+	public static final String HELP_HELP_DESCRIPTION = "Show help list";
+	public static final String HELP_HELP_OVERVIEW = "help [command]";
+	
 	// SAVE
 	public static final String HELP_SAVE_DESCRIPTION = "Change the location of storage files";
 	public static final String HELP_SAVE_OVERVIEW = "save [log] <path>";
