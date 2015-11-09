@@ -65,9 +65,4 @@ search by 09/11/2015 10pm priority high
 
 #### More options
 
-For information on all of Next's supported commands, use the `help` command or visit the [**User Guide**](docs/user_guide.md)!
-
-## Contribute
-
-- [**Developer Guide**](docs/developer_guide.md)
-- [How to contribute](docs/contribution_guide.md)
+For information on all of Next's supported commands, use the `help` command.
